@@ -4,11 +4,14 @@ package team7.simple.domain.course.controller;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseResponseDto;
 import team7.simple.domain.course.service.CourseService;
 import team7.simple.global.common.response.dto.ListResult;
 import team7.simple.global.common.response.dto.SingleResult;
 import team7.simple.global.common.response.service.ResponseService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/open/course")
@@ -22,6 +25,11 @@ public class CourseController {
     @GetMapping("/{courseId}")
     public SingleResult<CourseResponseDto> getCourse(@PathVariable Long courseId) {
         return responseService.getSingleResult(courseService.getCourse(courseId));
+    }
+
+    @PostMapping("")
+    public SingleResult<Long> upload(@RequestPart @Valid CourseRequestDto courseRequestDto) {
+        return responseService.getSingleResult(courseService.create(courseRequestDto));
     }
 
 

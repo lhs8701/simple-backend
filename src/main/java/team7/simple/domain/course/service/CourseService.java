@@ -3,6 +3,7 @@ package team7.simple.domain.course.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseResponseDto;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.repository.CourseJpaRepository;
@@ -20,5 +21,13 @@ public class CourseService {
         Course course = courseJpaRepository.findById(courseId)
                 .orElseThrow(CCourseNotFoundException::new);
         return new CourseResponseDto(course);
+    }
+
+    @Transactional
+    public Long create(CourseRequestDto courseRequestDto) {
+        Long userId = courseRequestDto.getUserId();
+
+        Course course = courseRequestDto.toEntity();
+        return courseJpaRepository.save(course).getId();
     }
 }
