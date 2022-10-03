@@ -1,14 +1,14 @@
 package team7.simple.global.security;
 
 
-import bh.bhback.global.common.response.dto.CommonResult;
-import bh.bhback.global.error.advice.exception.CAuthenticationEntryPointException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+import team7.simple.global.common.response.dto.CommonResult;
+import team7.simple.global.error.advice.exception.CAuthenticationEntryPointException;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +25,4 @@ public class SecurityExceptionController {
     public CommonResult accessDeniedException() {
         throw new AccessDeniedException("");
     }
-
-
 }

@@ -1,11 +1,11 @@
 package team7.simple.global.security;
 
-import bh.bhback.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
+import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -38,10 +38,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         log.info("[Verifying token]");
         log.info(((HttpServletRequest) request).getRequestURL().toString());
 
-        if (accessToken != null && jwtProvider.validationToken(accessToken, (HttpServletRequest) request)) {
-            Authentication authentication = jwtProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+//        if (accessToken != null && jwtProvider.validationToken(accessToken, (HttpServletRequest) request)) {
+//            Authentication authentication = jwtProvider.getAuthentication(accessToken);
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//        }
         //다음 차례 필터 클래스 객체의 doFilter() 메소드를 호출시키는 기능
         filterChain.doFilter(request, response);
     }

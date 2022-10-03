@@ -1,11 +1,6 @@
 package team7.simple.global.security;
 
 
-import bh.bhback.domain.auth.jwt.dto.TokenResponseDto;
-import bh.bhback.domain.auth.jwt.entity.JwtExpiration;
-import bh.bhback.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
-import bh.bhback.global.error.ErrorCode;
-import bh.bhback.global.error.advice.exception.CAuthenticationEntryPointException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
+import team7.simple.domain.auth.jwt.entity.JwtExpiration;
+import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
+import team7.simple.global.error.advice.exception.CAuthenticationEntryPointException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -141,26 +140,26 @@ public class JwtProvider {
     }
 
     public boolean validationToken(String token, HttpServletRequest request) {
-        try {
-            Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(token);
-            if (logoutAccessTokenRedisRepository.existsById(token)) {
-                log.error("이미 로그아웃된 회원입니다.");
-                request.setAttribute("exception", ErrorCode.LOGOUT_ERROR.getCode());
-                return false;
-            }
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("잘못된 Jwt 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            log.error("만료된 토큰입니다.");
-            request.setAttribute("exception", ErrorCode.EXPIRED_ACCESS_TOKEN.getCode());
-        } catch (UnsupportedJwtException e) {
-            log.error("지원하지 않는 토큰입니다.");
-            request.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN.getCode());
-        } catch (IllegalArgumentException e) {
-            log.error("잘못된 토큰입니다.");
-            request.setAttribute("exception", ErrorCode.WRONG_TOKEN.getCode());
-        }
+//        try {
+//            Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(token);
+//            if (logoutAccessTokenRedisRepository.existsById(token)) {
+//                log.error("이미 로그아웃된 회원입니다.");
+//                request.setAttribute("exception", ErrorCode.LOGOUT_ERROR.getCode());
+//                return false;
+//            }
+//            return true;
+//        } catch (SecurityException | MalformedJwtException e) {
+//            log.error("잘못된 Jwt 서명입니다.");
+//        } catch (ExpiredJwtException e) {
+//            log.error("만료된 토큰입니다.");
+//            request.setAttribute("exception", ErrorCode.EXPIRED_ACCESS_TOKEN.getCode());
+//        } catch (UnsupportedJwtException e) {
+//            log.error("지원하지 않는 토큰입니다.");
+//            request.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN.getCode());
+//        } catch (IllegalArgumentException e) {
+//            log.error("잘못된 토큰입니다.");
+//            request.setAttribute("exception", ErrorCode.WRONG_TOKEN.getCode());
+//        }
         return false;
     }
 }

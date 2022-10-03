@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,6 +38,7 @@ public class HlsController {
     /* 서버에 있는 .mp4를 바탕으로 .m3u8 생성 */
     @GetMapping("/hls-make/{fileName}")
     @ResponseBody
+    @PreAuthorize("permitAll()")
     public void videoHlsMake(@PathVariable String fileName) throws IOException {
         final String FFMPEG = env.getProperty("hls.ffmpeg");
         final String FFPROBE = env.getProperty("hls.ffprobe");
@@ -93,6 +95,7 @@ public class HlsController {
     }
 
     /* m3u8 파일 재생 */
+    @PreAuthorize("permitAll()")
     @GetMapping("/hls/{fileName}/{fileName}.m3u8")
     public ResponseEntity<Resource> videoHlsM3U8(@PathVariable String fileName) {
         String fileFullPath = UPLOAD_DIR + "/" + fileName + "/" + fileName + ".m3u8";
@@ -104,6 +107,7 @@ public class HlsController {
     }
 
     /*ts 파일 재생*/
+    @PreAuthorize("permitAll()")
     @GetMapping("/hls/{fileName}/{tsName}.ts")
     public ResponseEntity<Resource> videoHlsTs(@PathVariable String fileName, @PathVariable String tsName) {
         String fileFullPath = UPLOAD_DIR + "/" + fileName + "/" + tsName + ".ts";
