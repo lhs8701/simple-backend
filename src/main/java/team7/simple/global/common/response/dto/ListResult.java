@@ -10,3 +10,4 @@ import java.util.List;
 public class ListResult<T> extends CommonResult{
     private List<T> list;
 }
+
