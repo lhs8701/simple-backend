@@ -16,7 +16,7 @@ import team7.simple.global.common.response.service.ResponseService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/open/course")
+//@RequestMapping("/open/course")
 @RequiredArgsConstructor
 public class CourseController {
 
@@ -24,23 +24,23 @@ public class CourseController {
     private final ResponseService responseService;
 
 
-    @GetMapping("/{courseId}")
+    @GetMapping("/open/course/{courseId}")
     public SingleResult<CourseResponseDto> getCourse(@PathVariable Long courseId) {
         return responseService.getSingleResult(courseService.getCourse(courseId));
     }
 
-    @PostMapping("")
-    public SingleResult<Long> upload(@RequestPart @Valid CourseRequestDto courseRequestDto) {
+    @PostMapping("/open/course")
+    public SingleResult<Long> upload(@Valid CourseRequestDto courseRequestDto) {
         return responseService.getSingleResult(courseService.create(courseRequestDto));
     }
 
-    @DeleteMapping(value = "/{courseId}")
+    @DeleteMapping(value = "/open/course/{courseId}")
     public CommonResult delete(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);
         return responseService.getSuccessResult();
     }
 
-    @PostMapping(value = "/{courseId}")
+    @PatchMapping(value = "/open/course/{courseId}")
     public SingleResult<Long> update(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
         return responseService.getSingleResult(courseService.update(courseId, courseUpdateParam));
     }

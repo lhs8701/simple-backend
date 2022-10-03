@@ -36,7 +36,8 @@ public class CourseService {
     public void deleteCourse(Long courseId) {
         Course course = courseJpaRepository.findById(courseId)
                 .orElseThrow(CCourseNotFoundException::new);
-        courseJpaRepository.deleteById(courseId);
+
+        courseJpaRepository.delete(course);
     }
 
     @Transactional
