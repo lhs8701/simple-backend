@@ -2,10 +2,10 @@ package team7.simple.domain.player.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.player.service.PlayerService;
@@ -21,13 +21,9 @@ public class PlayerController {
     private final PlayerService playerService;
 
     @PostMapping("/open/player/on")
+//    @PreAuthorize("hasRole('USER')")
     public String start(@RequestBody StartRequestDto startRequestDto) {
-        playerService.start(startRequestDto);
-        String usid = String.valueOf(startRequestDto.getUserId());
-        String cid = String.valueOf(startRequestDto.getUserId());
-        String unid = String.valueOf(startRequestDto.getUserId());
-        log.info("{},{},{}", usid, cid, unid);
-        return "redirect:http://www.naver.com?usid=" + usid + "&cid=" + cid + "&unid=" + unid;
+        return "redirect:" + playerService.start(startRequestDto);
     }
 
     @PostMapping("/open/player/off")

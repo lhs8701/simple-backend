@@ -64,4 +64,22 @@ public class ExceptionAdvice {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
+
+    /**
+     * 전달한 Jwt 이 정상적이지 않은 경우 발생 시키는 예외
+     */
+    @ExceptionHandler(CAuthenticationEntryPointException.class)
+    protected CommonResult authenticationEntrypointException(HttpServletRequest request, CAuthenticationEntryPointException e) {
+        return responseService.getFailResult
+                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    }
+
+    /**
+     * 권한이 없는 리소스를 요청한 경우 발생 시키는 예외
+     */
+    @ExceptionHandler(CAccessDeniedException.class)
+    protected CommonResult accessDeniedException(HttpServletRequest request, CAccessDeniedException e) {
+        return responseService.getFailResult
+                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    }
 }

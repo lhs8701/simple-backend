@@ -12,6 +12,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID_EXCEPTION(-1007, "리프레쉬 토큰이 잘못되었습니다."),
     REFRESH_TOKEN_EXPIRED_EXCPEPTION(-1014, "리프레쉬 토큰이 만료되었습니다. 로그인을 다시 해주세요."),
     AUTHENTICATION_ENTRY_POINT_EXCEPTION(-1002, "해당 리소스에 접근하기 위한 권한이 없습니다."), //정상적으로 Jwt이 제대로 오지 않은 경우
+    ACCESS_DENIED(-1003,"해당 리소스에 접근할 수 없는 권한입니다."),
 
     USER_EXIST_EXCEPTION(-1006, "이미 가입된 계정입니다. 로그인을 해주세요"),
 

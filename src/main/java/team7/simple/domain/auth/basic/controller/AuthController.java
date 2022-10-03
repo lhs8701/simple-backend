@@ -44,11 +44,4 @@ public class AuthController {
     public SingleResult<TokenResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
         return responseService.getSingleResult(authService.login(loginRequestDto));
     }
-
-    @ApiOperation(value = "액세스/리프레시 토큰 재발급")
-    @PreAuthorize("permitAll()")
-    @PostMapping(value = "/reissue")
-    public SingleResult<TokenResponseDto> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
-        return responseService.getSingleResult(authService.reissue(tokenRequestDto));
-    }
 }
