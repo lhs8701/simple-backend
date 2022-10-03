@@ -1,17 +1,20 @@
 package team7.simple.global.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
-import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
+import org.springframework.web.filter.OncePerRequestFilter;
+import team7.simple.global.error.ErrorCode;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //Jwt이 유효한 토큰인지 인증하기 위한 Filter
@@ -19,30 +22,18 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
-
-    // request 로 들어오는 Jwt 의 유효성을 검증 - JwtProvider.validationToken()을 필터로서 FilterChain 에 추가
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String jwt = jwtProvider.resolveToken(request);
+        if (StringUtils.isNotEmpty(jwt) && jwtProvider.validateToken(request, jwt)) {
+            Authentication authentication = jwtProvider.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
 
-        // request 에서 token 을 취한다.
-        String accessToken = jwtProvider.resolveToken((HttpServletRequest) request);
-
-        // 검증
-        log.info("[Verifying token]");
-        log.info(((HttpServletRequest) request).getRequestURL().toString());
-
-//        if (accessToken != null && jwtProvider.validationToken(accessToken, (HttpServletRequest) request)) {
-//            Authentication authentication = jwtProvider.getAuthentication(accessToken);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//        }
-        //다음 차례 필터 클래스 객체의 doFilter() 메소드를 호출시키는 기능
         filterChain.doFilter(request, response);
     }
 }

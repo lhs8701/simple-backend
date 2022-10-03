@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import team7.simple.domain.auth.basic.dto.LoginRequestDto;
 import team7.simple.domain.auth.basic.dto.SignupRequestDto;
 import team7.simple.domain.auth.basic.service.AuthService;
-import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.dto.SingleResult;
 import team7.simple.global.common.response.service.ResponseService;
-
-import javax.validation.Valid;
-
 
 @Slf4j
 @Api(tags = {"Basic Auth"})

@@ -5,6 +5,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -36,6 +37,7 @@ public class SwaggerConfig implements EnvironmentAware {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
+                .ignoredParameterTypes(AuthenticationPrincipal.class)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .apiInfo(apiInfo()).select()

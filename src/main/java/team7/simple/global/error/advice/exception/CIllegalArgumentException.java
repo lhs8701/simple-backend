@@ -6,11 +6,11 @@ import team7.simple.global.error.ErrorCode;
 
 @AllArgsConstructor
 @Getter
-public class CCourseNotFoundException extends RuntimeException {
+public class CIllegalArgumentException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public CCourseNotFoundException() {
+    public CIllegalArgumentException() {
         super();
-        errorCode = ErrorCode.COURSE_NOT_FOUND_EXCEPTION;
+        errorCode = ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION;
     }
 }

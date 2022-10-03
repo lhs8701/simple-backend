@@ -6,11 +6,11 @@ import team7.simple.global.error.ErrorCode;
 
 @AllArgsConstructor
 @Getter
-public class CCourseNotFoundException extends RuntimeException {
+public class CExpiredTokenException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public CCourseNotFoundException() {
+    public CExpiredTokenException() {
         super();
-        errorCode = ErrorCode.COURSE_NOT_FOUND_EXCEPTION;
+        errorCode = ErrorCode.EXPIRED_TOKEN_EXCEPTION;
     }
 }
