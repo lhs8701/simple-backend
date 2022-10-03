@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -123,7 +124,7 @@ public class JwtProvider {
     // jwt 의 유효성 및 만료일자 확인
     // Jwts에서 제공하는 예외처리를 이용
     // jwt 의 유효성 및 만료일자 확인
-    public boolean validationToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(token);
             return true;
@@ -139,7 +140,7 @@ public class JwtProvider {
         return false;
     }
 
-    public boolean validationToken(String token, HttpServletRequest request) {
+    public boolean validateToken(String token, HttpServletRequest request) {
 //        try {
 //            Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(token);
 //            if (logoutAccessTokenRedisRepository.existsById(token)) {
