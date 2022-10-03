@@ -1,11 +1,11 @@
 package team7.simple.global.common.response.service;
 
 
-
 import org.springframework.stereotype.Service;
 import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.dto.ListResult;
 import team7.simple.global.common.response.dto.SingleResult;
+
 
 
 import java.util.List;
@@ -16,6 +16,7 @@ import java.util.List;
 public class ResponseService {
 
     // enum으로 api 요청 결과에 대한 code, message를 정의합니다.
+
     public enum CommonResponse {
         SUCCESS(0, "성공하였습니다."),
         FAIL(-1, "실패하였습니다.");
@@ -37,7 +38,7 @@ public class ResponseService {
         }
     }
 
-    // 단일건 결과를 처리하는 메소드
+
     public <T> SingleResult<T> getSingleResult(T data) {
         SingleResult<T> result = new SingleResult<>();
         result.setData(data);
@@ -53,7 +54,6 @@ public class ResponseService {
         return result;
     }
 
-    // 성공 결과만 처리하는 메소드 (데이터 반환 X, 성공했다는 결과만 리턴) (회원 삭제 시 삭제가 성공하면 성공 응답만 반환하는 용도로 사용 가능)
     public CommonResult getSuccessResult() {
         CommonResult result = new CommonResult();
         setSuccessResult(result);
@@ -66,7 +66,6 @@ public class ResponseService {
         return result;
     }
 
-    // 결과 모델에 api 요청 성공 데이터를 세팅해주는 메소드
     private void setSuccessResult(CommonResult result) {
         result.setSuccess(true);
         result.setCode(CommonResponse.SUCCESS.getCode());
@@ -78,8 +77,4 @@ public class ResponseService {
         result.setCode(code);
         result.setMsg(msg);
     }
-
-    // 실패 결과만 처리하는 메소드
-
-
 }
