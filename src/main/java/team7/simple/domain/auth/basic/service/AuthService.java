@@ -25,11 +25,7 @@ public class AuthService {
 
     private final UserJpaRepository userJpaRepository;
     private final JwtProvider jwtProvider;
-    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-
 
     public Long signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
@@ -44,12 +40,13 @@ public class AuthService {
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
 
-        String accessToken = "testAccessToken";
-        String refreshToken = "testRefreshToken";
-        TokenResponseDto tokenResponseDto = jwtProvider.createTokenDto(accessToken, refreshToken);
+        String accessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
+        String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(),user.getRoles());
 
-//        refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), tokenResponseDto.getRefreshToken()));
-
-        return tokenResponseDto;
+        return TokenResponseDto.builder()
+                .grantType("bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

@@ -29,29 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = jwtProvider.resolveToken(request);
-        try {
-            if (StringUtils.isNotEmpty(jwt) && jwtProvider.validateToken(jwt)) {
-                Authentication authentication = jwtProvider.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (SecurityException | MalformedJwtException e) {
-            request.setAttribute("exception", ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getCode());
-        } catch (ExpiredJwtException e) {
-            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode());
-        } catch (UnsupportedJwtException e) {
-            request.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN_EXCEPTION.getCode());
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("exception", ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getCode());
-        } catch (Exception e) {
-            log.error("================================================");
-            log.error("JwtFilter - doFilterInternal() 오류발생");
-            log.error("token : {}", jwt);
-            log.error("Exception Message : {}", e.getMessage());
-            log.error("Exception StackTrace : {");
-            e.printStackTrace();
-            log.error("}");
-            log.error("================================================");
-            request.setAttribute("exception", ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+        if (StringUtils.isNotEmpty(jwt) && jwtProvider.validateToken(request, jwt)) {
+            Authentication authentication = jwtProvider.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
