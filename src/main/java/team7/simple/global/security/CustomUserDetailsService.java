@@ -1,7 +1,5 @@
 package team7.simple.global.security;
 
-
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +14,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String memberPk) throws UsernameNotFoundException {
-        return userJpaRepository.findById(Long.parseLong(memberPk)).orElseThrow(CUserNotFoundException::new);
+    public UserDetails loadUserByUsername(String userAccount) throws UsernameNotFoundException {
+        return userJpaRepository.findByAccount(userAccount).orElseThrow(CUserNotFoundException::new);
     }
 }
