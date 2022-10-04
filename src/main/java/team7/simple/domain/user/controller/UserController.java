@@ -2,6 +2,7 @@ package team7.simple.domain.user.controller;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +29,7 @@ public class UserController {
                     required = true, dataType = "String", paramType = "header"
             )
     })
+    @ApiOperation(value = "회원 비밀번호 변경")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/open/user/password")
     public CommonResult changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal User user){

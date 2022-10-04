@@ -7,16 +7,10 @@ import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
+import team7.simple.infra.hls.dto.HlsRequestDto;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,14 +19,17 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class HlsService {
 
-    private final Environment env;
+    @Value("${hls.ffmpeg}")
+    private String FFMPEG_PATH;
+
+    @Value("${hls.ffprobe}")
+    private String FFPROBE_PATH;
 
     @Value("${hls.media.upload_dir}")
     private String UPLOAD_DIR;
 
-    public void convertToM3u8(String fileName){
-        final String FFMPEG = env.getProperty("hls.ffmpeg");
-        final String FFPROBE = env.getProperty("hls.ffprobe");
+    public void convertToM3u8(HlsRequestDto hlsRequestDto) {
+        String fileName = hlsRequestDto.getFileName();
         final String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".")); //path/이름
         String inputPath = UPLOAD_DIR + "/" + fileName; // .mp4 ( 경로 : /upload_dir_path/name.mp4
         String outputPath = UPLOAD_DIR + "/" + onlyFileName; // .m3u8
@@ -42,8 +39,8 @@ public class HlsService {
         }
 
         try {
-            FFmpeg ffmpeg = new FFmpeg(FFMPEG);
-            FFprobe ffprobe = new FFprobe(FFPROBE);
+            FFmpeg ffmpeg = new FFmpeg(FFMPEG_PATH);
+            FFprobe ffprobe = new FFprobe(FFPROBE_PATH);
             FFmpegProbeResult probeResult = ffprobe.probe(inputPath);
 
             // TS 파일 생성
@@ -71,12 +68,13 @@ public class HlsService {
                     .done();
             FFmpegExecutor executorThumbNail = new FFmpegExecutor(ffmpeg, ffprobe);
             executorThumbNail.createJob(builderThumbNail).run();
-        }catch(IOException e){
+        } catch (IOException e) {
             log.info(e.getMessage());
         }
     }
 
-    public String getM3u8Url(String fileName) {
+    public String getM3u8Url(HlsRequestDto hlsRequestDto) {
+        String fileName = hlsRequestDto.getFileName();
         return UPLOAD_DIR + "/" + fileName + "/" + fileName + ".m3u8";
     }
 }
