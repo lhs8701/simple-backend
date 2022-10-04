@@ -29,7 +29,7 @@ public class ExceptionAdvice {
      * 잘못된 형식일 때 발생시키는 예외
      */
     @ExceptionHandler(CIllegalArgumentException.class)
-    protected CommonResult illegalArgumentException(CIllegalArgumentException e) {
+    protected CommonResult handle(CIllegalArgumentException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -40,7 +40,7 @@ public class ExceptionAdvice {
      * Security - 권한이 없는 리소스를 요청한 경우 발생시키는 예외
      */
     @ExceptionHandler(CAccessDeniedException.class)
-    protected CommonResult accessDeniedException(CAccessDeniedException e) {
+    protected CommonResult handle(CAccessDeniedException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -49,7 +49,7 @@ public class ExceptionAdvice {
      * Security - JWT 서명이 잘못되었을 때 발생시키는 예외
      */
     @ExceptionHandler(CWrongTypeTokenException.class)
-    protected CommonResult wrongTypeTokenException(CWrongTypeTokenException e) {
+    protected CommonResult handle(CWrongTypeTokenException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -57,7 +57,7 @@ public class ExceptionAdvice {
      * Security - 토큰이 만료되었을 때 발생시키는 예외
      */
     @ExceptionHandler(CExpiredTokenException.class)
-    protected CommonResult expiredTokenException(CExpiredTokenException e) {
+    protected CommonResult handle(CExpiredTokenException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -65,7 +65,16 @@ public class ExceptionAdvice {
      * Security - 지원하지 않는 토큰일 때 발생시키는 예외
      */
     @ExceptionHandler(CUnsupportedTokenException.class)
-    protected CommonResult unsupportedTokenException(CUnsupportedTokenException e) {
+    protected CommonResult handle(CUnsupportedTokenException e) {
+        return responseService.getFailResult
+                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    }
+
+    /**
+     * 리프레시 토큰이 불일치할 경우 발생시키는 예외
+     */
+    @ExceptionHandler(CWrongRefreshTokenException.class)
+    protected CommonResult handle(CWrongRefreshTokenException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -74,7 +83,7 @@ public class ExceptionAdvice {
      * 잘못된 접근시 발생시키는 예외
      */
     @ExceptionHandler(CWrongApproachException.class)
-    protected CommonResult wrongApproachException(CWrongApproachException e) {
+    protected CommonResult handle(CWrongApproachException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -83,7 +92,7 @@ public class ExceptionAdvice {
      * 해당 유저를 찾을 수 없을 경우 발생시키는 예외
      */
     @ExceptionHandler(CUserNotFoundException.class)
-    protected CommonResult userNotFoundException(CUserNotFoundException e) {
+    protected CommonResult handle(CUserNotFoundException e) {
         return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
 
@@ -91,7 +100,7 @@ public class ExceptionAdvice {
      * 패스워드가 불일치할 경우 발생시키는 예외
      */
     @ExceptionHandler(CWrongPasswordException.class)
-    protected CommonResult wrongPasswordException(CWrongPasswordException e) {
+    protected CommonResult handle(CWrongPasswordException e) {
         return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
 
@@ -99,7 +108,7 @@ public class ExceptionAdvice {
      * 해당 강좌를 찾을 수 없을 경우 발생시키는 예외
      */
     @ExceptionHandler(CCourseNotFoundException.class)
-    protected CommonResult courseNotFoundException(CCourseNotFoundException e) {
+    protected CommonResult handle(CCourseNotFoundException e) {
         return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
 
@@ -107,7 +116,7 @@ public class ExceptionAdvice {
      * refresh token이 잘못되었을 경우 발생시키는 예외
      */
     @ExceptionHandler(CRefreshTokenInvalidException.class)
-    protected CommonResult refreshTokenException(CRefreshTokenInvalidException e) {
+    protected CommonResult handle(CRefreshTokenInvalidException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -116,7 +125,7 @@ public class ExceptionAdvice {
      * 리프레쉬 토큰이 만료되었을 경우 발생시키는 예외
      */
     @ExceptionHandler(CRefreshTokenExpiredException.class)
-    protected CommonResult refreshTokenExpiredException(CRefreshTokenExpiredException e) {
+    protected CommonResult handle(CRefreshTokenExpiredException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
@@ -125,10 +134,8 @@ public class ExceptionAdvice {
      * 해당 계정이 이미 가입되어 있는 경우 발생시키는 예외
      */
     @ExceptionHandler(CUserExistException.class)
-    protected CommonResult userExistException(CUserExistException e) {
+    protected CommonResult handle(CUserExistException e) {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
-
-
 }

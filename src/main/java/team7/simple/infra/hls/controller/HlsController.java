@@ -17,7 +17,6 @@ public class HlsController {
     private final HlsService hlsService;
     private final ResponseService responseService;
 
-
     /* m3u8 파일 경로 반환 */
     @PreAuthorize("permitAll()")
     @GetMapping("front/hls/{fileName}")

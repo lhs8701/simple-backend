@@ -101,6 +101,10 @@ public class JwtProvider {
     public boolean validateToken(HttpServletRequest request, String jwt) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(jwt);
+            if (logoutAccessTokenRedisRepository.existsById(jwt)) {
+                request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode());
+                return false;
+            }
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             request.setAttribute("exception", ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getCode());
@@ -121,7 +125,6 @@ public class JwtProvider {
             log.error("================================================");
             request.setAttribute("exception", ErrorCode.INTERNAL_SERVER_ERROR.getCode());
         }
-
         return false;
     }
 }
