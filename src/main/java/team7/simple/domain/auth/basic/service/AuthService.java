@@ -12,14 +12,18 @@ import team7.simple.domain.auth.basic.dto.LoginRequestDto;
 import team7.simple.domain.auth.basic.dto.SignupRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
+import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.entity.LogoutAccessToken;
 import team7.simple.domain.auth.jwt.entity.RefreshToken;
+import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.RefreshTokenRedisRepository;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,6 +37,7 @@ public class AuthService {
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
+    private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
     public Long signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
@@ -46,6 +51,12 @@ public class AuthService {
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
+
+        /* 중복 로그인 방지 */
+        ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
+        if (activeAccessToken != null){
+            // 해당 유저에게 알림
+        }
 
         String accessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
         String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(),user.getRoles());

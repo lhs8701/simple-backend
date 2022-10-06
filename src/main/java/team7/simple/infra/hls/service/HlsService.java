@@ -30,6 +30,7 @@ public class HlsService {
 
     public void convertToM3u8(HlsRequestDto hlsRequestDto) {
         String fileName = hlsRequestDto.getFileName();
+        log.info(fileName);
         final String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".")); //path/이름
         String inputPath = UPLOAD_DIR + "/" + fileName; // .mp4 ( 경로 : /upload_dir_path/name.mp4
         String outputPath = UPLOAD_DIR + "/" + onlyFileName; // .m3u8
