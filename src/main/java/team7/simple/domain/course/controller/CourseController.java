@@ -7,14 +7,16 @@ import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseResponseDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.service.CourseService;
+import team7.simple.domain.unit.dto.UnitResponseDto;
+import team7.simple.domain.unit.entity.Unit;
 import team7.simple.global.common.response.dto.CommonResult;
+import team7.simple.global.common.response.dto.ListResult;
 import team7.simple.global.common.response.dto.SingleResult;
 import team7.simple.global.common.response.service.ResponseService;
 
 import javax.validation.Valid;
 
 @RestController
-//@RequestMapping("/open/course")
 @RequiredArgsConstructor
 public class CourseController {
 
@@ -41,6 +43,11 @@ public class CourseController {
     @PatchMapping(value = "/open/course/{courseId}")
     public SingleResult<Long> update(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
         return responseService.getSingleResult(courseService.update(courseId, courseUpdateParam));
+    }
+
+    @GetMapping("/open/course/{courseId}/unit")
+    public ListResult<UnitResponseDto> getUnit(@PathVariable Long courseId) {
+        return responseService.getListResult(courseService.getUnitList(courseId));
     }
 
 
