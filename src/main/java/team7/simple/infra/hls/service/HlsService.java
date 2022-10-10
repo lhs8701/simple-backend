@@ -28,9 +28,7 @@ public class HlsService {
     @Value("${hls.media.upload_dir}")
     private String UPLOAD_DIR;
 
-    public void convertToM3u8(HlsRequestDto hlsRequestDto) {
-        String fileName = hlsRequestDto.getFileName();
-        log.info(fileName);
+    public void convertToM3u8(String fileName) {
         final String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".")); //path/이름
         String inputPath = UPLOAD_DIR + "/" + fileName; // .mp4 ( 경로 : /upload_dir_path/name.mp4
         String outputPath = UPLOAD_DIR + "/" + onlyFileName; // .m3u8
@@ -52,7 +50,7 @@ public class HlsService {
                     .addExtraArgs("-profile:v", "baseline") //
                     .addExtraArgs("-level", "3.0") //
                     .addExtraArgs("-start_number", "0") //
-                    .addExtraArgs("-hls_time", "10") //
+                    .addExtraArgs("-hls_time", "1") //
                     .addExtraArgs("-hls_list_size", "0") //
                     .addExtraArgs("-f", "hls") //
                     .done();
@@ -60,22 +58,22 @@ public class HlsService {
             executor.createJob(builder).run();
 
             // 이미지 파일 생성
-            FFmpegBuilder builderThumbNail = new FFmpegBuilder()
-                    .overrideOutputFiles(true) // 오버라이드 여부
-                    .setInput(inputPath) // 동영상파일
-                    .addExtraArgs("-ss", "00:00:03") // 썸네일 추출 시작점
-                    .addOutput(UPLOAD_DIR + "/" + onlyFileName + ".png") // 썸네일 경로 : /upload_dir_path/name.png
-                    .setFrames(1) // 프레임 수
-                    .done();
-            FFmpegExecutor executorThumbNail = new FFmpegExecutor(ffmpeg, ffprobe);
-            executorThumbNail.createJob(builderThumbNail).run();
+//            FFmpegBuilder builderThumbNail = new FFmpegBuilder()
+//                    .overrideOutputFiles(true) // 오버라이드 여부
+//                    .setInput(inputPath) // 동영상파일
+//                    .addExtraArgs("-ss", "00:00:03") // 썸네일 추출 시작점
+//                    .addOutput(UPLOAD_DIR + "/" + onlyFileName + ".png") // 썸네일 경로 : /upload_dir_path/name.png
+//                    .setFrames(1) // 프레임 수
+//                    .done();
+//            FFmpegExecutor executorThumbNail = new FFmpegExecutor(ffmpeg, ffprobe);
+//            executorThumbNail.createJob(builderThumbNail).run();
         } catch (IOException e) {
             log.info(e.getMessage());
         }
     }
 
-    public String getM3u8Url(HlsRequestDto hlsRequestDto) {
-        String fileName = hlsRequestDto.getFileName();
-        return UPLOAD_DIR + "/" + fileName + "/" + fileName + ".m3u8";
+    public String getM3u8Url(String fileName) {
+        /* 파일 존재하는지 확인하는 로직 추가 */
+        return "/media" + "/" + fileName + "/" + fileName + ".m3u8";
     }
 }

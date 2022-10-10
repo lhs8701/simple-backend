@@ -113,6 +113,14 @@ public class ExceptionAdvice {
     }
 
     /**
+     * 로그인 충돌시 발생시키는 예외
+     */
+    @ExceptionHandler(CLoginConflictException.class)
+    protected CommonResult handle(CLoginConflictException e) {
+        return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    }
+
+    /**
      * refresh token이 잘못되었을 경우 발생시키는 예외
      */
     @ExceptionHandler(CRefreshTokenInvalidException.class)

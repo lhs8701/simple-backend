@@ -15,14 +15,11 @@ public class LogoutAccessToken {
     @Id
     private String accessToken;
 
-    private Long userId;
-
     @TimeToLive
     private Long expiration;
 
-    public LogoutAccessToken(String accessToken, Long userId, Long remainingMilliSeconds) {
+    public LogoutAccessToken(String accessToken, Long remainingMilliSeconds) {
         this.accessToken = accessToken;
-        this.userId = userId;
         this.expiration = remainingMilliSeconds / 1000;
     }
 }
