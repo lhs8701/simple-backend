@@ -11,6 +11,7 @@ import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.unit.dto.UnitResponseDto;
+import team7.simple.domain.unit.dto.UnitUpdateParam;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.unit.service.UnitService;
@@ -18,8 +19,10 @@ import team7.simple.domain.video.dto.VideoDto;
 import team7.simple.domain.video.entity.Video;
 import team7.simple.domain.video.service.VideoService;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
+import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -98,6 +101,28 @@ public class CourseService {
 
         // Course 안에 unitList에 있는 unit 가져오기
         // unitService.deleteUnit(unit.getFileUrl());
+
+        // unit은 unit대로 지우고 course 안에 unitList에서 unitId에 해당하는 참조만 삭제?
+    }
+
+    @Transactional
+    public Long updateUnit(Long courseId, UnitUpdateParam unitUpdateParam) {
+        Course course = courseJpaRepository.findById(courseId)
+                .orElseThrow(CCourseNotFoundException::new);
+
+        Long unitId = unitUpdateParam.getUnitId();
+
+        Unit unit = unitJpaRepository.findById(unitId)
+                .orElseThrow(CUnitNotFoundException::new);
+
+        unit.setTitle(unitUpdateParam.getTitle());
+
+        // 동영상을 patch?
+        // Course는 unit을 list로 가지고 있는데 course를 타고 들어가서 unit을 수정해야 하는지 고민
+        // unit을 수정하면 course가 가지고 있는거도 (참조) 자연스럽게 수정되는..?
+        //
+
+        return unitId;
     }
 
 

@@ -10,6 +10,7 @@ import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.unit.dto.UnitResponseDto;
+import team7.simple.domain.unit.dto.UnitUpdateParam;
 import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.dto.ListResult;
 import team7.simple.global.common.response.dto.SingleResult;
@@ -61,6 +62,11 @@ public class CourseController {
     public CommonResult deleteUnit(@PathVariable Long courseId, @PathVariable Long unitId) {
         courseService.deleteUnit(courseId, unitId);
         return responseService.getSuccessResult();
+    }
+
+    @PatchMapping("/open/course/{courseId}/unit/{unitId}")
+    public SingleResult<Long> updateUnit(@PathVariable Long courseId, @RequestBody @Valid UnitUpdateParam unitUpdateParam) {
+        return responseService.getSingleResult(courseService.updateUnit(courseId, unitUpdateParam));
     }
 
 }
