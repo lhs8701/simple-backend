@@ -36,7 +36,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
-
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
     public Long signup(SignupRequestDto signupRequestDto) {
@@ -103,6 +102,8 @@ public class AuthService {
         if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
             String newAccessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
             String newRefreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
+            activeAccessTokenRedisRepository.deleteById(existAccessToken);
+            activeAccessTokenRedisRepository.save(new ActiveAccessToken(newAccessToken, user.getUserId()));
             refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
             return TokenResponseDto.builder()
                     .grantType("bearer")
