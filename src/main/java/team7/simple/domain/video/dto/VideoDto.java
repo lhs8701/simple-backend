@@ -13,11 +13,12 @@ public class VideoDto {
     private String fileOriName;
     private String fileUrl;
 
-    public Video toEntity() {
+    public Video toEntity(String hlsFileUrl) {
         return Video.builder()
                 .fileName(this.fileName)
                 .fileOriName(this.fileOriName)
                 .fileUrl(this.fileUrl)
+                .hlsFileUrl(hlsFileUrl)
                 .build();
     }
 }

@@ -10,7 +10,6 @@ import team7.simple.domain.course.entity.Course;
 public class CourseRequestDto {
     @NotNull
     private String title;
-    @NotNull
     private String subtitle;
     @NotNull
     private Long userId;

@@ -20,6 +20,7 @@ public enum ErrorCode {
     COURSE_NOT_FOUND_EXCEPTION(-1009,"해당 강좌를 찾을 수 없습니다."),
     UNIT_NOT_FOUND_EXCEPTION(-1009,"해당 강의를 찾을 수 없습니다."),
 
+    FILE_NOT_FOUND_EXCEPTION(-1010, "해당 파일을 찾을 수 없습니다."),
     WRONG_REFRESH_TOKEN_EXCEPTION(-5000, "refresh 토큰이 잘못되었습니다"),
     WRONG_TYPE_TOKEN_EXCEPTION(-5001, "잘못된 Jwt 서명입니다."),
     EXPIRED_TOKEN_EXCEPTION(-5002, "만료된 토큰입니다."),
