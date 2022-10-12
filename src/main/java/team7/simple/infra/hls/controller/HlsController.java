@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.dto.SingleResult;
 import team7.simple.global.common.response.service.ResponseService;
-import team7.simple.infra.hls.dto.HlsRequestDto;
 import team7.simple.infra.hls.service.HlsService;
 
 @RestController
@@ -20,16 +19,16 @@ public class HlsController {
 
     @ApiOperation(value = "m3u8 파일로 변환")
     @PreAuthorize("permitAll()")
-    @PostMapping("front/hls")
-    public CommonResult convertToM3u8(@RequestBody HlsRequestDto hlsRequestDto){
-        hlsService.convertToM3u8(hlsRequestDto);
+    @PostMapping("front/hls/{fileName}")
+    public CommonResult convertToM3u8(@PathVariable("fileName") String fileName){
+        hlsService.convertToM3u8(fileName);
         return responseService.getSuccessResult();
     }
 
     @ApiOperation(value = "m3u8 파일 경로 반환")
     @PreAuthorize("permitAll()")
-    @GetMapping("front/hls")
-    public SingleResult<String> videoHlsM3U8(@RequestBody HlsRequestDto hlsRequestDto) {
-        return responseService.getSingleResult(hlsService.getM3u8Url(hlsRequestDto));
+    @GetMapping("front/hls/{fileName}")
+    public SingleResult<String> videoHlsM3U8(@PathVariable("fileName") String fileName) {
+        return responseService.getSingleResult(hlsService.getM3u8Url(fileName));
     }
 }

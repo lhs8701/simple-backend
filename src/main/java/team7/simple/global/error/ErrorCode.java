@@ -14,6 +14,8 @@ public enum ErrorCode {
     AUTHENTICATION_ENTRY_POINT_EXCEPTION(-1002, "해당 리소스에 접근하기 위한 권한이 없습니다."), //정상적으로 Jwt이 제대로 오지 않은 경우
     ACCESS_DENIED(-1003, "해당 리소스에 접근할 수 없는 권한입니다."),
 
+    LOGIN_CONFLICT_EXCEPTION(-1004, "로그인 충돌입니다."),
+
     USER_EXIST_EXCEPTION(-1006, "이미 가입된 계정입니다. 로그인을 해주세요"),
     COURSE_NOT_FOUND_EXCEPTION(-1009,"해당 강좌를 찾을 수 없습니다."),
 

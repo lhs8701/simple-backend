@@ -1,9 +1,9 @@
 package team7.simple.domain.auth.basic.service;
 
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,14 +12,18 @@ import team7.simple.domain.auth.basic.dto.LoginRequestDto;
 import team7.simple.domain.auth.basic.dto.SignupRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
+import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.entity.LogoutAccessToken;
 import team7.simple.domain.auth.jwt.entity.RefreshToken;
+import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.RefreshTokenRedisRepository;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,7 +36,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
-
+    private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
     public Long signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
@@ -41,16 +45,28 @@ public class AuthService {
         return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getUserId();
     }
 
-    public TokenResponseDto login(LoginRequestDto loginRequestDto){
+    public TokenResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userJpaRepository.findByAccount(loginRequestDto.getAccount()).orElseThrow(CUserNotFoundException::new);
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
 
+        /* 중복 로그인 방지 */
+        ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
+        if (activeAccessToken != null){
+            if (loginRequestDto.isForced()) {
+                String prevAccessToken = activeAccessToken.getAccessToken();
+                logout(prevAccessToken, user);
+            } else {
+                throw new CLoginConflictException();
+            }
+        }
+
         String accessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
-        String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(),user.getRoles());
+        String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
 
         refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), refreshToken));
+        activeAccessTokenRedisRepository.save(new ActiveAccessToken(accessToken, user.getUserId()));
 
         return TokenResponseDto.builder()
                 .grantType("bearer")
@@ -59,28 +75,26 @@ public class AuthService {
                 .build();
     }
 
-    public void logout(String accessToken) {
-        Authentication authentication = jwtProvider.getAuthentication(accessToken);
-        User user = (User) authentication.getPrincipal();
+    public void logout(String accessToken, User user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
         refreshTokenRedisRepository.deleteById(user.getUserId());
-        logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, user.getUserId(), remainMilliSeconds));
+        activeAccessTokenRedisRepository.deleteById(accessToken);
+        logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, remainMilliSeconds));
     }
 
     public void withdrawal(String accessToken, User user) {
-        long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
-
-        refreshTokenRedisRepository.deleteById(user.getUserId());
-        logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, user.getUserId(), remainMilliSeconds));
+        logout(accessToken, user);
         userJpaRepository.deleteById(user.getUserId());
     }
 
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
 
         String existAccessToken = tokenRequestDto.getAccessToken();
+        jwtProvider.validateTokenForReissue(existAccessToken);
+
         Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
-        User user = (User)authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
         String existRefreshToken = tokenRequestDto.getRefreshToken();
         RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getUserId()).orElseThrow(CRefreshTokenExpiredException::new);
@@ -88,14 +102,15 @@ public class AuthService {
         if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
             String newAccessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
             String newRefreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
+            activeAccessTokenRedisRepository.deleteById(existAccessToken);
+            activeAccessTokenRedisRepository.save(new ActiveAccessToken(newAccessToken, user.getUserId()));
             refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
             return TokenResponseDto.builder()
                     .grantType("bearer")
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .build();
-        }
-        else {
+        } else {
             throw new CWrongRefreshTokenException();
         }
     }

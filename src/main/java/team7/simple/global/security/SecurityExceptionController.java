@@ -16,28 +16,28 @@ import team7.simple.global.error.advice.exception.*;
 public class SecurityExceptionController {
 
     @GetMapping("/entrypoint")
-    public CommonResult entrypointException() {
+    public void entrypointException() {
         throw new CAuthenticationEntryPointException();
     }
     @GetMapping("/entrypoint/illegal")
-    public CommonResult illegalArgumentException() {
+    public void illegalArgumentException() {
         throw new CIllegalArgumentException();
     }
     @GetMapping("/entrypoint/wrong")
-    public CommonResult wrongTypeTokenException() {
+    public void wrongTypeTokenException() {
         throw new CWrongTypeTokenException();
     }
     @GetMapping("/entrypoint/expired")
-    public CommonResult expiredTokenException() {
+    public void expiredTokenException() {
         throw new CExpiredTokenException();
     }
     @GetMapping("/entrypoint/unsupported")
-    public CommonResult unsupportedTokenException() {
+    public void unsupportedTokenException() {
         throw new CUnsupportedTokenException();
     }
 
     @GetMapping("/accessDenied")
-    public CommonResult accessDeniedException() {
+    public void accessDeniedException() {
         throw new CAccessDeniedException();
     }
 }

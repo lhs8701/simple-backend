@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class LoginRequestDto {
     String account;
     String password;
+    boolean forced;
 }

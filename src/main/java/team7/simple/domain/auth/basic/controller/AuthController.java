@@ -53,8 +53,8 @@ public class AuthController {
     })
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout", headers = "X-AUTH-TOKEN")
-    public CommonResult logout(@RequestHeader("X-AUTH-TOKEN") String accessToken) {
-        authService.logout(accessToken);
+    public CommonResult logout(@RequestHeader("X-AUTH-TOKEN") String accessToken, @AuthenticationPrincipal User user) {
+        authService.logout(accessToken, user);
         return responseService.getSuccessResult();
     }
 
