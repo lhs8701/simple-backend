@@ -14,7 +14,7 @@ public class CourseResponseDto {
     private Integer attendeeCount;
 
     public CourseResponseDto(Course course) {
-        this.courseId = course.getId();
+        this.courseId = course.getCourseId();
         this.title = course.getTitle();
         this.subtitle = course.getSubtitle();
 
