@@ -2,6 +2,7 @@ package team7.simple.domain.unit.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.video.entity.Video;
 
@@ -16,11 +17,12 @@ public class UnitRequestDto {
     @NotNull
     private String title;
 
-    public Unit toEntity(Video video) {
+    public Unit toEntity(Video video, Course course) {
         return Unit.builder()
                 .title(this.title)
                 .mediaUrl(video.getFileUrl())
                 .video(video)
+                .course(course)
                 .build();
     }
 }

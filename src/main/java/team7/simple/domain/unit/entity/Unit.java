@@ -1,6 +1,8 @@
 package team7.simple.domain.unit.entity;
 
 import lombok.*;
+import org.hibernate.mapping.Join;
+import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.video.entity.Video;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Setter
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Unit {
 
     @Id
@@ -16,15 +20,12 @@ public class Unit {
     private Long unitId;
     private String title;
     private String mediaUrl;
+
+    @ManyToOne
+    @JoinColumn
+    private Course course;
+
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn
     private Video video;
-
-    @Builder
-    public Unit(Long unitId, String title, String mediaUrl, Video video) {
-        this.unitId = unitId;
-        this.title = title;
-        this.mediaUrl = mediaUrl;
-        this.video = video;
-
-    }
 }

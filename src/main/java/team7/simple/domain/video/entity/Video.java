@@ -22,4 +22,11 @@ public class Video {
     private String fileName;
     private String fileOriName;
     private String fileUrl;
+
+    /*임시*/
+    public Video(String fileName, String fileOriName, String fileUrl){
+        this.fileName = fileName;
+        this.fileOriName = fileOriName;
+        this.fileUrl = fileUrl;
+    }
 }

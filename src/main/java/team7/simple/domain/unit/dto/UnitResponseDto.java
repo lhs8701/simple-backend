@@ -1,11 +1,13 @@
 package team7.simple.domain.unit.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import team7.simple.domain.unit.entity.Unit;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class UnitResponseDto {
 
     private Long unitId;

@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
 
     @Id
@@ -19,15 +21,6 @@ public class Course {
     private String title;
     private String subtitle;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "Course", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Unit> unitList = new ArrayList<Unit>();
-
-    @Builder
-    public Course(Long id, String title, String subtitle) {
-        this.courseId = id;
-        this.title = title;
-        this.subtitle = subtitle;
-
-    }
 }
