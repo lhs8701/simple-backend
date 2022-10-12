@@ -23,6 +23,8 @@ public class Video {
     private String fileOriName;
     private String fileUrl;
 
+    private String hlsFileUrl;
+
     /*임시*/
     public Video(String fileName, String fileOriName, String fileUrl){
         this.fileName = fileName;

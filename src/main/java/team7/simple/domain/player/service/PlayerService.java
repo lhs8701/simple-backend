@@ -24,5 +24,6 @@ public class PlayerService {
     }
 
     public void exit(ExitRequestDto exitRequestDto) {
+
     }
 }

@@ -146,4 +146,13 @@ public class ExceptionAdvice {
         return responseService.getFailResult
                 (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
     }
+
+    /***
+     * 파일을 찾을 수 없을 경우
+     */
+    @ExceptionHandler(CFileNotFoundException.class)
+    protected CommonResult handle(CFileNotFoundException e) {
+        return responseService.getFailResult
+                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    }
 }

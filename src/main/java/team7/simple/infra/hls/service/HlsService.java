@@ -8,15 +8,23 @@ import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import team7.simple.domain.video.dto.VideoDto;
+import team7.simple.domain.video.entity.Video;
+import team7.simple.domain.video.repository.VideoJpaRepository;
+import team7.simple.global.error.advice.exception.CFileNotFoundException;
 import team7.simple.infra.hls.dto.HlsRequestDto;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class HlsService {
 
     @Value("${hls.ffmpeg}")
@@ -25,14 +33,30 @@ public class HlsService {
     @Value("${hls.ffprobe}")
     private String FFPROBE_PATH;
 
-    @Value("${hls.media.upload_dir}")
-    private String UPLOAD_DIR;
+    @Value("${server.root-path}")
+    private String ROOT_PATH;
 
-    public void convertToM3u8(String fileName) {
-        final String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".")); //path/이름
-        String inputPath = UPLOAD_DIR + "/" + fileName; // .mp4 ( 경로 : /upload_dir_path/name.mp4
-        String outputPath = UPLOAD_DIR + "/" + onlyFileName; // .m3u8
-        File tsPath = new File(outputPath);
+    private final VideoJpaRepository videoJpaRepository;
+
+    private final Environment env;
+
+    public String convertToM3u8(VideoDto videoDto) {
+        String fileName = videoDto.getFileName();
+        String onlyFileName = fileName.substring(0, fileName.lastIndexOf("."));
+        String fileUrl = videoDto.getFileUrl();
+        String directoryPath = fileUrl.substring(0, fileUrl.lastIndexOf("/"));
+
+        String inputPath = fileUrl; // .mp4 ( 경로 : /upload_dir_path/name.mp4
+        String outputPath = directoryPath + "/" + onlyFileName + "-m3u8" + "/" + onlyFileName + ".m3u8"; // .m3u8
+
+        log.info("fileName : {}", fileName);
+        log.info("onlyFileName : {}", onlyFileName);
+        log.info("fileUrl : {}", fileUrl);
+        log.info("fileDir : {}", directoryPath);
+        log.info("inputPath : {}", inputPath);
+        log.info("outputPath : {}", outputPath);
+
+        File tsPath = new File(directoryPath + "/" + onlyFileName + "-m3u8");
         if (!tsPath.exists()) {
             tsPath.mkdir();
         }
@@ -46,7 +70,7 @@ public class HlsService {
             FFmpegBuilder builder = new FFmpegBuilder()
                     //.overrideOutputFiles(true) // 오버라이드 여부
                     .setInput(inputPath) // 동영상파일 (inputPath)
-                    .addOutput(outputPath + "/" + onlyFileName + ".m3u8") // 저장 경로 : /upload_dir_path/name/name.m3u8
+                    .addOutput(outputPath) // 저장 경로 : /upload_dir_path/name/name.m3u8
                     .addExtraArgs("-profile:v", "baseline") //
                     .addExtraArgs("-level", "3.0") //
                     .addExtraArgs("-start_number", "0") //
@@ -56,24 +80,21 @@ public class HlsService {
                     .done();
             FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
             executor.createJob(builder).run();
-
-            // 이미지 파일 생성
-//            FFmpegBuilder builderThumbNail = new FFmpegBuilder()
-//                    .overrideOutputFiles(true) // 오버라이드 여부
-//                    .setInput(inputPath) // 동영상파일
-//                    .addExtraArgs("-ss", "00:00:03") // 썸네일 추출 시작점
-//                    .addOutput(UPLOAD_DIR + "/" + onlyFileName + ".png") // 썸네일 경로 : /upload_dir_path/name.png
-//                    .setFrames(1) // 프레임 수
-//                    .done();
-//            FFmpegExecutor executorThumbNail = new FFmpegExecutor(ffmpeg, ffprobe);
-//            executorThumbNail.createJob(builderThumbNail).run();
         } catch (IOException e) {
             log.info(e.getMessage());
         }
+        return outputPath.substring(ROOT_PATH.length());
     }
 
-    public String getM3u8Url(String fileName) {
+    public String getHlsFileUrl(Video video) {
         /* 파일 존재하는지 확인하는 로직 추가 */
-        return "/media" + "/" + fileName + "/" + fileName + ".m3u8";
+        String url = ROOT_PATH + video.getHlsFileUrl();
+
+        File file = new File(url);
+        if (!file.exists()) {
+            throw new CFileNotFoundException();
+        }
+
+        return video.getHlsFileUrl();
     }
 }

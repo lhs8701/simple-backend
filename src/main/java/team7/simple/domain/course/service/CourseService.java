@@ -45,7 +45,6 @@ public class CourseService {
     }
 
 
-
     @Transactional
     public void deleteCourse(Long courseId) {
         Course course = courseJpaRepository.findById(courseId)
