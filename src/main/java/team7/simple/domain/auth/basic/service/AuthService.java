@@ -51,22 +51,10 @@ public class AuthService {
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword()))
             throw new CWrongPasswordException();
 
-        /* 중복 로그인 방지 */
-        ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
-        if (activeAccessToken != null){
-            if (loginRequestDto.isForced()) {
-                String prevAccessToken = activeAccessToken.getAccessToken();
-                logout(prevAccessToken, user);
-            } else {
-                throw new CLoginConflictException();
-            }
-        }
-
         String accessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
         String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
 
         refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), refreshToken));
-        activeAccessTokenRedisRepository.save(new ActiveAccessToken(accessToken, user.getUserId()));
 
         return TokenResponseDto.builder()
                 .grantType("bearer")
@@ -79,7 +67,6 @@ public class AuthService {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
         refreshTokenRedisRepository.deleteById(user.getUserId());
-        activeAccessTokenRedisRepository.deleteById(accessToken);
         logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, remainMilliSeconds));
     }
 
@@ -91,19 +78,24 @@ public class AuthService {
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
 
         String existAccessToken = tokenRequestDto.getAccessToken();
+        String existRefreshToken = tokenRequestDto.getRefreshToken();
+
         jwtProvider.validateTokenForReissue(existAccessToken);
 
         Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
         User user = (User) authentication.getPrincipal();
 
-        String existRefreshToken = tokenRequestDto.getRefreshToken();
         RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getUserId()).orElseThrow(CRefreshTokenExpiredException::new);
 
         if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
             String newAccessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
             String newRefreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
-            activeAccessTokenRedisRepository.deleteById(existAccessToken);
-            activeAccessTokenRedisRepository.save(new ActiveAccessToken(newAccessToken, user.getUserId()));
+
+            ActiveAccessToken finded = activeAccessTokenRedisRepository.findById(existAccessToken).orElse(null);
+            if (finded != null){
+                activeAccessTokenRedisRepository.deleteById(existAccessToken);
+                activeAccessTokenRedisRepository.save(new ActiveAccessToken(newAccessToken, user.getUserId()));
+            }
             refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
             return TokenResponseDto.builder()
                     .grantType("bearer")
