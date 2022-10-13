@@ -2,6 +2,7 @@ package team7.simple.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor

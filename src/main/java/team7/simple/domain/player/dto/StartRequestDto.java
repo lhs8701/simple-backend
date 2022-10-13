@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StartRequestDto {
-    Long userId;
-    Long courseId;
     Long unitId;
     boolean forced;
 }

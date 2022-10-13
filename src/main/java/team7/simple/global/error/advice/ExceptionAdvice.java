@@ -2,10 +2,13 @@ package team7.simple.global.error.advice;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.service.ResponseService;
+import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.*;
 
 
@@ -20,139 +23,144 @@ public class ExceptionAdvice {
     /**
      * 공통 서버 에러
      */
-//    @ExceptionHandler(Exception.class)
-//    protected CommonResult defaultException(Exception e) {
-//        return responseService.getFailResult(ErrorCode.INTERNAL_SERVER_ERROR.getCode(), ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
-//    }
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<?> defaultException(Exception e) {
+        log.info(e.getMessage());
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     /**
      * 잘못된 형식일 때 발생시키는 예외
      */
     @ExceptionHandler(CIllegalArgumentException.class)
-    protected CommonResult handle(CIllegalArgumentException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CIllegalArgumentException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
-
 
     /**
      * Security - 권한이 없는 리소스를 요청한 경우 발생시키는 예외
      */
     @ExceptionHandler(CAccessDeniedException.class)
-    protected CommonResult handle(CAccessDeniedException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CAccessDeniedException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     /**
      * Security - JWT 서명이 잘못되었을 때 발생시키는 예외
      */
     @ExceptionHandler(CWrongTypeTokenException.class)
-    protected CommonResult handle(CWrongTypeTokenException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     /**
      * Security - 토큰이 만료되었을 때 발생시키는 예외
      */
     @ExceptionHandler(CExpiredTokenException.class)
-    protected CommonResult handle(CExpiredTokenException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CExpiredTokenException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     /**
      * Security - 지원하지 않는 토큰일 때 발생시키는 예외
      */
     @ExceptionHandler(CUnsupportedTokenException.class)
-    protected CommonResult handle(CUnsupportedTokenException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
      * 리프레시 토큰이 불일치할 경우 발생시키는 예외
      */
     @ExceptionHandler(CWrongRefreshTokenException.class)
-    protected CommonResult handle(CWrongRefreshTokenException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CWrongRefreshTokenException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
      * 잘못된 접근시 발생시키는 예외
      */
     @ExceptionHandler(CWrongApproachException.class)
-    protected CommonResult handle(CWrongApproachException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CWrongApproachException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
      * 해당 유저를 찾을 수 없을 경우 발생시키는 예외
      */
     @ExceptionHandler(CUserNotFoundException.class)
-    protected CommonResult handle(CUserNotFoundException e) {
-        return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CUserNotFoundException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
      * 패스워드가 불일치할 경우 발생시키는 예외
      */
     @ExceptionHandler(CWrongPasswordException.class)
-    protected CommonResult handle(CWrongPasswordException e) {
-        return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CWrongPasswordException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
      * 해당 강좌를 찾을 수 없을 경우 발생시키는 예외
      */
     @ExceptionHandler(CCourseNotFoundException.class)
-    protected CommonResult handle(CCourseNotFoundException e) {
-        return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CCourseNotFoundException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
      * 로그인 충돌시 발생시키는 예외
      */
     @ExceptionHandler(CLoginConflictException.class)
-    protected CommonResult handle(CLoginConflictException e) {
-        return responseService.getFailResult(e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CLoginConflictException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     /**
      * refresh token이 잘못되었을 경우 발생시키는 예외
      */
     @ExceptionHandler(CRefreshTokenInvalidException.class)
-    protected CommonResult handle(CRefreshTokenInvalidException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CRefreshTokenInvalidException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
      * 리프레쉬 토큰이 만료되었을 경우 발생시키는 예외
      */
     @ExceptionHandler(CRefreshTokenExpiredException.class)
-    protected CommonResult handle(CRefreshTokenExpiredException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /***
      * 해당 계정이 이미 가입되어 있는 경우 발생시키는 예외
      */
     @ExceptionHandler(CUserExistException.class)
-    protected CommonResult handle(CUserExistException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CUserExistException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     /***
      * 파일을 찾을 수 없을 경우
      */
     @ExceptionHandler(CFileNotFoundException.class)
-    protected CommonResult handle(CFileNotFoundException e) {
-        return responseService.getFailResult
-                (e.getErrorCode().getCode(), e.getErrorCode().getMessage());
+    protected ResponseEntity<?> handle(CFileNotFoundException e) {
+        log.info(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

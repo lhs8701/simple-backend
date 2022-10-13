@@ -1,14 +1,14 @@
 package team7.simple.domain.unit;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.unit.dto.UnitResponseDto;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
 import team7.simple.domain.unit.service.UnitService;
-import team7.simple.global.common.response.dto.CommonResult;
-import team7.simple.global.common.response.dto.SingleResult;
 import team7.simple.global.common.response.service.ResponseService;
 
 import javax.validation.Valid;
@@ -17,34 +17,32 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UnitController {
     private final UnitService unitService;
-    private final ResponseService responseService;
 
     @PostMapping("open/course/unit")
-    public SingleResult<Long> uploadUnit(@RequestPart @Valid UnitRequestDto unitRequestDto, @RequestPart MultipartFile file) {
-        return responseService.getSingleResult(unitService.createUnit(unitRequestDto, file));
+    public ResponseEntity<?> uploadUnit(@RequestPart @Valid UnitRequestDto unitRequestDto, @RequestPart MultipartFile file) {
+        return new ResponseEntity<>(unitService.createUnit(unitRequestDto, file), HttpStatus.OK);
     }
 
     /*테스트용*/
     @PostMapping("open/course/unit/local")
-    public SingleResult<Long> uploadUnitLocal(@RequestBody @Valid UnitRequestDto unitRequestDto) {
-        return responseService.getSingleResult(unitService.createUnitLocal(unitRequestDto));
+    public ResponseEntity<?> uploadUnitLocal(@RequestBody @Valid UnitRequestDto unitRequestDto) {
+        return new ResponseEntity<>(unitService.createUnitLocal(unitRequestDto), HttpStatus.OK);
     }
 
 
     @PatchMapping("/open/course/unit/{unitId}")
-    public SingleResult<Long> updateUnit(@RequestBody @Valid UnitUpdateParam unitUpdateParam) {
-        return responseService.getSingleResult(unitService.updateUnit(unitUpdateParam));
+    public ResponseEntity<?> updateUnit(@RequestBody @Valid UnitUpdateParam unitUpdateParam) {
+        return new ResponseEntity<>(unitService.updateUnit(unitUpdateParam), HttpStatus.OK);
     }
 
     @DeleteMapping("/open/course/unit/{unitId}")
-    public CommonResult deleteUnit(@PathVariable Long unitId) {
+    public ResponseEntity<?> deleteUnit(@PathVariable Long unitId) {
         unitService.deleteUnit(unitId);
-        return responseService.getSuccessResult();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @GetMapping("/front/course/unit/{unitId}")
-    public SingleResult<UnitResponseDto> getUnitInfo(@PathVariable Long unitId){
-        return responseService.getSingleResult(unitService.getUnitInfo(unitId));
+    public ResponseEntity<?> getUnitInfo(@PathVariable Long unitId) {
+        return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
     }
 }

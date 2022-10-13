@@ -5,17 +5,15 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.JwtExpiration;
 import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
+import team7.simple.global.common.ConstValue;
 import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.CAuthenticationEntryPointException;
 import team7.simple.global.error.advice.exception.CExpiredTokenException;
@@ -37,6 +35,7 @@ public class JwtProvider {
     private final UserDetailsService userDetailsService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private String ROLES = "roles";
+
 
 
     private Key getSigningKey(String secretKey) {
@@ -97,7 +96,7 @@ public class JwtProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader(ConstValue.JWT_HEADER);
     }
 
     public boolean validateToken(HttpServletRequest request, String jwt) {
