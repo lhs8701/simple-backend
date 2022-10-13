@@ -25,7 +25,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> defaultException(Exception e) {
-        log.info(e.getMessage());
+        log.error(e.getMessage());
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -34,7 +34,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CIllegalArgumentException.class)
     protected ResponseEntity<?> handle(CIllegalArgumentException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -43,7 +43,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CAccessDeniedException.class)
     protected ResponseEntity<?> handle(CAccessDeniedException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
@@ -52,7 +52,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongTypeTokenException.class)
     protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -61,7 +61,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CExpiredTokenException.class)
     protected ResponseEntity<?> handle(CExpiredTokenException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -70,7 +70,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CUnsupportedTokenException.class)
     protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -79,7 +79,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongRefreshTokenException.class)
     protected ResponseEntity<?> handle(CWrongRefreshTokenException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -88,7 +88,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongApproachException.class)
     protected ResponseEntity<?> handle(CWrongApproachException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -97,7 +97,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CUserNotFoundException.class)
     protected ResponseEntity<?> handle(CUserNotFoundException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -106,7 +106,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongPasswordException.class)
     protected ResponseEntity<?> handle(CWrongPasswordException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -115,7 +115,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CCourseNotFoundException.class)
     protected ResponseEntity<?> handle(CCourseNotFoundException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -124,7 +124,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CLoginConflictException.class)
     protected ResponseEntity<?> handle(CLoginConflictException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
@@ -133,7 +133,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CRefreshTokenInvalidException.class)
     protected ResponseEntity<?> handle(CRefreshTokenInvalidException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -142,7 +142,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CRefreshTokenExpiredException.class)
     protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
@@ -151,7 +151,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CUserExistException.class)
     protected ResponseEntity<?> handle(CUserExistException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
@@ -160,7 +160,16 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CFileNotFoundException.class)
     protected ResponseEntity<?> handle(CFileNotFoundException e) {
-        log.info(e.getErrorCode().getMessage());
+        log.error(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /***
+     * 수강 중인 강의가 아닐 경우
+     */
+    @ExceptionHandler(CStudyNotFoundException.class)
+    protected ResponseEntity<?> handle(CStudyNotFoundException e) {
+        log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

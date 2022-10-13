@@ -32,4 +32,6 @@ public class UserController {
         userService.changePassword(user.getUserId(), passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }

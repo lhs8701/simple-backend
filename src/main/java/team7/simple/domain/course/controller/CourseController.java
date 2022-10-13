@@ -1,13 +1,22 @@
 package team7.simple.domain.course.controller;
 
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
+import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.service.CourseService;
+import team7.simple.domain.user.entity.User;
+import team7.simple.global.common.ConstValue;
 
 import javax.validation.Valid;
 
@@ -16,15 +25,31 @@ import javax.validation.Valid;
 public class CourseController {
 
     private final CourseService courseService;
-
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/course")
-    public ResponseEntity<?> uploadCourse(@Valid CourseRequestDto courseRequestDto) {
-        return new ResponseEntity<>(courseService.createCourse(courseRequestDto), HttpStatus.OK);
+    public ResponseEntity<?> createCourse(@Valid CourseRequestDto courseRequestDto, @AuthenticationPrincipal User instructor) {
+        return new ResponseEntity<>(courseService.createCourse(courseRequestDto, instructor), HttpStatus.OK);
+    }
+
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/open/course/register")
+    public ResponseEntity<?> register(@RequestBody RegisterCancelRequestDto registerCancelRequestDto, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(courseService.register(registerCancelRequestDto, user), HttpStatus.OK);
+    }
+
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/open/course/cancel")
+    public ResponseEntity<?> cancel(@RequestBody RegisterCancelRequestDto registerCancelRequestDto, @AuthenticationPrincipal User user) {
+        courseService.cancel(registerCancelRequestDto, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/open/course/{courseId}")
-    public ResponseEntity<?> getCourse(@PathVariable Long courseId) {
-        return new ResponseEntity<>(courseService.getCourse(courseId), HttpStatus.OK);
+    public ResponseEntity<?> getCourseInfo(@PathVariable Long courseId) {
+        return new ResponseEntity<>(courseService.getCourseInfo(courseId), HttpStatus.OK);
     }
 
     @PatchMapping(value = "/open/course/{courseId}")
