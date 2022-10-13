@@ -1,6 +1,7 @@
-package team7.simple.domain.course.entity;
+package team7.simple.domain.study.entity;
 
 import lombok.*;
+import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.user.entity.User;
 
 import javax.persistence.*;

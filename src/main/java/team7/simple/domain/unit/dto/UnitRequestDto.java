@@ -20,7 +20,6 @@ public class UnitRequestDto {
     public Unit toEntity(Video video, Course course) {
         return Unit.builder()
                 .title(this.title)
-                .mediaUrl(video.getFileUrl())
                 .video(video)
                 .course(course)
                 .build();

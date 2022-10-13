@@ -16,14 +16,15 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long videoId;
 
-    @OneToOne(mappedBy = "video", fetch = FetchType.LAZY)
-    private Unit unit;
-
     private String fileName;
     private String fileOriName;
     private String fileUrl;
 
     private String hlsFileUrl;
+
+    @OneToOne(mappedBy = "video", fetch = FetchType.LAZY)
+    private Unit unit;
+
 
     /*임시*/
     public Video(String fileName, String fileOriName, String fileUrl){

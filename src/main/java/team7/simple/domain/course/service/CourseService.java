@@ -8,12 +8,15 @@ import team7.simple.domain.course.dto.CourseResponseDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.course.entity.Study;
+import team7.simple.domain.rating.entity.Rating;
+import team7.simple.domain.rating.repository.RatingJpaRepository;
+import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.course.repository.StudyJpaRepository;
+import team7.simple.domain.study.repository.StudyJpaRepository;
 import team7.simple.domain.unit.dto.UnitResponseDto;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CStudyNotFoundException;
 
@@ -28,6 +31,9 @@ public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
     private final StudyJpaRepository studyJpaRepository;
 
+    private final RatingJpaRepository ratingJpaRepository;
+    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+
     @Transactional
     public Long createCourse(CourseRequestDto courseRequestDto, User instructor) {
         Course course = courseRequestDto.toEntity(instructor);
@@ -39,7 +45,22 @@ public class CourseService {
         Course course = courseJpaRepository.findById(courseId)
                 .orElseThrow(CCourseNotFoundException::new);
 
-        return new CourseResponseDto(course, getUnitList(course));
+        double rating = 0;
+        List<Rating> ratingList = ratingJpaRepository.findAllByCourse(course).orElse(null);
+        if (ratingList != null){
+            double sum = 0;
+            for (Rating elem : ratingList) {
+                sum += elem.getScore();
+            }
+            rating = sum / ratingList.size();
+        }
+
+        int attendeeCount = 0;
+        List<Study> studyList = studyJpaRepository.findAllByCourse(course).orElse(null);
+        if (studyList != null){
+            attendeeCount = studyList.size();
+        }
+        return new CourseResponseDto(course,attendeeCount, rating,  getUnitList(course));
     }
 
     @Transactional

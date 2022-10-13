@@ -1,6 +1,7 @@
 package team7.simple.domain.course.entity;
 
 import lombok.*;
+import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 
@@ -27,8 +28,8 @@ public class Course {
     private User instructor;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Study> studyList = new ArrayList<>();
+    private List<Unit> unitList = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Unit> unitList = new ArrayList<Unit>();
+    private List<Study> studyList = new ArrayList<>();
 }

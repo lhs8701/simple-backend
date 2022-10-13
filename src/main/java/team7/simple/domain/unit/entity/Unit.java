@@ -19,7 +19,6 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long unitId;
     private String title;
-    private String mediaUrl;
 
     @ManyToOne
     @JoinColumn

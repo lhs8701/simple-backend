@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.course.entity.Study;
+import team7.simple.domain.study.entity.Study;
 import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
