@@ -10,6 +10,7 @@ import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.rating.entity.Rating;
 import team7.simple.domain.rating.repository.RatingJpaRepository;
+import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.repository.StudyJpaRepository;
@@ -31,7 +32,7 @@ public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
     private final StudyJpaRepository studyJpaRepository;
 
-    private final RatingJpaRepository ratingJpaRepository;
+    private final RatingService ratingService;
     private final ViewingRecordJpaRepository viewingRecordJpaRepository;
 
     @Transactional
@@ -45,22 +46,13 @@ public class CourseService {
         Course course = courseJpaRepository.findById(courseId)
                 .orElseThrow(CCourseNotFoundException::new);
 
-        double rating = 0;
-        List<Rating> ratingList = ratingJpaRepository.findAllByCourse(course).orElse(null);
-        if (ratingList != null){
-            double sum = 0;
-            for (Rating elem : ratingList) {
-                sum += elem.getScore();
-            }
-            rating = sum / ratingList.size();
-        }
-
+        double rating = ratingService.getCourseAverageRatingScore(course);
         int attendeeCount = 0;
         List<Study> studyList = studyJpaRepository.findAllByCourse(course).orElse(null);
         if (studyList != null){
             attendeeCount = studyList.size();
         }
-        return new CourseResponseDto(course,attendeeCount, rating,  getUnitList(course));
+        return new CourseResponseDto(course, attendeeCount, rating, this.getUnitList(course));
     }
 
     @Transactional

@@ -172,4 +172,13 @@ public class ExceptionAdvice {
         log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    /***
+     * 등록된 평점이 없을 경우
+     */
+    @ExceptionHandler(CRatingNotFoundException.class)
+    protected ResponseEntity<?> handle(CRatingNotFoundException e) {
+        log.error(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
