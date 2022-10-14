@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import team7.simple.domain.question.dto.QuestionRequestDto;
+import team7.simple.domain.question.dto.QuestionUpdateParam;
+import team7.simple.domain.question.service.QuestionService;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.unit.dto.UnitResponseDto;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
@@ -17,6 +20,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UnitController {
     private final UnitService unitService;
+    private final QuestionService questionService;
 
     @PostMapping("open/course/unit")
     public ResponseEntity<?> uploadUnit(@RequestPart @Valid UnitRequestDto unitRequestDto, @RequestPart MultipartFile file) {
@@ -44,5 +48,26 @@ public class UnitController {
     @GetMapping("/front/course/unit/{unitId}")
     public ResponseEntity<?> getUnitInfo(@PathVariable Long unitId) {
         return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
+    }
+
+    @PostMapping("/front/course/unit/{unitId}/question")
+    public ResponseEntity<?> uploadQuestion(@PathVariable Long unitId, @Valid QuestionRequestDto questionRequestDto) {
+        return new ResponseEntity<>(questionService.createQuestion(unitId, questionRequestDto), HttpStatus.OK);
+    }
+
+    @PatchMapping("/front/course/unit/question/{questionId}")
+    public ResponseEntity<?> updateQuestion(@RequestBody @Valid QuestionUpdateParam questionUpdateParam) {
+        return new ResponseEntity<>(questionService.updateQuestion(questionUpdateParam), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/front/course/unit/question/{questionId}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
+        questionService.deleteQuestion(questionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/front/course/unit/question/{questionId}")
+    public ResponseEntity<?> getQuestionInfo(@PathVariable Long questionId) {
+        return new ResponseEntity<>(questionService.getQuestionInfo(questionId), HttpStatus.OK);
     }
 }

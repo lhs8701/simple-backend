@@ -22,5 +22,6 @@ public class Course {
     private String subtitle;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Unit> unitList = new ArrayList<Unit>();
 }
