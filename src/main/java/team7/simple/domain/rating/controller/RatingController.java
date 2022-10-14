@@ -1,6 +1,7 @@
 package team7.simple.domain.rating.controller;
 
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class RatingController {
     private final RatingService ratingService;
+    @ApiOperation(value = "FRONT - 강좌 평점 등록")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/front/course/rating")

@@ -2,6 +2,7 @@ package team7.simple.domain.player.controller;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,28 +28,31 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
+    @ApiOperation(value = "OPEN - 플레이어 실행")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/player/execute")
-    public ResponseEntity<?> executePlayer(@RequestHeader("X-AUTH-TOKEN") String accessToken, @RequestBody ExecuteRequestDto executeRequestDto) {
+    public ResponseEntity<?> executePlayer(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExecuteRequestDto executeRequestDto) {
         return new ResponseEntity<>(playerService.executePlayer(accessToken, executeRequestDto), HttpStatus.SEE_OTHER);
     }
 
+    @ApiOperation(value = "FRONT - 플레이어 시작")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/front/player/on")
-    public ResponseEntity<?> start(@RequestHeader("X-AUTH-TOKEN") String accessToken, @RequestBody StartRequestDto startRequestDto, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> start(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody StartRequestDto startRequestDto, @AuthenticationPrincipal User user) {
         playerService.start(accessToken, startRequestDto, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "FRONT - 플레이어 종료")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/front/player/off")
-    public ResponseEntity<?> exit(@RequestHeader("X-AUTH-TOKEN") String accessToken, @RequestBody ExitRequestDto exitRequestDto){
+    public ResponseEntity<?> exit(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExitRequestDto exitRequestDto) {
         playerService.exit(accessToken, exitRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
