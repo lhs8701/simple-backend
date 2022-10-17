@@ -4,23 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import team7.simple.domain.unit.entity.Unit;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class UnitResponseDto {
+@AllArgsConstructor
+public class UnitPlayResponseDto {
     private Long unitId;
     private String title;
-
     private String fileUrl;
-
-
-    public UnitResponseDto(Unit unit) {
-        this.unitId = unit.getUnitId();
-        this.title = unit.getTitle();
-    }
+    private String time;
 }

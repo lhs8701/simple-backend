@@ -34,7 +34,8 @@ public class PlayerController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/player/execute")
     public ResponseEntity<?> executePlayer(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExecuteRequestDto executeRequestDto) {
-        return new ResponseEntity<>(playerService.executePlayer(accessToken, executeRequestDto), HttpStatus.SEE_OTHER);
+        playerService.executePlayer(accessToken, executeRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 플레이어 시작")

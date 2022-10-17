@@ -8,13 +8,11 @@ import team7.simple.domain.course.dto.CourseResponseDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.rating.entity.Rating;
-import team7.simple.domain.rating.repository.RatingJpaRepository;
 import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.repository.StudyJpaRepository;
-import team7.simple.domain.unit.dto.UnitResponseDto;
+import team7.simple.domain.unit.dto.UnitThumbnailResponseDto;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
@@ -56,11 +54,11 @@ public class CourseService {
     }
 
     @Transactional
-    public List<UnitResponseDto> getUnitList(Course course) {
+    public List<UnitThumbnailResponseDto> getUnitList(Course course) {
         List<Unit> unitList = course.getUnitList();
         if (unitList == null)
             return null;
-        return unitList.stream().map(UnitResponseDto::new).collect(Collectors.toList());
+        return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
     }
 
 

@@ -17,8 +17,8 @@ import team7.simple.global.error.advice.exception.CIllegalArgumentException;
 import team7.simple.global.error.advice.exception.CLoginConflictException;
 import team7.simple.global.error.advice.exception.CUserNotFoundException;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.net.*;
 
 
 @Service
@@ -33,7 +33,6 @@ public class PlayerService {
 //    String PLAYER_PATH = "http://www.naver.com";
 
     public HttpHeaders executePlayer(String accessToken, ExecuteRequestDto executeRequestDto)  {
-        User user = userJpaRepository.findById(executeRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
         try {
             URI redirectUri = new URI(PLAYER_PATH);
             HttpHeaders httpHeaders = new HttpHeaders();
@@ -47,7 +46,6 @@ public class PlayerService {
             throw new CIllegalArgumentException();
         }
     }
-
     public void start(String accessToken, StartRequestDto startRequestDto, User user) {
         /* 중복 시청 방지 */
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
