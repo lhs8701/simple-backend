@@ -6,6 +6,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ExecuteRequestDto {
-    Long userId;
     Long unitId;
 }

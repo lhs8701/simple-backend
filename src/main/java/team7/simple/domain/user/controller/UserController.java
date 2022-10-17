@@ -24,8 +24,8 @@ import team7.simple.global.common.response.service.ResponseService;
 public class UserController {
     private final UserService userService;
 
+    @ApiOperation(value = "OPEN - 회원 비밀번호 변경")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @ApiOperation(value = "회원 비밀번호 변경")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/open/user/password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal User user) {

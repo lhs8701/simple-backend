@@ -78,11 +78,13 @@ public class HlsService {
                     .addExtraArgs("-hls_list_size", "0") //
                     .addExtraArgs("-f", "hls") //
                     .done();
+            log.info("start execute");
             FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
             executor.createJob(builder).run();
         } catch (IOException e) {
             log.info(e.getMessage());
         }
+        log.info("finish execute");
         return outputPath.substring(ROOT_PATH.length());
     }
 

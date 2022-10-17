@@ -1,7 +1,11 @@
 package team7.simple.domain.viewingrecord.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
 
-public interface ViewingRecordJpaRepository extends JpaRepository<ViewingRecord, Long> {
+import java.util.Optional;
+
+public interface ViewingRecordJpaRepository extends CrudRepository<ViewingRecord, Long> {
+    Optional<ViewingRecord> findByUnitId(Long unitId);
 }

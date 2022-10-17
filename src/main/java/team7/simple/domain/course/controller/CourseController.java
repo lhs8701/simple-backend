@@ -2,6 +2,7 @@ package team7.simple.domain.course.controller;
 
 
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import javax.validation.Valid;
 public class CourseController {
 
     private final CourseService courseService;
+
+    @ApiOperation(value = "OPEN - 강좌 등록")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/course")
@@ -29,6 +32,7 @@ public class CourseController {
         return new ResponseEntity<>(courseService.createCourse(courseRequestDto, instructor), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "OPEN - 강좌 수강 신청")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/course/register")
@@ -36,6 +40,7 @@ public class CourseController {
         return new ResponseEntity<>(courseService.register(registerCancelRequestDto, user), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "OPEN - 강좌 수강 취소")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/course/cancel")
@@ -44,16 +49,19 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "OPEN - 강좌 정보 조회")
     @GetMapping("/open/course/{courseId}")
     public ResponseEntity<?> getCourseInfo(@PathVariable Long courseId) {
         return new ResponseEntity<>(courseService.getCourseInfo(courseId), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "OPEN - 강좌 정보 수정")
     @PatchMapping(value = "/open/course/{courseId}")
     public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
         return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "OPEN - 강좌 삭제")
     @DeleteMapping(value = "/open/course/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);

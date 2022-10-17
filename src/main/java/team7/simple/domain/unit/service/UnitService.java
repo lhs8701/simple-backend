@@ -6,23 +6,28 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.unit.dto.UnitRequestDto;
-import team7.simple.domain.unit.dto.UnitResponseDto;
-import team7.simple.domain.unit.dto.UnitUpdateParam;
+import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
+import team7.simple.domain.user.entity.User;
 import team7.simple.domain.video.dto.VideoDto;
 import team7.simple.domain.video.entity.Video;
 import team7.simple.domain.video.service.VideoService;
+import team7.simple.domain.viewingrecord.entity.ViewingRecord;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class UnitService {
     private final CourseJpaRepository courseJpaRepository;
     private final UnitJpaRepository unitJpaRepository;
+
+    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
 
     private final VideoService videoService;
 
@@ -71,13 +76,33 @@ public class UnitService {
         return unitId;
     }
 
-    @Transactional
-    public UnitResponseDto getUnitInfo(Long unitId) {
-        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-        return UnitResponseDto.builder()
-                .unitId(unit.getUnitId())
-                .title(unit.getTitle())
-                .fileUrl(hlsService.getHlsFileUrl(unit.getVideo()))
+
+    public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
+        Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+        Unit currentUnit = unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
+        String recordTime;
+
+        viewingRecordJpaRepository.save(ViewingRecord.builder()
+                .recordId(UUID.randomUUID().toString())
+                .unitId(currentUnit.getUnitId())
+                .userId(user.getUserId())
+                .time(unitPlayRequestDto.getRecordTime())
+                .build());
+
+        ViewingRecord nextUnitViewingRecord = viewingRecordJpaRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
+        if (nextUnitViewingRecord == null){
+            recordTime = String.valueOf(0);
+        }else{
+            recordTime = nextUnitViewingRecord.getTime();
+            viewingRecordJpaRepository.delete(nextUnitViewingRecord);
+        }
+
+        return UnitPlayResponseDto.builder()
+                .unitId(nextUnit.getUnitId())
+                .title(nextUnit.getTitle())
+//                .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
+                .time(recordTime)
                 .build();
     }
 }
+

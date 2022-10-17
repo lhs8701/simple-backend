@@ -1,12 +1,9 @@
 package team7.simple.domain.course.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.unit.dto.UnitResponseDto;
-import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.unit.dto.UnitThumbnailResponseDto;
 
 import java.util.List;
 
@@ -21,9 +18,9 @@ public class CourseResponseDto {
     private String instructor;
     private double rating;
     private int attendeeCount;
-    private List<UnitResponseDto> unitList;
+    private List<UnitThumbnailResponseDto> unitList;
 
-    public CourseResponseDto(Course course, int attendeeCount, double rating, List<UnitResponseDto> unitList) {
+    public CourseResponseDto(Course course, int attendeeCount, double rating, List<UnitThumbnailResponseDto> unitList) {
         this.courseId = course.getCourseId();
         this.title = course.getTitle();
         this.subtitle = course.getSubtitle();

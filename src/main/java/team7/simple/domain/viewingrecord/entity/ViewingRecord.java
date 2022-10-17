@@ -1,37 +1,37 @@
 package team7.simple.domain.viewingrecord.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import team7.simple.domain.unit.entity.Unit;
-import team7.simple.domain.user.entity.User;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
-@Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert //insert 시 null인 필드 제외
 @DynamicUpdate //update 시 null인 필드 제외
+@RedisHash("ViewingRecord")
 public class ViewingRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long recordId;
+    private String recordId;
 
-    String time;
+    private String time;
 
     @ColumnDefault("false")
-    boolean check;
+    private boolean check;
 
-    @ManyToOne
-    @JoinColumn
-    User user;
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn
-    Unit unit;
+    @Indexed
+    private Long unitId;
 }
