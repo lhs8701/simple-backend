@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import team7.simple.domain.answer.dto.AnswerRequestDto;
+import team7.simple.domain.answer.dto.AnswerUpdateParam;
+import team7.simple.domain.answer.service.AnswerService;
 import team7.simple.domain.question.dto.QuestionRequestDto;
 import team7.simple.domain.question.dto.QuestionUpdateParam;
 import team7.simple.domain.question.service.QuestionService;
@@ -21,6 +24,7 @@ import javax.validation.Valid;
 public class UnitController {
     private final UnitService unitService;
     private final QuestionService questionService;
+    private final AnswerService answerService;
 
     @PostMapping("open/course/unit")
     public ResponseEntity<?> uploadUnit(@RequestPart @Valid UnitRequestDto unitRequestDto, @RequestPart MultipartFile file) {
@@ -69,5 +73,26 @@ public class UnitController {
     @GetMapping("/front/course/unit/question/{questionId}")
     public ResponseEntity<?> getQuestionInfo(@PathVariable Long questionId) {
         return new ResponseEntity<>(questionService.getQuestionInfo(questionId), HttpStatus.OK);
+    }
+
+    @PostMapping("/front/course/unit/question/{questionId}/answer")
+    public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid AnswerRequestDto answerRequestDto) {
+        return new ResponseEntity<>(answerService.createAnswer(questionId, answerRequestDto), HttpStatus.OK);
+    }
+
+    @PatchMapping("/front/course/unit/question/answer/{answerId}")
+    public ResponseEntity<?> updateAnswer(@RequestBody @Valid AnswerUpdateParam answerUpdateParam) {
+        return new ResponseEntity<>(answerService.updateAnswer(answerUpdateParam), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/front/course/unit/question/answer/{answerId}")
+    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId) {
+        answerService.deleteAnswer(answerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/front/course/unit/question/answer/{answerId}")
+    public ResponseEntity<?> getAnswerInfo(@PathVariable Long answerId) {
+        return new ResponseEntity<>(answerService.getAnswerInfo(answerId), HttpStatus.OK);
     }
 }
