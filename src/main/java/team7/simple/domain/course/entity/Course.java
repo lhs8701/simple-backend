@@ -31,5 +31,6 @@ public class Course {
     private List<Unit> unitList = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
     private List<Study> studyList = new ArrayList<>();
 }
