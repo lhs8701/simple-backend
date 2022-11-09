@@ -53,10 +53,6 @@ public class AnswerService {
     public AnswerResponseDto getAnswerInfo(Long answerId) {
         Answer answer = answerJpaRepository.findById(answerId)
                 .orElseThrow(CAnswerNotFoundException::new);
-        return AnswerResponseDto.builder()
-                .answerId(answer.getAnswerId())
-                .title(answer.getTitle())
-                .content(answer.getContent())
-                .build();
+        return new AnswerResponseDto(answer);
     }
 }

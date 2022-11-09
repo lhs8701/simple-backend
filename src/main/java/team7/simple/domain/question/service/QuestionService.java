@@ -52,12 +52,6 @@ public class QuestionService {
     @Transactional
     public QuestionResponseDto getQuestionInfo(Long questionId) {
         Question question = questionJpaRepository.findById(questionId).orElseThrow(CQuestionNotFoundException::new);
-        return QuestionResponseDto.builder()
-                .questionId(question.getQuestionId())
-                .title(question.getTitle())
-                .content(question.getContent())
-                .timeline(question.getTimeline())
-                .createdTime(question.getCreatedTime())
-                .build();
+        return new QuestionResponseDto(question);
     }
 }

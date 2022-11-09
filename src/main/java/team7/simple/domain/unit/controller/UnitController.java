@@ -1,4 +1,4 @@
-package team7.simple.domain.unit;
+package team7.simple.domain.unit.controller;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -69,7 +69,7 @@ public class UnitController {
     }
 
     @PostMapping("/front/course/unit/{unitId}/question")
-    public ResponseEntity<?> uploadQuestion(@PathVariable Long unitId, @Valid QuestionRequestDto questionRequestDto) {
+    public ResponseEntity<?> uploadQuestion(@PathVariable Long unitId, @Valid @RequestBody QuestionRequestDto questionRequestDto) {
         return new ResponseEntity<>(questionService.createQuestion(unitId, questionRequestDto), HttpStatus.OK);
     }
 
@@ -90,7 +90,7 @@ public class UnitController {
     }
 
     @PostMapping("/front/course/unit/question/{questionId}/answer")
-    public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid AnswerRequestDto answerRequestDto) {
+    public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
         return new ResponseEntity<>(answerService.createAnswer(questionId, answerRequestDto), HttpStatus.OK);
     }
 

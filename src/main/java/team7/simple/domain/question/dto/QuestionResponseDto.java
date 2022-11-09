@@ -27,7 +27,6 @@ public class QuestionResponseDto {
         this.questionId = question.getQuestionId();
         this.title = question.getTitle();
         this.content = question.getContent();
-        //this.replyCount = question.getReplyCount();
         this.timeline = question.getTimeline();
         this.createdTime = question.getCreatedTime();
         this.answerList = question.getAnswerList();
