@@ -33,10 +33,10 @@ hls:
   ffmpeg: /usr/bin/ffmpeg
   ffprobe: /usr/bin/ffprobe
   media:
-    upload_dir: /home/hansol8701/media
+    upload_dir: /workspace/simple/media
 
 server:
-  root-path: /home/hansol8701
+  root-path: /workspace/simple
   media-path: /media
 
 swagger:
