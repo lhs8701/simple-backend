@@ -75,14 +75,14 @@ public class CourseControllerTest {
 
     @Test
     void 강좌_조회() throws Exception {
-        //given
-        ResultActions actions = mvc.perform(get("/open/course/1"));
-
-        //then
-        actions
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andDo(print()); //처리 내용을 출력
-//                .andExpect((ResultMatcher) jsonPath("$.id", is("goddaehee")));
+//        //given
+//        ResultActions actions = mvc.perform(get("/open/course/1"));
+//
+//        //then
+//        actions
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print()); //처리 내용을 출력
+////                .andExpect((ResultMatcher) jsonPath("$.id", is("goddaehee")));
     }
 }
