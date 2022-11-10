@@ -52,35 +52,24 @@ public class CourseControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-//    @Autowired
-//    private WebApplicationContext ctx;
-
     static final String testToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmc4NzAxZHNkZiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NjgwODc4ODMsImV4cCI6MTY5OTYyMzg4M30.MlThld3p5RFSHgAt0TFCrQ-dxQtaCFl5vLusDycVwXc";
-
-//    @BeforeEach() //Junit4의 @Before
-//    public void setup() {
-//        this.mvc = MockMvcBuilders.webAppContextSetup(ctx)
-//                .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
-//                .alwaysDo(print())
-//                .build();
-//    }
 
     @Test
     void 강좌_개설() throws Exception {
 
-        String courseRequestDtoJson = objectMapper.writeValueAsString(new CourseRequestDto("title", "subtitle"));
-
-        //given
-        ResultActions resultActions = mvc.perform(post("/open/course")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(ConstValue.JWT_HEADER, testToken)
-                        .content(courseRequestDtoJson));
-
-        //then
-        resultActions
-                .andExpect(status().isOk())
-                .andDo(print());
+//        String courseRequestDtoJson = objectMapper.writeValueAsString(new CourseRequestDto("title", "subtitle"));
+//
+//        //given
+//        ResultActions resultActions = mvc.perform(post("/open/course")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                        .header(ConstValue.JWT_HEADER, testToken)
+//                        .content(courseRequestDtoJson));
+//
+//        //then
+//        resultActions
+//                .andExpect(status().isOk())
+//                .andDo(print());
 
     }
 
@@ -92,7 +81,7 @@ public class CourseControllerTest {
         //then
         actions
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()); //처리 내용을 출력
 //                .andExpect((ResultMatcher) jsonPath("$.id", is("goddaehee")));
     }
