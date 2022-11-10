@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+	//security test
+	testImplementation 'org.springframework.security:spring-security-test'
+
 
 	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

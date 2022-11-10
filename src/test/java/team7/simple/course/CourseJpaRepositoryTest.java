@@ -1,15 +1,12 @@
 package team7.simple.course;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
@@ -22,7 +19,7 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 
 @DataJpaTest //@Transactional 포함하고 있음 -> 따로 롤백 안해줘도 됨
 @AutoConfigureTestDatabase(replace = Replace.NONE) // 메모리 DB가 아닌, 실제 DB에서 테스트
-public class CourseTest {
+public class CourseJpaRepositoryTest {
 
     @Autowired
     private CourseJpaRepository courseJpaRepository;
