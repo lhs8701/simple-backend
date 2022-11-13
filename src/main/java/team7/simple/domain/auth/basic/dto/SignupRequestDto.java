@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import team7.simple.domain.user.entity.User;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -19,6 +20,7 @@ public class SignupRequestDto {
 
     public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
+                .userId(UUID.randomUUID().toString())
                 .account(account)
                 .password(passwordEncoder.encode(password))
                 .roles(Collections.singletonList("ROLE_USER"))

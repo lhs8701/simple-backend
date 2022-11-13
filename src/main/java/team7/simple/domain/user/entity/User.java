@@ -23,8 +23,7 @@ import java.util.stream.Collectors;
 @Entity
 public class User extends BaseTimeEntity implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private String userId;
 
     @Column(nullable = false, length = 30)
     private String account;

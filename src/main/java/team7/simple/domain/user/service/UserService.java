@@ -17,7 +17,7 @@ import team7.simple.global.error.advice.exception.CUserNotFoundException;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserJpaRepository userJpaRepository;
-    public void changePassword(Long userId, PasswordUpdateParam passwordUpdateParam){
+    public void changePassword(String userId, PasswordUpdateParam passwordUpdateParam){
         User user = userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
     }

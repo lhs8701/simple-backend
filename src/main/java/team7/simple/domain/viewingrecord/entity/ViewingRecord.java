@@ -30,7 +30,7 @@ public class ViewingRecord {
     @ColumnDefault("false")
     private boolean check;
 
-    private Long userId;
+    private String userId;
 
     @Indexed
     private Long unitId;

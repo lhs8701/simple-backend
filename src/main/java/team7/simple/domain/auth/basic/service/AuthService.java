@@ -38,10 +38,9 @@ public class AuthService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
-    public Long signup(SignupRequestDto signupRequestDto) {
+    public String signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
             throw new CUserExistException();
-        log.info(signupRequestDto.getPassword());
         return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getUserId();
     }
 

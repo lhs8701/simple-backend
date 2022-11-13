@@ -15,12 +15,12 @@ public class ActiveAccessToken {
     private String accessToken;
 
     @Indexed //redis repository에서 인자로 사용하는 필드에 붙여줘야 함
-    private Long userId;
+    private String userId;
 
     @TimeToLive
     private Long expiration;
 
-    public ActiveAccessToken(String accessToken, Long userId) {
+    public ActiveAccessToken(String accessToken, String userId) {
         this.accessToken = accessToken;
         this.userId = userId;
         this.expiration = JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue() / 1000;
