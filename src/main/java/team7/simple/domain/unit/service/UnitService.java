@@ -80,29 +80,41 @@ public class UnitService {
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
         Unit currentUnit = unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
-        String recordTime;
+        double recordTime;
+        boolean complete = unitPlayRequestDto.isComplete();
 
-        viewingRecordJpaRepository.save(ViewingRecord.builder()
-                .recordId(UUID.randomUUID().toString())
-                .unitId(currentUnit.getUnitId())
-                .userId(user.getUserId())
-                .time(unitPlayRequestDto.getRecordTime())
-                .build());
+        saveCurrentViewingRecord(unitPlayRequestDto, user, currentUnit, complete);
 
         ViewingRecord nextUnitViewingRecord = viewingRecordJpaRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
-        if (nextUnitViewingRecord == null){
-            recordTime = String.valueOf(0);
-        }else{
+        if (nextUnitViewingRecord == null) {
+            recordTime = 0;
+        } else {
             recordTime = nextUnitViewingRecord.getTime();
-            viewingRecordJpaRepository.delete(nextUnitViewingRecord);
         }
 
         return UnitPlayResponseDto.builder()
                 .unitId(nextUnit.getUnitId())
                 .title(nextUnit.getTitle())
-//                .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
+                .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
                 .time(recordTime)
                 .build();
+    }
+
+    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto, User user, Unit currentUnit, boolean complete) {
+        ViewingRecord currentViewingRecord = viewingRecordJpaRepository.findByUnitAndUser(currentUnit, user).orElse(null);
+        if (currentViewingRecord == null) {
+            viewingRecordJpaRepository.save(ViewingRecord.builder()
+                    .recordId(UUID.randomUUID().toString())
+                    .unitId(currentUnit.getUnitId())
+                    .userId(user.getUserId())
+                    .time(unitPlayRequestDto.getRecordTime())
+                    .check(complete) //complete
+                    .build());
+        }
+        else{
+            currentViewingRecord.setTime(unitPlayRequestDto.getRecordTime());
+            currentViewingRecord.setCheck(complete);
+        }
     }
 }
 

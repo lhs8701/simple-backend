@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UnitPlayRequestDto {
     private Long currentUnitId;
-    private String recordTime;
+    private double recordTime;
+    private boolean complete;
 }

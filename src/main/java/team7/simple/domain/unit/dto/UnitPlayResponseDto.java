@@ -15,5 +15,5 @@ public class UnitPlayResponseDto {
     private Long unitId;
     private String title;
     private String fileUrl;
-    private String time;
+    private double time;
 }
