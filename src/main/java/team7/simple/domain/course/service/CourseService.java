@@ -15,7 +15,7 @@ import team7.simple.domain.study.repository.StudyJpaRepository;
 import team7.simple.domain.unit.dto.UnitThumbnailResponseDto;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CStudyNotFoundException;
 
@@ -31,7 +31,7 @@ public class CourseService {
     private final StudyJpaRepository studyJpaRepository;
 
     private final RatingService ratingService;
-    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
 
     @Transactional
     public Long createCourse(CourseRequestDto courseRequestDto, User instructor) {

@@ -14,7 +14,7 @@ import team7.simple.domain.video.dto.VideoDto;
 import team7.simple.domain.video.entity.Video;
 import team7.simple.domain.video.service.VideoService;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
@@ -27,7 +27,7 @@ public class UnitService {
     private final CourseJpaRepository courseJpaRepository;
     private final UnitJpaRepository unitJpaRepository;
 
-    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
 
     private final VideoService videoService;
 
@@ -85,7 +85,7 @@ public class UnitService {
 
         saveCurrentViewingRecord(unitPlayRequestDto, currentUnit.getUnitId(), user.getUserId(), complete);
 
-        ViewingRecord nextUnitViewingRecord = viewingRecordJpaRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
+        ViewingRecord nextUnitViewingRecord = viewingRecordRedisRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
         if (nextUnitViewingRecord == null) {
             recordTime = 0;
         } else {
@@ -101,9 +101,9 @@ public class UnitService {
     }
 
     private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto, Long unitId, String userId, boolean complete) {
-        ViewingRecord currentViewingRecord = viewingRecordJpaRepository.findByUnitIdAndUserId(unitId, userId).orElse(null);
+        ViewingRecord currentViewingRecord = viewingRecordRedisRepository.findByUnitIdAndUserId(unitId, userId).orElse(null);
         if (currentViewingRecord == null) {
-            viewingRecordJpaRepository.save(ViewingRecord.builder()
+            viewingRecordRedisRepository.save(ViewingRecord.builder()
                     .recordId(UUID.randomUUID().toString())
                     .unitId(unitId)
                     .userId(userId)

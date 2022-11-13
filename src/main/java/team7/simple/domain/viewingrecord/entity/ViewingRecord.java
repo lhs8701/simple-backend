@@ -28,6 +28,7 @@ public class ViewingRecord {
     @ColumnDefault("false")
     private boolean check;
 
+    @Indexed
     private String userId;
 
     @Indexed

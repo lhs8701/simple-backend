@@ -2,9 +2,7 @@ package team7.simple.domain.player.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
@@ -14,11 +12,9 @@ import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
-import team7.simple.global.common.ConstValue;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
 import team7.simple.global.error.advice.exception.*;
 
-import java.io.IOException;
 import java.net.*;
 import java.util.List;
 
@@ -30,7 +26,7 @@ public class PlayerService {
     private final UserJpaRepository userJpaRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
-    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
 
     @Value("${path.front_page}")
     String PLAYER_PATH;
@@ -70,7 +66,7 @@ public class PlayerService {
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
-        ViewingRecord viewingRecord = viewingRecordJpaRepository.findByUnitId(exitRequestDto.getUnitId()).orElseThrow(CUnitNotFoundException::new);
+        ViewingRecord viewingRecord = viewingRecordRedisRepository.findByUnitId(exitRequestDto.getUnitId()).orElseThrow(CUnitNotFoundException::new);
         viewingRecord.setTime(exitRequestDto.getTime());
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
