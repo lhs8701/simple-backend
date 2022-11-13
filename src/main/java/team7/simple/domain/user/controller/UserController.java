@@ -1,5 +1,6 @@
 package team7.simple.domain.user.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +20,7 @@ import team7.simple.global.common.ConstValue;
 import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.service.ResponseService;
 
+@Api(tags = {"User Controller"})
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -32,6 +34,4 @@ public class UserController {
         userService.changePassword(user.getUserId(), passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }

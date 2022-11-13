@@ -71,11 +71,12 @@ public class AuthController {
         return new ResponseEntity<>(authService.reissue(tokenRequestDto), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "FRONT - 로그인 충돌 시, 조취 방법 선택")
+    @ApiOperation(value = "FRONT - 로그인 충돌 시, 조치 방법 선택", notes = "같은 계정으로 다수가 로그인할 경우, 사용자의 입력을 받아 충돌을 해결합니다. " +
+            "keepGoing값이 참일 경우 기존 이용중이던 사용자가 계속 이용하게 되고, 거짓일 경우 나중에 접속한 사용자가 강제 종료됩니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping(value = "/conflict")
-    public ResponseEntity<?> removeConflict(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, RemoveConflictRequestDto removeConflictRequestDto, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> removeConflict(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody RemoveConflictRequestDto removeConflictRequestDto, @AuthenticationPrincipal User user) {
         authService.removeConflict(accessToken, removeConflictRequestDto, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

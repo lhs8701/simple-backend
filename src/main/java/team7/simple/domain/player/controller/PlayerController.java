@@ -1,5 +1,6 @@
 package team7.simple.domain.player.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +26,7 @@ import team7.simple.global.common.ConstValue;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@Api(tags = {"Player Controller"})
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -32,7 +34,7 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
-    @ApiOperation(value = "OPEN - 플레이어 실행")
+    @ApiOperation(value = "OPEN - 플레이어 실행", notes = "플레이어의 URL로 이동합니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
@@ -44,7 +46,7 @@ public class PlayerController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
-    @ApiOperation(value = "FRONT - 플레이어 시작")
+    @ApiOperation(value = "FRONT - 플레이어 시작", notes = "플레이어가 실행되자마자 가장 먼저 호출되어야 하는 API로, userId에 해당하는 어세스 토큰을 반환합니다.")
     @ResponseBody
     @PreAuthorize("permitAll()")
     @PostMapping("/front/player/on")
@@ -53,7 +55,7 @@ public class PlayerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "FRONT - 플레이어 종료")
+    @ApiOperation(value = "FRONT - 플레이어 종료", notes = "플레이어가 종료될 때 호출되어야 하는 API로, 현재 재생중인 강의의 시청 기록을 갱신합니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
     @PreAuthorize("hasRole('USER')")

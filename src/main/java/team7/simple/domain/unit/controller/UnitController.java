@@ -1,5 +1,6 @@
 package team7.simple.domain.unit.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import team7.simple.global.common.ConstValue;
 
 import javax.validation.Valid;
 
+@Api(tags = {"Unit Controller"})
 @RestController
 @RequiredArgsConstructor
 public class UnitController {
@@ -27,14 +29,14 @@ public class UnitController {
     private final QuestionService questionService;
     private final AnswerService answerService;
 
-    @ApiOperation(value = "OPEN - 강의 업로드")
+    @ApiOperation(value = "OPEN - 강의 업로드", notes = "강의 원본 영상을 원격 서버에 업로드함과 동시에 m3u8 확장자로 변환합니다.")
     @PostMapping("open/course/unit")
     public ResponseEntity<?> uploadUnit(@RequestPart @Valid UnitRequestDto unitRequestDto, @RequestPart MultipartFile file) {
         return new ResponseEntity<>(unitService.createUnit(unitRequestDto, file), HttpStatus.OK);
     }
 
     /*테스트용*/
-    @ApiOperation(value = "OPEN - 강의 업로드 (로컬 테스트용)")
+    @ApiOperation(value = "OPEN - 강의 업로드 (로컬 테스트용)", notes = "로컬 환경에서 테스트 용으로 사용하는 API입니다.")
     @PostMapping("open/course/unit/local")
     public ResponseEntity<?> uploadUnitLocal(@RequestBody @Valid UnitRequestDto unitRequestDto) {
         return new ResponseEntity<>(unitService.createUnitLocal(unitRequestDto), HttpStatus.OK);
@@ -54,7 +56,7 @@ public class UnitController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "FRONT - 강의 재생")
+    @ApiOperation(value = "FRONT - 강의 재생", notes = "다른 강의로 이동할 경우 호출하는 API입니다. 현재 재생중인 강의의 시간대와 완료 여부를 기록한 후, 다음 강의 영상의 경로를 포함한 정보를 반환합니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/front/course/unit/{unitId}")

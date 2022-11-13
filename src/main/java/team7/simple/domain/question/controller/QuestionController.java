@@ -1,5 +1,6 @@
 package team7.simple.domain.question.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import team7.simple.domain.question.service.QuestionService;
 
 import javax.validation.Valid;
 
+@Api(tags = {"Question Controller"})
 @RestController
 @RequiredArgsConstructor
 public class QuestionController {

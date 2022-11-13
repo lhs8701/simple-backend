@@ -1,6 +1,7 @@
 package team7.simple.domain.course.controller;
 
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.ConstValue;
 
 import javax.validation.Valid;
-
+@Api(tags = {"Course Controller"})
 @RestController
 @RequiredArgsConstructor
 public class CourseController {

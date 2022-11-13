@@ -1,5 +1,6 @@
 package team7.simple.domain.rating.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import team7.simple.global.common.ConstValue;
 
 import javax.validation.Valid;
 
+
+@Api(tags = {"Rating Controller"})
 @RestController
 @RequiredArgsConstructor
 public class RatingController {

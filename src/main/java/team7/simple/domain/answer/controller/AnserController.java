@@ -1,5 +1,6 @@
 package team7.simple.domain.answer.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.service.AnswerService;
 
 import javax.validation.Valid;
-
+@Api(tags = {"Answer Controller"})
 @RestController
 @RequiredArgsConstructor
 public class AnserController {
