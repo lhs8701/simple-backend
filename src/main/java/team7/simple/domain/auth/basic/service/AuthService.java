@@ -94,13 +94,13 @@ public class AuthService {
 
             ActiveAccessToken finded = activeAccessTokenRedisRepository.findById(existAccessToken).orElse(null);
             if (finded != null) {
-                activeAccessTokenRedisRepository.deleteById(existAccessToken);
                 activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                         .accessToken(newAccessToken)
                         .userId(user.getUserId())
-                        .conflict(0)
+                        .conflict(finded.getConflict())
                         .expiration(JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue())
                         .build());
+                activeAccessTokenRedisRepository.delete(finded);
             }
             refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
             return TokenResponseDto.builder()

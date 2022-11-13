@@ -36,7 +36,7 @@ public class PlayerService {
     String PLAYER_PATH;
 //    String PLAYER_PATH = "http://www.naver.com";
 
-    public String executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) {
+    public URI executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
         int conflict = 0;
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
         //중복로그인인 경우
@@ -50,9 +50,9 @@ public class PlayerService {
                 .conflict(conflict)
                 .build());
 
-        return PLAYER_PATH +
+        return new URI (PLAYER_PATH +
                 "?userId=" + String.valueOf(user.getUserId()) +
-                "&unitId=" + String.valueOf(executeRequestDto.getUnitId());
+                "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
     }
 
     public String start(StartRequestDto startRequestDto) {
