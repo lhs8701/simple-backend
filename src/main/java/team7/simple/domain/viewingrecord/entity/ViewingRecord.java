@@ -1,9 +1,6 @@
 package team7.simple.domain.viewingrecord.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -15,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +23,7 @@ public class ViewingRecord {
     @Id
     private String recordId;
 
-    private String time;
+    private double time;
 
     @ColumnDefault("false")
     private boolean check;

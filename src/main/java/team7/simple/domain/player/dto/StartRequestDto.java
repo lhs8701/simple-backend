@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StartRequestDto {
-    Long unitId;
-    boolean forced;
+    String userId;
 }

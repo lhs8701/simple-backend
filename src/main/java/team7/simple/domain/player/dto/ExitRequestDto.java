@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ExitRequestDto {
     Long userId;
-    Long courseId;
     Long unitId;
+    double time;
 }

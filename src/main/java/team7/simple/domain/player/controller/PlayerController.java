@@ -33,18 +33,17 @@ public class PlayerController {
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/player/execute")
-    public ResponseEntity<?> executePlayer(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExecuteRequestDto executeRequestDto) {
-        playerService.executePlayer(accessToken, executeRequestDto);
+    public ResponseEntity<?> executePlayer(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExecuteRequestDto executeRequestDto, @AuthenticationPrincipal User user) {
+        playerService.executePlayer(accessToken, executeRequestDto, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 플레이어 시작")
-    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("permitAll()")
     @PostMapping("/front/player/on")
-    public ResponseEntity<?> start(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody StartRequestDto startRequestDto, @AuthenticationPrincipal User user) {
-        playerService.start(accessToken, startRequestDto, user);
+    public ResponseEntity<?> start(@RequestBody StartRequestDto startRequestDto) {
+        playerService.start(startRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

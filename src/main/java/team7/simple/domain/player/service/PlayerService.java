@@ -2,6 +2,7 @@ package team7.simple.domain.player.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,14 @@ import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
+import team7.simple.domain.viewingrecord.entity.ViewingRecord;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.common.ConstValue;
-import team7.simple.global.error.advice.exception.CIllegalArgumentException;
-import team7.simple.global.error.advice.exception.CLoginConflictException;
-import team7.simple.global.error.advice.exception.CUserNotFoundException;
+import team7.simple.global.error.advice.exception.*;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.List;
 
 
 @Service
@@ -28,40 +30,49 @@ public class PlayerService {
     private final UserJpaRepository userJpaRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
+    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+
     @Value("${path.front_page}")
     String PLAYER_PATH;
 //    String PLAYER_PATH = "http://www.naver.com";
 
-    public HttpHeaders executePlayer(String accessToken, ExecuteRequestDto executeRequestDto)  {
-        try {
-            URI redirectUri = new URI(PLAYER_PATH);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set(ConstValue.JWT_HEADER, accessToken);
-            httpHeaders.set(ConstValue.UNIT_HEADER, String.valueOf(executeRequestDto.getUnitId()));
-            httpHeaders.setLocation(redirectUri);
-            return httpHeaders;
-        }
-        catch(URISyntaxException e){
-            log.info(e.getMessage());
-            throw new CIllegalArgumentException();
-        }
-    }
-    public void start(String accessToken, StartRequestDto startRequestDto, User user) {
-        /* 중복 시청 방지 */
+    public String executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) {
+        int conflict = 0;
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
+        //중복로그인인 경우
         if (existActiveAccessToken != null) {
-            if (startRequestDto.isForced()) {
-                activeAccessTokenRedisRepository.deleteById(existActiveAccessToken.getAccessToken());
-            } else {
-                throw new CLoginConflictException();
-            }
+            existActiveAccessToken.setConflict(1);
+            conflict = 2;
         }
-        activeAccessTokenRedisRepository.save(new ActiveAccessToken(accessToken, user.getUserId()));
+        activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
+                .accessToken(accessToken)
+                .userId(user.getUserId())
+                .conflict(conflict)
+                .build());
+
+        return PLAYER_PATH +
+                "?userId=" + String.valueOf(user.getUserId()) +
+                "&unitId=" + String.valueOf(executeRequestDto.getUnitId());
+    }
+
+    public String start(StartRequestDto startRequestDto) {
+        /* 중복 시청 방지 */
+        User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
+        ActiveAccessToken token;
+        List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
+        if (activeAccessTokens.size() > 1){
+             token = activeAccessTokens.stream().filter(t -> t.getConflict() == 2).findAny().orElseThrow(CExpiredTokenException::new);
+        }
+        else{
+            token = activeAccessTokens.get(0);
+        }
+        return token.getAccessToken();
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
+        ViewingRecord viewingRecord = viewingRecordJpaRepository.findByUnitId(exitRequestDto.getUnitId()).orElseThrow(CUnitNotFoundException::new);
+        viewingRecord.setTime(exitRequestDto.getTime());
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
-
 
 }
