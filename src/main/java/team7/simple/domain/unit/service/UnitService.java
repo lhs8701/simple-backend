@@ -83,7 +83,7 @@ public class UnitService {
         double recordTime;
         boolean complete = unitPlayRequestDto.isComplete();
 
-        saveCurrentViewingRecord(unitPlayRequestDto, user, currentUnit, complete);
+        saveCurrentViewingRecord(unitPlayRequestDto, currentUnit.getUnitId(), user.getUserId(), complete);
 
         ViewingRecord nextUnitViewingRecord = viewingRecordJpaRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
         if (nextUnitViewingRecord == null) {
@@ -100,13 +100,13 @@ public class UnitService {
                 .build();
     }
 
-    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto, User user, Unit currentUnit, boolean complete) {
-        ViewingRecord currentViewingRecord = viewingRecordJpaRepository.findByUnitAndUser(currentUnit, user).orElse(null);
+    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto, Long unitId, String userId, boolean complete) {
+        ViewingRecord currentViewingRecord = viewingRecordJpaRepository.findByUnitIdAndUserId(unitId, userId).orElse(null);
         if (currentViewingRecord == null) {
             viewingRecordJpaRepository.save(ViewingRecord.builder()
                     .recordId(UUID.randomUUID().toString())
-                    .unitId(currentUnit.getUnitId())
-                    .userId(user.getUserId())
+                    .unitId(unitId)
+                    .userId(userId)
                     .time(unitPlayRequestDto.getRecordTime())
                     .check(complete) //complete
                     .build());

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface ViewingRecordJpaRepository extends CrudRepository<ViewingRecord, Long> {
     Optional<ViewingRecord> findByUnitId(Long unitId);
-    Optional<ViewingRecord> findByUnitAndUser(Unit unit, User user);
+    Optional<ViewingRecord> findByUnitIdAndUserId(Long unitId, String userId);
 }
