@@ -19,9 +19,9 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
   datasource:
-    url: jdbc:mysql://localhost:3306/dev_db?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
+    url: jdbc:mysql://34.64.36.79:3306/dev_db?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: devuser
-    password: devuser
+    password: simple0311
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-test-query: select 1 from dual
@@ -33,10 +33,10 @@ hls:
   ffmpeg: /usr/bin/ffmpeg
   ffprobe: /usr/bin/ffprobe
   media:
-    upload_dir: /workspace/simple/media
+    upload_dir: /home/hansol8701/media
 
 server:
-  root-path: /workspace/simple
+  root-path: /home/hansol8701
   media-path: /media
 
 swagger:
