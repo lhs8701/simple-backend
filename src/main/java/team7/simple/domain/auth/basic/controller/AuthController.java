@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.auth.basic.dto.LoginRequestDto;
+import team7.simple.domain.auth.basic.dto.RemoveConflictRequestDto;
 import team7.simple.domain.auth.basic.dto.SignupRequestDto;
 import team7.simple.domain.auth.basic.service.AuthService;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
@@ -68,5 +69,14 @@ public class AuthController {
     @PostMapping(value = "/reissue")
     public ResponseEntity<?> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
         return new ResponseEntity<>(authService.reissue(tokenRequestDto), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FRONT - 로그인 충돌 시, 조취 방법 선택")
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping(value = "/conflict")
+    public ResponseEntity<?> removeConflict(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, RemoveConflictRequestDto removeConflictRequestDto, @AuthenticationPrincipal User user) {
+        authService.removeConflict(accessToken, removeConflictRequestDto, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

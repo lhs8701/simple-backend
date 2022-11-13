@@ -9,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.auth.basic.dto.LoginRequestDto;
+import team7.simple.domain.auth.basic.dto.RemoveConflictRequestDto;
 import team7.simple.domain.auth.basic.dto.SignupRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
+import team7.simple.domain.auth.jwt.entity.JwtExpiration;
 import team7.simple.domain.auth.jwt.entity.LogoutAccessToken;
 import team7.simple.domain.auth.jwt.entity.RefreshToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
@@ -91,9 +93,14 @@ public class AuthService {
             String newRefreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
 
             ActiveAccessToken finded = activeAccessTokenRedisRepository.findById(existAccessToken).orElse(null);
-            if (finded != null){
+            if (finded != null) {
                 activeAccessTokenRedisRepository.deleteById(existAccessToken);
-                activeAccessTokenRedisRepository.save(new ActiveAccessToken(newAccessToken, user.getUserId()));
+                activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
+                        .accessToken(newAccessToken)
+                        .userId(user.getUserId())
+                        .conflict(0)
+                        .expiration(JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue())
+                        .build());
             }
             refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
             return TokenResponseDto.builder()
@@ -103,6 +110,20 @@ public class AuthService {
                     .build();
         } else {
             throw new CWrongRefreshTokenException();
+        }
+    }
+
+    public void removeConflict(String accessToken, RemoveConflictRequestDto removeConflictRequestDto, User user) {
+        ActiveAccessToken currentAccessToken = activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(InternalError::new);
+        ActiveAccessToken otherAccessToken = activeAccessTokenRedisRepository.findByUserIdAndConflict(user.getUserId(), 2).orElseThrow(CUserNotFoundException::new);
+        if (currentAccessToken.getConflict() != 1) {
+            throw new CWrongTypeTokenException();
+        }
+        if (removeConflictRequestDto.isKeepGoing()) {
+            otherAccessToken.setConflict(3);
+        } else {
+            activeAccessTokenRedisRepository.delete(currentAccessToken);
+            otherAccessToken.setConflict(0);
         }
     }
 }

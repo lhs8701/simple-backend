@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.entity.JwtExpiration;
+import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import team7.simple.global.common.ConstValue;
 import team7.simple.global.error.ErrorCode;
@@ -34,8 +36,10 @@ public class JwtProvider {
     private String secretKey;
     private final UserDetailsService userDetailsService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
-    private String ROLES = "roles";
 
+    private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
+
+    private String ROLES = "roles";
 
 
     private Key getSigningKey(String secretKey) {
@@ -106,6 +110,9 @@ public class JwtProvider {
                 request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode());
                 return false;
             }
+            if (isConflicted(request, jwt)) {
+                return false;
+            }
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             request.setAttribute("exception", ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getCode());
@@ -128,6 +135,20 @@ public class JwtProvider {
         }
         return false;
     }
+
+    private boolean isConflicted(HttpServletRequest request, String jwt) {
+        ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findById(jwt).orElseThrow(InternalError::new);
+        if (activeAccessToken.getConflict() == 1) {
+            request.setAttribute("exception", ErrorCode.LOGIN_CONFLICT_EXCEPTION.getCode());
+            return true;
+        }
+        if (activeAccessToken.getConflict() == 3) {
+            request.setAttribute("exception", ErrorCode.ACCESS_DENIED.getCode());
+            return true;
+        }
+        return false;
+    }
+
     public void validateTokenForReissue(String jwt) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(jwt);

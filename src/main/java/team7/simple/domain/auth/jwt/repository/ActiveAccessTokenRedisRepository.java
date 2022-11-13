@@ -9,5 +9,10 @@ import java.util.Optional;
 
 public interface ActiveAccessTokenRedisRepository extends CrudRepository<ActiveAccessToken, String> {
     Optional<ActiveAccessToken> findByUserId(String userId);
+
     List<ActiveAccessToken> findAllByUserId(String userId);
+
+    boolean existByIdAndConflict(String accessToken, int conflict);
+
+    Optional<ActiveAccessToken> findByUserIdAndConflict(String userId, int conflict);
 }
