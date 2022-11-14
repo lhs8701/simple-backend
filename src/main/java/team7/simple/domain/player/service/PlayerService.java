@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import team7.simple.domain.auth.jwt.dto.AccessTokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
 import team7.simple.domain.player.dto.ExecuteRequestDto;
@@ -51,7 +52,7 @@ public class PlayerService {
                 "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
     }
 
-    public String start(StartRequestDto startRequestDto) {
+    public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
         /* 중복 시청 방지 */
         User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken token;
@@ -62,7 +63,7 @@ public class PlayerService {
         else{
             token = activeAccessTokens.get(0);
         }
-        return token.getAccessToken();
+        return new AccessTokenResponseDto(token.getAccessToken());
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {

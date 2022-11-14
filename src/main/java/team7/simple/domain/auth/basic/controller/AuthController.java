@@ -45,7 +45,7 @@ public class AuthController {
     @ApiOperation(value = "OPEN - 로그인")
     @ApiResponses(value = {
             @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "패스워드가 다를 경우"),
+            @ApiResponse(code=400, message = "패스워드가 다를 경우"),
     })
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
@@ -68,6 +68,11 @@ public class AuthController {
     }
 
     @ApiOperation(value = "OPEN - 회원 탈퇴")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=401, message = "토큰이 유효하지 않거나, 만료된 경우"),
+            @ApiResponse(code=403, message = "접근 권한이 없을 경우"),
+    })
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/withdrawal")
@@ -76,7 +81,13 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @ApiOperation(value = "OPEN - 액세스, 리프레시 토큰 재발급")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=401, message = "토큰이 유효하지 않은 경우"),
+            @ApiResponse(code=403, message = "접근 권한이 없을 경우"),
+    })
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/reissue")
     public ResponseEntity<?> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
