@@ -17,9 +17,7 @@ import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.ConstValue;
-import team7.simple.global.common.response.dto.CommonResult;
-import team7.simple.global.common.response.dto.SingleResult;
-import team7.simple.global.common.response.service.ResponseService;
+
 
 import javax.validation.Valid;
 
@@ -45,6 +43,10 @@ public class AuthController {
     }
 
     @ApiOperation(value = "OPEN - 로그인")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=404, message = "패스워드가 다를 경우"),
+    })
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
@@ -52,11 +54,17 @@ public class AuthController {
     }
 
     @ApiOperation(value = "OPEN - 로그아웃")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=401, message = "토큰이 유효하지 않거나, 만료된 경우"),
+            @ApiResponse(code=403, message = "접근 권한이 없을 경우"),
+    })
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout")
     public ResponseEntity<?> logout(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @ApiOperation(value = "OPEN - 회원 탈퇴")

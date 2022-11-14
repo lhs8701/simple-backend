@@ -44,7 +44,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CAccessDeniedException.class)
     protected ResponseEntity<?> handle(CAccessDeniedException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     /**
@@ -53,7 +53,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CWrongTypeTokenException.class)
     protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -62,7 +62,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CExpiredTokenException.class)
     protected ResponseEntity<?> handle(CExpiredTokenException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CUnsupportedTokenException.class)
     protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -116,7 +116,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CCourseNotFoundException.class)
     protected ResponseEntity<?> handle(CCourseNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -143,7 +143,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CRefreshTokenExpiredException.class)
     protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     /***

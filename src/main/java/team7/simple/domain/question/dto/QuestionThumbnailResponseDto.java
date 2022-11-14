@@ -9,12 +9,14 @@ import team7.simple.domain.question.entity.Question;
 public class QuestionThumbnailResponseDto {
     private Long questionId;
     private String title;
-
     private int replyCount;
+
+    private int timeline;
 
     public QuestionThumbnailResponseDto(Question question) {
         this.questionId = question.getQuestionId();
         this.title = question.getTitle();
         this.replyCount = question.getAnswerList().size();
+        this.timeline = question.getTimeline();
     }
 }

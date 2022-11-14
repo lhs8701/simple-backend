@@ -38,14 +38,8 @@ public class QuestionController {
     }
 
     @ApiOperation(value = "FRONT - 강의 질문 목록 조회")
-    @GetMapping("/front/course/unit/{unitId}/question/")
+    @GetMapping("/front/course/unit/{unitId}/question")
     public ResponseEntity<?> getQuestionList(@PathVariable Long unitId) {
         return new ResponseEntity<>(questionService.getQuestionList(unitId), HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "FRONT - 질문 상세 조회")
-    @GetMapping("/front/course/unit/question/{questionId}")
-    public ResponseEntity<?> getQuestionInfo(@PathVariable Long questionId) {
-        return new ResponseEntity<>(questionService.getQuestionInfo(questionId), HttpStatus.OK);
     }
 }

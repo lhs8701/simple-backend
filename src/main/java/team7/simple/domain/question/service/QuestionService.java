@@ -54,13 +54,8 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionDetailResponseDto getQuestionInfo(Long questionId) {
-        Question question = questionJpaRepository.findById(questionId).orElseThrow(CQuestionNotFoundException::new);
-        return new QuestionDetailResponseDto(question);
-    }
-    @Transactional
-    public List<QuestionThumbnailResponseDto> getQuestionList(Long unitId) {
+    public List<QuestionDetailResponseDto> getQuestionList(Long unitId) {
         Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-        return unit.getQuestionList().stream().map(QuestionThumbnailResponseDto::new).collect(Collectors.toList());
+        return unit.getQuestionList().stream().map(QuestionDetailResponseDto::new).collect(Collectors.toList());
     }
 }
