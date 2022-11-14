@@ -51,8 +51,7 @@ public class PlayerController {
     @PreAuthorize("permitAll()")
     @PostMapping("/front/player/on")
     public ResponseEntity<?> start(@RequestBody StartRequestDto startRequestDto) {
-        playerService.start(startRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(playerService.start(startRequestDto), HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 플레이어 종료", notes = "플레이어가 종료될 때 호출되어야 하는 API로, 현재 재생중인 강의의 시청 기록을 갱신합니다.")
