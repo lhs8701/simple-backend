@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.dto.CourseRequestDto;
-import team7.simple.domain.course.dto.CourseResponseDto;
+import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
@@ -39,17 +39,16 @@ public class CourseService {
     }
 
     @Transactional
-    public CourseResponseDto getCourseInfo(Long courseId) {
+    public CourseDetailResponseDto getCourseInfo(Long courseId) {
         Course course = courseJpaRepository.findById(courseId)
                 .orElseThrow(CCourseNotFoundException::new);
 
-        double rating = ratingService.getCourseAverageRatingScore(course);
         int attendeeCount = 0;
         List<Study> studyList = studyJpaRepository.findAllByCourse(course).orElse(null);
         if (studyList != null){
             attendeeCount = studyList.size();
         }
-        return new CourseResponseDto(course, attendeeCount, rating, unitService.getUnitThumbnailList(courseId));
+        return new CourseDetailResponseDto(course, attendeeCount, unitService.getUnitThumbnailList(courseId));
     }
 
 

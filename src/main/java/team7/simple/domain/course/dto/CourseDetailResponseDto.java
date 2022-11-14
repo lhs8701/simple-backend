@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class CourseResponseDto {
+public class CourseDetailResponseDto {
 
     private Long courseId;
     private String title;
@@ -20,13 +20,12 @@ public class CourseResponseDto {
     private int attendeeCount;
     private List<UnitThumbnailResponseDto> unitList;
 
-    public CourseResponseDto(Course course, int attendeeCount, double rating, List<UnitThumbnailResponseDto> unitList) {
+    public CourseDetailResponseDto(Course course, int attendeeCount, List<UnitThumbnailResponseDto> unitList) {
         this.courseId = course.getCourseId();
         this.title = course.getTitle();
         this.subtitle = course.getSubtitle();
         this.instructor = course.getInstructor().getAccount();
         this.attendeeCount = attendeeCount;
-        this.rating = rating;
         this.unitList = unitList;
     }
 

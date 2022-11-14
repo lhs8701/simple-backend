@@ -9,7 +9,5 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class RatingRequestDto {
     @NotNull
-    Long courseId;
-    @NotNull
     double score;
 }

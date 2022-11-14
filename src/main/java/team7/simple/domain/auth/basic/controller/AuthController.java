@@ -33,6 +33,10 @@ public class AuthController {
     private final AuthService authService;
 
     @ApiOperation(value = "OPEN - 회원가입")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=409, message = "이미 가입된 계정인 경우"),
+    })
     @PreAuthorize("permitAll()")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequestDto signupRequestDto) {

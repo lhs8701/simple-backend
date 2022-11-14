@@ -28,6 +28,8 @@ public class ViewingRecord {
     @ColumnDefault("false")
     private boolean check;
 
+    double score;
+
     @Indexed
     private String userId;
 

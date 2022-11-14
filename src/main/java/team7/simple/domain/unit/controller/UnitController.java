@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.answer.service.AnswerService;
 import team7.simple.domain.question.service.QuestionService;
+import team7.simple.domain.rating.dto.RatingRequestDto;
+import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.unit.dto.UnitPlayRequestDto;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
@@ -26,8 +28,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UnitController {
     private final UnitService unitService;
-    private final QuestionService questionService;
-    private final AnswerService answerService;
+    private final RatingService ratingService;
 
     @ApiOperation(value = "OPEN - 강의 업로드", notes = "강의 원본 영상을 원격 서버에 업로드함과 동시에 m3u8 확장자로 변환합니다.")
     @PostMapping("open/course/unit")
@@ -68,5 +69,23 @@ public class UnitController {
     @PostMapping("/front/course/unit/{unitId}")
     public ResponseEntity<?> playUnit(@PathVariable Long unitId, @RequestBody UnitPlayRequestDto unitPlayRequestDto, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(unitService.playUnit(unitId, unitPlayRequestDto, user), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FRONT - 강좌 평점 등록")
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/front/course/unit/{unitId}/rating")
+    public ResponseEntity<?> addRating(@PathVariable Long unitId, @RequestBody @Valid RatingRequestDto ratingRequestDto, @AuthenticationPrincipal User user) {
+        ratingService.addRating(unitId, ratingRequestDto, user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FRONT - 강좌 평점 조회")
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/front/course/unit/{unitId}/rating")
+    public ResponseEntity<?> getRating(@PathVariable Long unitId) {
+
+        return new ResponseEntity<>(ratingService.getAverageRatingScore(unitId), HttpStatus.OK);
     }
 }
