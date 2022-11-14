@@ -83,8 +83,9 @@ public class UnitService {
         double recordTime;
         boolean complete = unitPlayRequestDto.isComplete();
 
-        saveCurrentViewingRecord(unitPlayRequestDto, currentUnit.getUnitId(), user.getUserId(), complete);
-
+        if (unitPlayRequestDto.getCurrentUnitId() != -1) {
+            saveCurrentViewingRecord(unitPlayRequestDto, currentUnit.getUnitId(), user.getUserId(), complete);
+        }
         ViewingRecord nextUnitViewingRecord = viewingRecordRedisRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
         if (nextUnitViewingRecord == null) {
             recordTime = 0;

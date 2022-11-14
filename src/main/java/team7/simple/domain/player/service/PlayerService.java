@@ -56,7 +56,7 @@ public class PlayerService {
         User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken token;
         List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
-        if (activeAccessTokens.size() > 1){
+        if (activeAccessTokens.size() >= 2){
              token = activeAccessTokens.stream().filter(t -> t.getConflict() == 2).findAny().orElseThrow(CExpiredTokenException::new);
         }
         else{
