@@ -14,14 +14,20 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UnitThumbnailResponseDto {
+public class UnitDetailResponseDto {
     private Long unitId;
     private String title;
 
+    private String fileUrl;
 
-    public UnitThumbnailResponseDto(Unit unit) {
+    private List<QuestionThumbnailResponseDto> questionList;
+
+
+    public UnitDetailResponseDto(Unit unit) {
         this.unitId = unit.getUnitId();
         this.title = unit.getTitle();
+        this.fileUrl = unit.getVideo().getHlsFileUrl();
+        this.questionList = unit.getQuestionList().stream().map(QuestionThumbnailResponseDto::new).collect(Collectors.toList());
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuestionResponseDto {
+public class QuestionDetailResponseDto {
     private Long questionId;
     private String title;
     private String content;
@@ -23,7 +23,7 @@ public class QuestionResponseDto {
     private LocalDateTime createdTime;
     private List<Answer> answerList;
 
-    public QuestionResponseDto(Question question) {
+    public QuestionDetailResponseDto(Question question) {
         this.questionId = question.getQuestionId();
         this.title = question.getTitle();
         this.content = question.getContent();

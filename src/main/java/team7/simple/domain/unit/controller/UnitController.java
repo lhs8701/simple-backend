@@ -56,6 +56,12 @@ public class UnitController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ApiOperation(value = "FRONT - 강좌 내 강의 목록 조회")
+    @GetMapping("/open/course/{courseId}/unit")
+    public ResponseEntity<?> getUnitThumbnailList(@PathVariable Long courseId) {
+        return new ResponseEntity<>(unitService.getUnitThumbnailList(courseId), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "FRONT - 강의 재생", notes = "다른 강의로 이동할 경우 호출하는 API입니다. 현재 재생중인 강의의 시간대와 완료 여부를 기록한 후, 다음 강의 영상의 경로를 포함한 정보를 반환합니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")

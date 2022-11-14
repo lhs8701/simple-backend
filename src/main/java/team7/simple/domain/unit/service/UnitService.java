@@ -19,7 +19,9 @@ import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -76,7 +78,7 @@ public class UnitService {
         return unitId;
     }
 
-
+    @Transactional
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
         double recordTime;
         boolean complete = unitPlayRequestDto.isComplete();
@@ -100,7 +102,6 @@ public class UnitService {
                 .time(recordTime)
                 .build();
     }
-
     private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto, Long unitId, String userId, boolean complete) {
         ViewingRecord currentViewingRecord = viewingRecordRedisRepository.findByUnitIdAndUserId(unitId, userId).orElse(null);
         if (currentViewingRecord == null) {
@@ -116,6 +117,15 @@ public class UnitService {
             currentViewingRecord.setTime(unitPlayRequestDto.getRecordTime());
             currentViewingRecord.setCheck(complete);
         }
+    }
+
+    @Transactional
+    public List<UnitThumbnailResponseDto> getUnitThumbnailList(Long courseId) {
+        Course course = courseJpaRepository.findById(courseId).orElseThrow(CCourseNotFoundException::new);
+        List<Unit> unitList = course.getUnitList();
+        if (unitList == null)
+            return null;
+        return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
     }
 }
 

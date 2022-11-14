@@ -12,15 +12,13 @@ import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.repository.StudyJpaRepository;
-import team7.simple.domain.unit.dto.UnitThumbnailResponseDto;
-import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CStudyNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -31,6 +29,7 @@ public class CourseService {
     private final StudyJpaRepository studyJpaRepository;
 
     private final RatingService ratingService;
+    private final UnitService unitService;
     private final ViewingRecordRedisRepository viewingRecordRedisRepository;
 
     @Transactional
@@ -50,15 +49,7 @@ public class CourseService {
         if (studyList != null){
             attendeeCount = studyList.size();
         }
-        return new CourseResponseDto(course, attendeeCount, rating, this.getUnitList(course));
-    }
-
-    @Transactional
-    public List<UnitThumbnailResponseDto> getUnitList(Course course) {
-        List<Unit> unitList = course.getUnitList();
-        if (unitList == null)
-            return null;
-        return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
+        return new CourseResponseDto(course, attendeeCount, rating, unitService.getUnitThumbnailList(courseId));
     }
 
 
