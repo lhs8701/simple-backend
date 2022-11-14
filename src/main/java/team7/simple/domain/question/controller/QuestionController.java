@@ -37,6 +37,14 @@ public class QuestionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @ApiOperation(value = "FRONT - 강의 질문 목록 조회")
+    @DeleteMapping("/front/course/unit/{unitId}/question/")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
+        questionService.deleteQuestion(questionId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @ApiOperation(value = "FRONT - 질문 상세 조회")
     @GetMapping("/front/course/unit/question/{questionId}")
     public ResponseEntity<?> getQuestionInfo(@PathVariable Long questionId) {
