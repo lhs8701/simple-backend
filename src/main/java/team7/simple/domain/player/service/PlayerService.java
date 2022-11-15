@@ -8,6 +8,7 @@ import team7.simple.domain.auth.jwt.dto.AccessTokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
 import team7.simple.domain.player.dto.ExecuteRequestDto;
+import team7.simple.domain.player.dto.ExecuteResponseDto;
 import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.user.entity.User;
@@ -33,7 +34,7 @@ public class PlayerService {
     String PLAYER_PATH;
 //    String PLAYER_PATH = "http://www.naver.com";
 
-    public String executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
+    public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
         int conflict = 0;
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
         //중복로그인인 경우
@@ -47,7 +48,7 @@ public class PlayerService {
                 .conflict(conflict)
                 .build());
 
-        return PLAYER_PATH + "?userId=" + String.valueOf(user.getUserId()) + "&unitId=" + String.valueOf(executeRequestDto.getUnitId());
+        return new ExecuteResponseDto(PLAYER_PATH + "?userId=" + String.valueOf(user.getUserId()) + "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
     }
 
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
