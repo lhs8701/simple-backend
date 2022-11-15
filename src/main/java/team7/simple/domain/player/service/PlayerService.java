@@ -48,7 +48,10 @@ public class PlayerService {
                 .conflict(conflict)
                 .build());
 
-        return new ExecuteResponseDto(PLAYER_PATH + "?userId=" + String.valueOf(user.getUserId()) + "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
+        return new ExecuteResponseDto(PLAYER_PATH
+                + "?userId=" + String.valueOf(user.getUserId())
+                + "&courseId=" + String.valueOf(executeRequestDto.getCourseId())
+                + "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
     }
 
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
