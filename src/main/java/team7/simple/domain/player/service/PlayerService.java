@@ -33,7 +33,7 @@ public class PlayerService {
     String PLAYER_PATH;
 //    String PLAYER_PATH = "http://www.naver.com";
 
-    public URI executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
+    public String executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
         int conflict = 0;
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
         //중복로그인인 경우
@@ -47,9 +47,7 @@ public class PlayerService {
                 .conflict(conflict)
                 .build());
 
-        return new URI (PLAYER_PATH +
-                "?userId=" + String.valueOf(user.getUserId()) +
-                "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
+        return PLAYER_PATH + "?userId=" + String.valueOf(user.getUserId()) + "&unitId=" + String.valueOf(executeRequestDto.getUnitId());
     }
 
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
@@ -57,10 +55,9 @@ public class PlayerService {
         User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken token;
         List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
-        if (activeAccessTokens.size() >= 2){
-             token = activeAccessTokens.stream().filter(t -> t.getConflict() == 2).findAny().orElseThrow(CExpiredTokenException::new);
-        }
-        else{
+        if (activeAccessTokens.size() >= 2) {
+            token = activeAccessTokens.stream().filter(t -> t.getConflict() == 2).findAny().orElseThrow(CExpiredTokenException::new);
+        } else {
             token = activeAccessTokens.get(0);
         }
         return new AccessTokenResponseDto(token.getAccessToken());

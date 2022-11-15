@@ -40,10 +40,7 @@ public class PlayerController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/player/execute")
     public ResponseEntity<?> executePlayer(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExecuteRequestDto executeRequestDto, @AuthenticationPrincipal User user) throws URISyntaxException {
-        URI redirectedUri = playerService.executePlayer(accessToken, executeRequestDto, user);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(redirectedUri);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(playerService.executePlayer(accessToken, executeRequestDto, user), HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 플레이어 시작", notes = "플레이어가 실행되자마자 가장 먼저 호출되어야 하는 API로, userId에 해당하는 어세스 토큰을 반환합니다.")
