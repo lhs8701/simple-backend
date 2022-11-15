@@ -81,8 +81,13 @@ public class UnitService {
         Long courseId = unitRequestByUrlDto.getCourseId();
         Course course = courseJpaRepository.findById(courseId)
                 .orElseThrow(CCourseNotFoundException::new);
-
-        Unit unit = unitRequestByUrlDto.toEntity(new Video("test", "test", unitRequestByUrlDto.getMediaUrl()), course);
+        Video video = Video.builder()
+                .fileName("test")
+                .fileOriName("test")
+                .fileUrl("test")
+                .hlsFileUrl(unitRequestByUrlDto.getMediaUrl())
+                .build();
+        Unit unit = unitRequestByUrlDto.toEntity(video, course);
 
         return unitJpaRepository.save(unit).getUnitId();
     }
