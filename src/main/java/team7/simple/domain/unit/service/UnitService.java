@@ -75,6 +75,18 @@ public class UnitService {
         return unitJpaRepository.save(unit).getUnitId();
     }
 
+    /*임시*/
+    @Transactional
+    public Long createUnitByUrl(UnitRequestByUrlDto unitRequestByUrlDto) {
+        Long courseId = unitRequestByUrlDto.getCourseId();
+        Course course = courseJpaRepository.findById(courseId)
+                .orElseThrow(CCourseNotFoundException::new);
+
+        Unit unit = unitRequestByUrlDto.toEntity(new Video("test", "test", unitRequestByUrlDto.getMediaUrl()), course);
+
+        return unitJpaRepository.save(unit).getUnitId();
+    }
+
     @Transactional
     public void deleteUnit(Long unitId) {
         Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);

@@ -15,6 +15,7 @@ import team7.simple.domain.question.service.QuestionService;
 import team7.simple.domain.rating.dto.RatingRequestDto;
 import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.unit.dto.UnitPlayRequestDto;
+import team7.simple.domain.unit.dto.UnitRequestByUrlDto;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
 import team7.simple.domain.unit.service.UnitService;
@@ -43,6 +44,12 @@ public class UnitController {
         return new ResponseEntity<>(unitService.createUnitLocal(unitRequestDto), HttpStatus.OK);
     }
 
+    /*테스트용*/
+    @ApiOperation(value = "OPEN - 강의 업로드 (url로 접근, 테스트용) ", notes = "URL로 미디어 소스에 접근합니다. 테스트 용으로 사용하는 API입니다.")
+    @PostMapping("open/course/unit/url")
+    public ResponseEntity<?> uploadUnitByUrl(@RequestBody @Valid UnitRequestByUrlDto unitRequestByUrlDto) {
+        return new ResponseEntity<>(unitService.createUnitByUrl(unitRequestByUrlDto), HttpStatus.OK);
+    }
 
     @ApiOperation(value = "OPEN - 강의 수정")
     @PatchMapping("/open/course/unit/{unitId}")
