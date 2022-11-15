@@ -15,6 +15,7 @@ import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
 import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
+import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 
 import java.net.*;
@@ -32,15 +33,14 @@ public class PlayerService {
 
     @Value("${path.front_page}")
     String PLAYER_PATH;
-//    String PLAYER_PATH = "http://www.naver.com";
 
     public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
-        int conflict = 0;
+        int conflict = ActiveStatus.NO_CONFLICT.ordinal();
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
         //중복로그인인 경우
         if (existActiveAccessToken != null) {
-            existActiveAccessToken.setConflict(1);
-            conflict = 2;
+            existActiveAccessToken.setConflict(ActiveStatus.PRE_CONFLICTED.ordinal());
+            conflict = ActiveStatus.POST_CONFLICTED.ordinal();
         }
         activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                 .accessToken(accessToken)
@@ -60,7 +60,10 @@ public class PlayerService {
         ActiveAccessToken token;
         List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
         if (activeAccessTokens.size() >= 2) {
-            token = activeAccessTokens.stream().filter(t -> t.getConflict() == 2).findAny().orElseThrow(CExpiredTokenException::new);
+            token = activeAccessTokens.stream()
+                    .filter(t -> t.getConflict() == ActiveStatus.POST_CONFLICTED.ordinal())
+                    .findAny()
+                    .orElseThrow(CExpiredTokenException::new);
         } else {
             token = activeAccessTokens.get(0);
         }
