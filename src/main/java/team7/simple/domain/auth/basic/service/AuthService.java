@@ -22,6 +22,7 @@ import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.RefreshTokenRedisRepository;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
+import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
 
@@ -121,16 +122,16 @@ public class AuthService {
     }
 
     public void removeConflict(String accessToken, RemoveConflictRequestDto removeConflictRequestDto, User user) {
-        ActiveAccessToken currentAccessToken = activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(InternalError::new);
+        ActiveAccessToken currentAccessToken = activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken otherAccessToken = activeAccessTokenRedisRepository.findByUserIdAndConflict(user.getUserId(), 2).orElseThrow(CUserNotFoundException::new);
-        if (currentAccessToken.getConflict() != 1) {
+        if (currentAccessToken.getConflict() != ActiveStatus.PRE_CONFLICTED.ordinal()) {
             throw new CWrongTypeTokenException();
         }
         if (removeConflictRequestDto.isKeepGoing()) {
-            otherAccessToken.setConflict(3);
+            otherAccessToken.setConflict(ActiveStatus.POST_CONFLICTED_FIRED.ordinal());
         } else {
             activeAccessTokenRedisRepository.delete(currentAccessToken);
-            otherAccessToken.setConflict(0);
+            otherAccessToken.setConflict(ActiveStatus.NO_CONFLICT.ordinal());
         }
     }
 }

@@ -98,6 +98,11 @@ public class AuthController {
             "keepGoing값이 참일 경우 기존 이용중이던 사용자가 계속 이용하게 되고, 거짓일 경우 나중에 접속한 사용자가 강제 종료됩니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=401, message = "토큰이 유효하지 않은 경우"),
+            @ApiResponse(code=404, message = "접속 중인 토큰이 없을 경우"),
+    })
     @PostMapping(value = "/conflict")
     public ResponseEntity<?> removeConflict(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody RemoveConflictRequestDto removeConflictRequestDto, @AuthenticationPrincipal User user) {
         authService.removeConflict(accessToken, removeConflictRequestDto, user);

@@ -31,21 +31,28 @@ public class PlayerService {
 
     private final ViewingRecordRedisRepository viewingRecordRedisRepository;
 
+    static final int CONNECTION_LIMIT = 1;
+
     @Value("${path.front_page}")
     String PLAYER_PATH;
 
-    public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) throws URISyntaxException {
-        int conflict = ActiveStatus.NO_CONFLICT.ordinal();
+    /**
+     * 사용자 권한을 확인한 후, 플레이어 주소를 반환한다.
+     *
+     * @param accessToken       어세스토큰
+     * @param executeRequestDto 강좌 아이디, 강의 아이디
+     * @param user              사용자
+     * @return 사용자 아이디, 강좌 아이디, 강의 아이디를 쿼리 파라미터로 하는 플레이어의 주소
+     */
+    public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) {
+        int conflictState = ActiveStatus.NO_CONFLICT.ordinal();
+
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
-        //중복로그인인 경우
-        if (existActiveAccessToken != null) {
-            existActiveAccessToken.setConflict(ActiveStatus.PRE_CONFLICTED.ordinal());
-            conflict = ActiveStatus.POST_CONFLICTED.ordinal();
-        }
+        conflictState = doesConflicted(conflictState, existActiveAccessToken);
         activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                 .accessToken(accessToken)
                 .userId(user.getUserId())
-                .conflict(conflict)
+                .conflict(conflictState)
                 .build());
 
         return new ExecuteResponseDto(PLAYER_PATH
@@ -54,20 +61,36 @@ public class PlayerService {
                 + "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
     }
 
+    /**
+     * 충돌을 확인한 후, 충돌 상태를 갱신한다.
+     *
+     * @param conflict               충돌 상태. NO_CONFLICTED는 충돌이 없음을 의미하고, PRE_CONFLICTED는 동일 계정을 먼저 접속했음을 의미하고, POST_CONFLICTED는 동일 계정을 후에 접속했음을 의미한다.
+     * @param existActiveAccessToken 기존 이용중이던 사용자의 어세스토큰
+     * @return 갱신된 충돌 상태를 반환한다.
+     */
+    private int doesConflicted(int conflict, ActiveAccessToken existActiveAccessToken) {
+        if (existActiveAccessToken != null) {
+            existActiveAccessToken.setConflict(ActiveStatus.PRE_CONFLICTED.ordinal());
+            conflict = ActiveStatus.POST_CONFLICTED.ordinal();
+        }
+        return conflict;
+    }
+
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
-        /* 중복 시청 방지 */
         User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
-        ActiveAccessToken token;
+        ActiveAccessToken token = 나중에_접속한_토큰_얻기(user);
+        return new AccessTokenResponseDto(token.getAccessToken());
+    }
+
+    private ActiveAccessToken 나중에_접속한_토큰_얻기(User user) {
         List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
-        if (activeAccessTokens.size() >= 2) {
-            token = activeAccessTokens.stream()
+        if (activeAccessTokens.size() > CONNECTION_LIMIT) {
+            return activeAccessTokens.stream()
                     .filter(t -> t.getConflict() == ActiveStatus.POST_CONFLICTED.ordinal())
                     .findAny()
                     .orElseThrow(CExpiredTokenException::new);
-        } else {
-            token = activeAccessTokens.get(0);
         }
-        return new AccessTokenResponseDto(token.getAccessToken());
+        return activeAccessTokens.get(0);
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {

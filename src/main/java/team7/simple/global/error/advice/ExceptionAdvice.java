@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import team7.simple.global.common.response.dto.CommonResult;
 import team7.simple.global.common.response.service.ResponseService;
-import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.*;
 
 
@@ -170,7 +168,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CStudyNotFoundException.class)
     protected ResponseEntity<?> handle(CStudyNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     /***
