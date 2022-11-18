@@ -94,10 +94,24 @@ public class PlayerService {
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
+        log.info("1");
         ViewingRecord viewingRecord = viewingRecordRedisRepository
                 .findByUnitIdAndUserId(exitRequestDto.getUnitId(), exitRequestDto.getUserId())
-                .orElseThrow(CUnitNotFoundException::new);
-        viewingRecord.setTime(exitRequestDto.getTime());
+                .orElse(null);
+        if (viewingRecord == null){
+            viewingRecord = ViewingRecord.builder()
+                    .unitId(exitRequestDto.getUnitId())
+                    .userId(exitRequestDto.getUserId())
+                    .check(exitRequestDto.isCheck())
+                    .time(exitRequestDto.getTime())
+                    .build();
+        }
+        else{
+            viewingRecord.setTime(exitRequestDto.getTime());
+        }
+        log.info("2");
         activeAccessTokenRedisRepository.deleteById(accessToken);
+
+        log.info("3");
     }
 }

@@ -11,4 +11,5 @@ public class ExitRequestDto {
     String userId;
     Long unitId;
     double time;
+    boolean check;
 }
