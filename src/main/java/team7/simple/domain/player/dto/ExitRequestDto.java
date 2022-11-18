@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExitRequestDto {
-    Long userId;
+    String userId;
     Long unitId;
     double time;
 }
