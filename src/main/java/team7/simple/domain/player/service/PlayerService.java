@@ -94,9 +94,10 @@ public class PlayerService {
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
-        ViewingRecord viewingRecord = viewingRecordRedisRepository.findByUnitId(exitRequestDto.getUnitId()).orElseThrow(CUnitNotFoundException::new);
+        ViewingRecord viewingRecord = viewingRecordRedisRepository
+                .findByUnitIdAndUserId(exitRequestDto.getUnitId(), exitRequestDto.getUserId())
+                .orElseThrow(CUnitNotFoundException::new);
         viewingRecord.setTime(exitRequestDto.getTime());
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
-
 }
