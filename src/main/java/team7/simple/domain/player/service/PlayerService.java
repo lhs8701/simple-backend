@@ -59,7 +59,6 @@ public class PlayerService {
                 + "&unitId=" + executeRequestDto.getUnitId());
     }
 
-
     private int doesConflicted(User user) {
         int conflictStatus = ActiveStatus.NO_CONFLICT.ordinal();
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
@@ -71,7 +70,7 @@ public class PlayerService {
         log.info("e");
         return conflictStatus;
     }
-    private void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus){
+    public void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus){
         ActiveAccessToken newToken = ActiveAccessToken.builder()
                 .accessToken(oldToken.getAccessToken())
                 .userId(oldToken.getUserId())
