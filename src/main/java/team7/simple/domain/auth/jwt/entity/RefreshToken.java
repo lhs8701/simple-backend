@@ -13,15 +13,15 @@ import org.springframework.data.redis.core.TimeToLive;
 public class RefreshToken {
 
     @Id
-    private String id;
+    private String userId;
 
     private String refreshToken;
 
     @TimeToLive
     private Long expiration;
 
-    public RefreshToken(String id, String refreshToken) {
-        this.id = id;
+    public RefreshToken(String userId, String refreshToken) {
+        this.userId = userId;
         this.refreshToken = refreshToken;
         this.expiration = JwtExpiration.REFRESH_TOKEN_EXPIRATION_TIME.getValue() / 1000;
     }

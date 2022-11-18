@@ -36,6 +36,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN_EXCEPTION(-5002, "만료된 토큰입니다."),
     UNSUPPORTED_TOKEN_EXCEPTION(-5003, "지원하지 않는 토큰입니다."),
     ILLEGAL_ARGUMENT_EXCEPTION(-5004, "잘못된 형식입니다."),
+    USER_NOT_ACTIVE_EXCEPTION(-5005, "현재 시청중인 계정이 아닙니다."),
 
 
     WRONG_APPROACH(-9998, "잘못된 접근입니다."),

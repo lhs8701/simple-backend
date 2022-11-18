@@ -19,6 +19,7 @@ import team7.simple.global.common.ConstValue;
 import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.CAuthenticationEntryPointException;
 import team7.simple.global.error.advice.exception.CExpiredTokenException;
+import team7.simple.global.error.advice.exception.CUserNotActiveException;
 import team7.simple.global.error.advice.exception.CWrongTypeTokenException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -137,7 +138,10 @@ public class JwtProvider {
     }
 
     private boolean isConflicted(HttpServletRequest request, String jwt) {
-        ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findById(jwt).orElseThrow(InternalError::new);
+        ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findById(jwt).orElse(null);
+        if (activeAccessToken == null){
+            return false;
+        }
         if (activeAccessToken.getConflict() == 1) {
             request.setAttribute("exception", ErrorCode.LOGIN_CONFLICT_EXCEPTION.getCode());
             return true;

@@ -179,4 +179,13 @@ public class ExceptionAdvice {
         log.error(e.getErrorCode().getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    /***
+     * 현재 시청중인인 계정이 아닐 경우 (ActiveAccessToken이 없는 경우)
+     */
+    @ExceptionHandler(CUserNotActiveException.class)
+    protected ResponseEntity<?> handle(CUserNotActiveException e) {
+        log.error(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

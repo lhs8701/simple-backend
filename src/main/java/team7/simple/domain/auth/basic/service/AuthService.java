@@ -57,12 +57,6 @@ public class AuthService {
         String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
 
         refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), refreshToken));
-        activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
-                .userId(user.getUserId())
-                .accessToken(accessToken)
-                .expiration(JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue())
-                .conflict(0)
-                .build());
 
         return TokenResponseDto.builder()
                 .grantType("bearer")

@@ -63,6 +63,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout")
     public ResponseEntity<?> logout(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @AuthenticationPrincipal User user) {
+        authService.logout(accessToken, user);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
