@@ -18,7 +18,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String exception = String.valueOf(request.getAttribute("exception"));
-
+        log.info("aaa");
         //잘못된 토큰
         if (exception.equals(String.valueOf(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getCode()))){
             response.sendRedirect("/exception/entrypoint/illegal");
@@ -35,8 +35,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         else if(exception.equals(String.valueOf(ErrorCode.UNSUPPORTED_TOKEN_EXCEPTION.getCode()))) {
             response.sendRedirect("/exception/entrypoint/unsupported");
         }
+        else if (exception.equals(String.valueOf(ErrorCode.LOGIN_CONFLICT_EXCEPTION.getCode()))){
+            log.info("sss");
+            response.sendRedirect("/exception/entrypoint/conflicted");
+        }
         //접근 권한이 없는 경우
         else {
+            log.info("ddd");
             response.sendRedirect("/exception/entrypoint");
         }
     }

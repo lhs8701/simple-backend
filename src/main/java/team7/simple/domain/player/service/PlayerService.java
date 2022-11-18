@@ -54,22 +54,32 @@ public class PlayerService {
                 .build());
         log.info("c");
         return new ExecuteResponseDto(PLAYER_PATH
-                + "?userId=" + String.valueOf(user.getUserId())
-                + "&courseId=" + String.valueOf(executeRequestDto.getCourseId())
-                + "&unitId=" + String.valueOf(executeRequestDto.getUnitId()));
+                + "?userId=" + user.getUserId()
+                + "&courseId=" + executeRequestDto.getCourseId()
+                + "&unitId=" + executeRequestDto.getUnitId());
     }
 
 
     private int doesConflicted(User user) {
-        int conflict = ActiveStatus.NO_CONFLICT.ordinal();
+        int conflictStatus = ActiveStatus.NO_CONFLICT.ordinal();
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
         if (existActiveAccessToken != null) {
             log.info("d");
-            existActiveAccessToken.setConflict(ActiveStatus.PRE_CONFLICTED.ordinal());
-            conflict = ActiveStatus.POST_CONFLICTED.ordinal();
+            updateConflictStatus(existActiveAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
+            conflictStatus = ActiveStatus.POST_CONFLICTED.ordinal();
         }
         log.info("e");
-        return conflict;
+        return conflictStatus;
+    }
+    private void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus){
+        ActiveAccessToken newToken = ActiveAccessToken.builder()
+                .accessToken(oldToken.getAccessToken())
+                .userId(oldToken.getUserId())
+                .conflict(conflictStatus)
+                .expiration(oldToken.getExpiration())
+                .build();
+        activeAccessTokenRedisRepository.delete(oldToken);
+        activeAccessTokenRedisRepository.save(newToken);
     }
 
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {

@@ -139,10 +139,14 @@ public class JwtProvider {
 
     private boolean isConflicted(HttpServletRequest request, String jwt) {
         ActiveAccessToken activeAccessToken = activeAccessTokenRedisRepository.findById(jwt).orElse(null);
+        log.info("1");
         if (activeAccessToken == null){
+            log.info("2");
+
             return false;
         }
         if (activeAccessToken.getConflict() == 1) {
+            log.info("3");
             request.setAttribute("exception", ErrorCode.LOGIN_CONFLICT_EXCEPTION.getCode());
             return true;
         }
@@ -150,6 +154,8 @@ public class JwtProvider {
             request.setAttribute("exception", ErrorCode.ACCESS_DENIED.getCode());
             return true;
         }
+        log.info("4");
+
         return false;
     }
 

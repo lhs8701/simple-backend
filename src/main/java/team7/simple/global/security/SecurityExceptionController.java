@@ -35,7 +35,10 @@ public class SecurityExceptionController {
     public void unsupportedTokenException() {
         throw new CUnsupportedTokenException();
     }
-
+    @GetMapping("/entrypoint/conflicted")
+    public void loginConflictedException() {
+        throw new CLoginConflictException();
+    }
     @GetMapping("/accessDenied")
     public void accessDeniedException() {
         throw new CAccessDeniedException();
