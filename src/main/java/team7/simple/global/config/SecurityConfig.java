@@ -18,10 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
-import team7.simple.global.security.CustomAccessDeniedHandler;
-import team7.simple.global.security.CustomAuthenticationEntryPoint;
-import team7.simple.global.security.JwtAuthenticationFilter;
-import team7.simple.global.security.JwtProvider;
+import team7.simple.global.security.*;
 
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) //@PreAuthorize, @Secured 사용을 위함
@@ -32,8 +29,6 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
-
     @Bean
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
@@ -57,7 +52,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
         return http.build();
     }
 
