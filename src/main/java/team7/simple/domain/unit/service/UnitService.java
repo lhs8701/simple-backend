@@ -112,11 +112,10 @@ public class UnitService {
     @Transactional
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
         double recordTime;
-        boolean complete = unitPlayRequestDto.isComplete();
 
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
-            Unit currentUnit = unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
-            saveCurrentViewingRecord(unitPlayRequestDto, currentUnit.getUnitId(), user.getUserId(), complete);
+            unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
+            saveCurrentViewingRecord(unitPlayRequestDto, user.getUserId());
         }
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
         ViewingRecord nextUnitViewingRecord = viewingRecordRedisRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
@@ -133,20 +132,24 @@ public class UnitService {
                 .time(recordTime)
                 .build();
     }
-    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto, Long unitId, String userId, boolean complete) {
-        ViewingRecord currentViewingRecord = viewingRecordRedisRepository.findByUnitIdAndUserId(unitId, userId).orElse(null);
+
+    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto,String userId) {
+        ViewingRecord currentViewingRecord = viewingRecordRedisRepository
+                .findByUnitIdAndUserId(unitPlayRequestDto.getCurrentUnitId(), userId)
+                .orElse(null);
         if (currentViewingRecord == null) {
             viewingRecordRedisRepository.save(ViewingRecord.builder()
                     .recordId(UUID.randomUUID().toString())
-                    .unitId(unitId)
+                    .unitId(unitPlayRequestDto.getCurrentUnitId())
                     .userId(userId)
                     .time(unitPlayRequestDto.getRecordTime())
-                    .check(complete) //complete
+                    .check(unitPlayRequestDto.isComplete())
                     .build());
-        }
-        else{
+        } else {
             currentViewingRecord.setTime(unitPlayRequestDto.getRecordTime());
-            currentViewingRecord.setCheck(complete);
+            if (unitPlayRequestDto.isComplete()) {
+                currentViewingRecord.setCheck(true);
+            }
         }
     }
 
@@ -158,7 +161,5 @@ public class UnitService {
             return null;
         return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
     }
-
-
 }
 

@@ -2,6 +2,7 @@ package team7.simple.global.security;
 
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 import team7.simple.global.error.ErrorCode;
 
@@ -26,23 +27,23 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     public void setErrorResponse(HttpServletResponse response, Throwable e) {
         if (e.getMessage().equals(String.valueOf(ErrorCode.LOGIN_CONFLICT_EXCEPTION.getCode()))) {
             log.error(ErrorCode.LOGIN_CONFLICT_EXCEPTION.getMessage());
-            response.setStatus(409);
+            response.setStatus(HttpStatus.CONFLICT.value());
         }
         if (e.getMessage().equals(String.valueOf(ErrorCode.EXPIRED_TOKEN_EXCEPTION.getCode()))) {
             log.error(ErrorCode.EXPIRED_TOKEN_EXCEPTION.getMessage());
-            response.setStatus(401);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         if (e.getMessage().equals(String.valueOf(ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getCode()))) {
             log.error(ErrorCode.WRONG_TYPE_TOKEN_EXCEPTION.getMessage());
-            response.setStatus(401);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         if (e.getMessage().equals(String.valueOf(ErrorCode.UNSUPPORTED_TOKEN_EXCEPTION.getCode()))) {
             log.error(ErrorCode.UNSUPPORTED_TOKEN_EXCEPTION.getMessage());
-            response.setStatus(401);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         if (e.getMessage().equals(String.valueOf(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getCode()))) {
             log.error(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getMessage());
-            response.setStatus(400);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
     }
 }
