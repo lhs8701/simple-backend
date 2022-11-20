@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExitRequestDto {
-    String userId;
     Long unitId;
     double time;
     boolean check;

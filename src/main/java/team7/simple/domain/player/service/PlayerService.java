@@ -17,6 +17,7 @@ import team7.simple.domain.viewingrecord.entity.ViewingRecord;
 import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
+import team7.simple.global.security.JwtProvider;
 
 import java.net.*;
 import java.util.List;
@@ -30,6 +31,8 @@ public class PlayerService {
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
     private final ViewingRecordRedisRepository viewingRecordRedisRepository;
+
+    private final JwtProvider jwtProvider;
 
     static final int CONNECTION_LIMIT = 1;
 
@@ -110,14 +113,15 @@ public class PlayerService {
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
+        User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
         activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
         ViewingRecord viewingRecord = viewingRecordRedisRepository
-                .findByUnitIdAndUserId(exitRequestDto.getUnitId(), exitRequestDto.getUserId())
+                .findByUnitIdAndUserId(exitRequestDto.getUnitId(), user.getUserId())
                 .orElse(null);
         if (viewingRecord == null){
             viewingRecord = ViewingRecord.builder()
                     .unitId(exitRequestDto.getUnitId())
-                    .userId(exitRequestDto.getUserId())
+                    .userId(user.getUserId())
                     .check(exitRequestDto.isCheck())
                     .time(exitRequestDto.getTime())
                     .build();
