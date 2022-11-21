@@ -22,6 +22,7 @@ public class ViewingRecordService {
     }
 
     public boolean doesCompleted(User user, Unit unit) {
-        return false;
+        ViewingRecord viewingRecord = viewingRecordJpaRepository.findByUnitAndUser(unit, user).orElse(null);
+        return viewingRecord != null && viewingRecord.isCompleted();
     }
 }
