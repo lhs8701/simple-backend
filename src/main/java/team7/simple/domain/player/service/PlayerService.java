@@ -14,12 +14,11 @@ import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
 
-import java.net.*;
 import java.util.List;
 
 
@@ -30,7 +29,7 @@ public class PlayerService {
     private final UserJpaRepository userJpaRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
-    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
+    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
 
     private final JwtProvider jwtProvider;
 
@@ -115,7 +114,7 @@ public class PlayerService {
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
         activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
-        ViewingRecord viewingRecord = viewingRecordRedisRepository
+        ViewingRecord viewingRecord = viewingRecordJpaRepository
                 .findByUnitIdAndUserId(exitRequestDto.getUnitId(), user.getUserId())
                 .orElse(null);
         if (viewingRecord == null){
@@ -125,7 +124,7 @@ public class PlayerService {
                     .check(exitRequestDto.isCheck())
                     .time(exitRequestDto.getTime())
                     .build();
-            viewingRecordRedisRepository.save(viewingRecord);
+            viewingRecordJpaRepository.save(viewingRecord);
         }
         else{
             viewingRecord.setTime(exitRequestDto.getTime());

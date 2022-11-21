@@ -4,35 +4,35 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
+import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.user.entity.User;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamicInsert //insert 시 null인 필드 제외
-@DynamicUpdate //update 시 null인 필드 제외
-@RedisHash("ViewingRecord")
+@Entity
 public class ViewingRecord {
     @Id
-    private String recordId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long recordId;
 
-    private double time;
+    private double timeline;
 
-    @ColumnDefault("false")
-    private boolean check;
+    private boolean completed;
 
-    double score;
+    double rating;
 
-    @Indexed
-    private String userId;
+    @ManyToOne
+    @JoinColumn
+    private User user;
 
-    @Indexed
-    private Long unitId;
+    @ManyToOne
+    @JoinColumn
+    private Unit unit;
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.study.entity.Study;
+import team7.simple.domain.viewingrecord.entity.ViewingRecord;
 import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -40,6 +41,9 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch= FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Study> studyList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ViewingRecord> recordList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

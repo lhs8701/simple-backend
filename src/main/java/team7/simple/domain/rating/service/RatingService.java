@@ -10,7 +10,7 @@ import team7.simple.domain.study.repository.StudyJpaRepository;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.error.advice.exception.*;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RatingService {
 
-    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
+    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
     private final UnitJpaRepository unitJpaRepository;
     private final StudyJpaRepository studyJpaRepository;
 
@@ -29,7 +29,7 @@ public class RatingService {
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Course course = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new).getCourse();
         studyJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);
-        ViewingRecord viewingRecord = viewingRecordRedisRepository.findByUnitIdAndUserId(unitId, user.getUserId()).orElse(null);
+        ViewingRecord viewingRecord = viewingRecordJpaRepository.findByUnitIdAndUserId(unitId, user.getUserId()).orElse(null);
         if (viewingRecord == null) {
             log.error("ViewingRecord가 없습니다.");
             throw new CAccessDeniedException();
@@ -40,7 +40,7 @@ public class RatingService {
     @Transactional
     public double getAverageRatingScore(Long unitId) {
         double rating;
-        List<ViewingRecord> viewingRecordList = viewingRecordRedisRepository.findAllByUnitId(unitId);
+        List<ViewingRecord> viewingRecordList = viewingRecordJpaRepository.findAllByUnitId(unitId);
         if (viewingRecordList == null) {
             log.error("해당 강의의 ViewingRecord가 없습니다.");
             throw new CRatingNotFoundException();

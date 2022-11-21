@@ -1,21 +1,11 @@
 package team7.simple.domain.unit.service;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.rating.dto.RatingRequestDto;
 import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
@@ -24,15 +14,11 @@ import team7.simple.domain.video.dto.VideoDto;
 import team7.simple.domain.video.entity.Video;
 import team7.simple.domain.video.service.VideoService;
 import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
-import team7.simple.global.common.ConstValue;
-import team7.simple.global.error.advice.exception.CAccessDeniedException;
+import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
 
-import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,7 +29,7 @@ public class UnitService {
     private final CourseJpaRepository courseJpaRepository;
     private final UnitJpaRepository unitJpaRepository;
 
-    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
+    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
 
     private final VideoService videoService;
 
@@ -118,7 +104,7 @@ public class UnitService {
             saveCurrentViewingRecord(unitPlayRequestDto, user.getUserId());
         }
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-        ViewingRecord nextUnitViewingRecord = viewingRecordRedisRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
+        ViewingRecord nextUnitViewingRecord = viewingRecordJpaRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
         if (nextUnitViewingRecord == null) {
             recordTime = 0;
         } else {
@@ -134,11 +120,11 @@ public class UnitService {
     }
 
     private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto,String userId) {
-        ViewingRecord currentViewingRecord = viewingRecordRedisRepository
+        ViewingRecord currentViewingRecord = viewingRecordJpaRepository
                 .findByUnitIdAndUserId(unitPlayRequestDto.getCurrentUnitId(), userId)
                 .orElse(null);
         if (currentViewingRecord == null) {
-            viewingRecordRedisRepository.save(ViewingRecord.builder()
+            viewingRecordJpaRepository.save(ViewingRecord.builder()
                     .recordId(UUID.randomUUID().toString())
                     .unitId(unitPlayRequestDto.getCurrentUnitId())
                     .userId(userId)
