@@ -2,7 +2,6 @@ package team7.simple.domain.question.entity;
 
 import lombok.*;
 import team7.simple.domain.answer.entity.Answer;
-import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.unit.entity.Unit;
 
 import javax.persistence.*;
@@ -20,7 +19,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionId;
+    private Long id;
     private String title;
     private String content;
     //private Integer replyCount;

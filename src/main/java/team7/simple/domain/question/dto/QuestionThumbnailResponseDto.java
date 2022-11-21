@@ -14,7 +14,7 @@ public class QuestionThumbnailResponseDto {
     private int timeline;
 
     public QuestionThumbnailResponseDto(Question question) {
-        this.questionId = question.getQuestionId();
+        this.questionId = question.getId();
         this.title = question.getTitle();
         this.replyCount = question.getAnswerList().size();
         this.timeline = question.getTimeline();

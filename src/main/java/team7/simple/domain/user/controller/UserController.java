@@ -7,15 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.service.UserService;
 import team7.simple.global.common.ConstValue;
-import team7.simple.global.common.response.dto.CommonResult;
-import team7.simple.global.common.response.service.ResponseService;
 
 @Api(tags = {"User Controller"})
 @RestController
@@ -32,7 +29,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/open/user/password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal User user) {
-        userService.changePassword(user.getUserId(), passwordUpdateParam);
+        userService.changePassword(user.getId(), passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

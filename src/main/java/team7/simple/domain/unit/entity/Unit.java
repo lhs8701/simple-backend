@@ -1,7 +1,6 @@
 package team7.simple.domain.unit.entity;
 
 import lombok.*;
-import org.hibernate.mapping.Join;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.question.entity.Question;
 import team7.simple.domain.video.entity.Video;
@@ -20,7 +19,7 @@ public class Unit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long unitId;
+    private Long id;
     private String title;
 
     @ManyToOne

@@ -1,21 +1,13 @@
 package team7.simple.domain.unit.service;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.rating.dto.RatingRequestDto;
+import team7.simple.domain.course.service.CourseService;
+import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
@@ -23,64 +15,49 @@ import team7.simple.domain.user.entity.User;
 import team7.simple.domain.video.dto.VideoDto;
 import team7.simple.domain.video.entity.Video;
 import team7.simple.domain.video.service.VideoService;
-import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
-import team7.simple.global.common.ConstValue;
-import team7.simple.global.error.advice.exception.CAccessDeniedException;
-import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
 
-import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class UnitService {
-    private final CourseJpaRepository courseJpaRepository;
     private final UnitJpaRepository unitJpaRepository;
-
-    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
-
+    private final CourseService courseService;
+    private final RecordService recordService;
     private final VideoService videoService;
-
     private final HlsService hlsService;
 
     @Transactional
     public Long createUnit(UnitRequestDto unitRequestDto, MultipartFile file) {
         Long courseId = unitRequestDto.getCourseId();
-        Course course = courseJpaRepository.findById(courseId)
-                .orElseThrow(CCourseNotFoundException::new);
+        Course course = courseService.getCourseById(courseId);
 
         VideoDto videoDto = videoService.uploadVideo(file, courseId);
         String hlsFileUrl = hlsService.convertToM3u8(videoDto);
 
         Unit unit = unitRequestDto.toEntity(videoDto.toEntity(hlsFileUrl), course);
 
-        return unitJpaRepository.save(unit).getUnitId();
+        return unitJpaRepository.save(unit).getId();
     }
 
     /*임시*/
     @Transactional
     public Long createUnitLocal(UnitRequestDto unitRequestDto) {
         Long courseId = unitRequestDto.getCourseId();
-        Course course = courseJpaRepository.findById(courseId)
-                .orElseThrow(CCourseNotFoundException::new);
-
+        Course course = courseService.getCourseById(courseId);
         Unit unit = unitRequestDto.toEntity(new Video("test", "test", "test"), course);
 
-        return unitJpaRepository.save(unit).getUnitId();
+        return unitJpaRepository.save(unit).getId();
     }
 
     /*임시*/
     @Transactional
     public Long createUnitByUrl(UnitRequestByUrlDto unitRequestByUrlDto) {
         Long courseId = unitRequestByUrlDto.getCourseId();
-        Course course = courseJpaRepository.findById(courseId)
-                .orElseThrow(CCourseNotFoundException::new);
+        Course course = courseService.getCourseById(courseId);
         Video video = Video.builder()
                 .fileName("test")
                 .fileOriName("test")
@@ -89,7 +66,7 @@ public class UnitService {
                 .build();
         Unit unit = unitRequestByUrlDto.toEntity(video, course);
 
-        return unitJpaRepository.save(unit).getUnitId();
+        return unitJpaRepository.save(unit).getId();
     }
 
     @Transactional
@@ -111,55 +88,50 @@ public class UnitService {
 
     @Transactional
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
-        double recordTime;
 
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
-            unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
-            saveCurrentViewingRecord(unitPlayRequestDto, user.getUserId());
+            changeCurrentUnitRecord(unitPlayRequestDto, user);
         }
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-        ViewingRecord nextUnitViewingRecord = viewingRecordRedisRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
-        if (nextUnitViewingRecord == null) {
-            recordTime = 0;
-        } else {
-            recordTime = nextUnitViewingRecord.getTime();
-        }
 
         return UnitPlayResponseDto.builder()
-                .unitId(nextUnit.getUnitId())
+                .unitId(nextUnit.getId())
                 .title(nextUnit.getTitle())
                 .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
-                .time(recordTime)
+                .time(recordService.getTimeline(user, nextUnit))
                 .build();
     }
 
-    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto,String userId) {
-        ViewingRecord currentViewingRecord = viewingRecordRedisRepository
-                .findByUnitIdAndUserId(unitPlayRequestDto.getCurrentUnitId(), userId)
-                .orElse(null);
-        if (currentViewingRecord == null) {
-            viewingRecordRedisRepository.save(ViewingRecord.builder()
-                    .recordId(UUID.randomUUID().toString())
-                    .unitId(unitPlayRequestDto.getCurrentUnitId())
-                    .userId(userId)
-                    .time(unitPlayRequestDto.getRecordTime())
-                    .check(unitPlayRequestDto.isComplete())
-                    .build());
-        } else {
-            currentViewingRecord.setTime(unitPlayRequestDto.getRecordTime());
-            if (unitPlayRequestDto.isComplete()) {
-                currentViewingRecord.setCheck(true);
-            }
+    private void changeCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
+        Unit unit = unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
+        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+
+        if (record == null) {
+            recordService.saveRecord(unit, user, unitPlayRequestDto.getRecordTime(), unitPlayRequestDto.isComplete());
+            return;
+        }
+        renewExistingRecordInfo(unitPlayRequestDto, record);
+    }
+
+    private void renewExistingRecordInfo(UnitPlayRequestDto unitPlayRequestDto, Record record) {
+        record.setTimeline(unitPlayRequestDto.getRecordTime());
+        if (unitPlayRequestDto.isComplete() && !record.isCompleted()) {
+            record.setCompleted(true);
         }
     }
 
     @Transactional
     public List<UnitThumbnailResponseDto> getUnitThumbnailList(Long courseId) {
-        Course course = courseJpaRepository.findById(courseId).orElseThrow(CCourseNotFoundException::new);
+        Course course = courseService.getCourseById(courseId);
         List<Unit> unitList = course.getUnitList();
         if (unitList == null)
             return null;
         return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Unit findUnitById(Long unitId){
+        return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
     }
 }
 

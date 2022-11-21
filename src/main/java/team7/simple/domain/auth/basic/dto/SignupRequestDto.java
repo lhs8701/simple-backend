@@ -20,7 +20,7 @@ public class SignupRequestDto {
 
     public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
-                .userId(UUID.randomUUID().toString())
+                .id(UUID.randomUUID().toString())
                 .account(account)
                 .password(passwordEncoder.encode(password))
                 .roles(Collections.singletonList("ROLE_USER"))
