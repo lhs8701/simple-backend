@@ -114,7 +114,7 @@ public class PlayerService {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
         activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
 
-        Unit unit = unitService.findUnitById(exitRequestDto.getUnitId()).orElseThrow(CUnitNotFoundException::new);
+        Unit unit = unitService.findUnitById(exitRequestDto.getUnitId());
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
         if (record == null){
             recordService.saveRecord(unit, user, exitRequestDto.getTime(), exitRequestDto.isCheck());

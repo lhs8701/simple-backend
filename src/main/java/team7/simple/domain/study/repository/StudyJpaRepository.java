@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudyJpaRepository extends JpaRepository<Study,Long> {
-    Optional<List<Study>> findAllByCourse(Course course);
+    List<Study> findAllByCourse(Course course);
     Optional<Study> findByCourseAndUser(Course course, User user);
 }

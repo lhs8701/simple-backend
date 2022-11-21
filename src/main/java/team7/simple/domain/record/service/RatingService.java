@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.record.dto.RatingRequestDto;
-import team7.simple.domain.study.repository.StudyJpaRepository;
+import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.study.service.StudyService;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.record.entity.Record;
-import team7.simple.global.error.advice.exception.*;
+import team7.simple.global.error.advice.exception.CRatingNotFoundException;
 
 import java.util.List;
 
@@ -21,8 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RatingService {
 
-    private final StudyJpaRepository studyJpaRepository;
-
+    private final StudyService studyService;
     private final RecordService recordService;
 
     private final UnitService unitService;
@@ -31,13 +30,19 @@ public class RatingService {
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Unit unit = unitService.findUnitById(unitId);
         Course course = unit.getCourse();
-        studyJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);
-        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
-//        if (record == null || !record.isCompleted()) {
-//            log.error("평점을 등록하기 위해서는, 해당 강의를 끝까지 시청해야합니다.");
-//            throw new CAccessDeniedException();
-//        }
-        record.setRating(ratingRequestDto.getScore());
+        if (doesUserEnrollCourse(course, user)){
+            Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+    //        if (record == null || !record.isCompleted()) {
+    //            log.error("평점을 등록하기 위해서는, 해당 강의를 끝까지 시청해야합니다.");
+    //            throw new CAccessDeniedException();
+    //        }
+            record.setRating(ratingRequestDto.getScore());
+        }
+    }
+
+    private boolean doesUserEnrollCourse(Course course, User user) {
+        studyService.getStudyByCourseAndUser(course, user);
+        return true;
     }
 
     @Transactional

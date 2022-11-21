@@ -3,7 +3,6 @@ package team7.simple.domain.auth.basic.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,6 @@ import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
-
-import java.util.Optional;
 
 @Slf4j
 @Service

@@ -8,9 +8,8 @@ import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.entity.Answer;
 import team7.simple.domain.answer.repository.AnswerJpaRepository;
 import team7.simple.domain.question.entity.Question;
-import team7.simple.domain.question.repository.QuestionJpaRepository;
+import team7.simple.domain.question.service.QuestionService;
 import team7.simple.global.error.advice.exception.CAnswerNotFoundException;
-import team7.simple.global.error.advice.exception.CQuestionNotFoundException;
 
 import javax.transaction.Transactional;
 
@@ -18,13 +17,11 @@ import javax.transaction.Transactional;
 @Service
 public class AnswerService {
     private final AnswerJpaRepository answerJpaRepository;
-    private final QuestionJpaRepository questionJpaRepository;
+    private final QuestionService questionService;
 
     @Transactional
     public Long createAnswer(Long questionId, AnswerRequestDto answerRequestDto) {
-        Question question = questionJpaRepository.findById(questionId)
-                .orElseThrow(CQuestionNotFoundException::new);
-
+        Question question = questionService.getQuestionById(questionId);
         Answer answer = answerRequestDto.toEntity(question);
 
         return answerJpaRepository.save(answer).getAnswerId();
@@ -33,9 +30,7 @@ public class AnswerService {
     @Transactional
     public Long updateAnswer(AnswerUpdateParam answerUpdateParam) {
         Long answerId = answerUpdateParam.getAnswerId();
-        Answer answer = answerJpaRepository.findById(answerId)
-                .orElseThrow(CAnswerNotFoundException::new);
-
+        Answer answer = getAnswerById(answerId);
         answer.setTitle(answerUpdateParam.getTitle());
         answer.setContent(answerUpdateParam.getContent());
 
@@ -44,15 +39,17 @@ public class AnswerService {
 
     @Transactional
     public void deleteAnswer(Long answerId) {
-        Answer answer = answerJpaRepository.findById(answerId)
-                .orElseThrow(CAnswerNotFoundException::new);
+        Answer answer = getAnswerById(answerId);
         answerJpaRepository.delete(answer);
     }
 
     @Transactional
     public AnswerResponseDto getAnswerInfo(Long answerId) {
-        Answer answer = answerJpaRepository.findById(answerId)
-                .orElseThrow(CAnswerNotFoundException::new);
+        Answer answer = getAnswerById(answerId);
         return new AnswerResponseDto(answer);
+    }
+
+    public Answer getAnswerById(Long id){
+        return answerJpaRepository.findById(id).orElseThrow(CAnswerNotFoundException::new);
     }
 }
