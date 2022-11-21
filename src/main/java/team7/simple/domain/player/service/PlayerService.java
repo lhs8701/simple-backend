@@ -115,7 +115,7 @@ public class PlayerService {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
         activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
         ViewingRecord viewingRecord = viewingRecordJpaRepository
-                .findByUnitIdAndUserId(exitRequestDto.getUnitId(), user.getUserId())
+                .findByUnitAndUser(exitRequestDto.getUnitId(), user.getUserId())
                 .orElse(null);
         if (viewingRecord == null){
             viewingRecord = ViewingRecord.builder()

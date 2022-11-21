@@ -8,7 +8,7 @@ import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.rating.service.RatingService;
+import team7.simple.domain.viewingrecord.service.RatingService;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.repository.StudyJpaRepository;

@@ -37,7 +37,7 @@ public enum ErrorCode {
     UNSUPPORTED_TOKEN_EXCEPTION(-5003, "지원하지 않는 토큰입니다."),
     ILLEGAL_ARGUMENT_EXCEPTION(-5004, "잘못된 형식입니다."),
     USER_NOT_ACTIVE_EXCEPTION(-5005, "현재 시청중인 계정이 아닙니다."),
-
+    NO_RECORD_EXCEPTION(-5006, "강의를 시청한 기록이 없습니다."),
 
     WRONG_APPROACH(-9998, "잘못된 접근입니다."),
     INTERNAL_SERVER_ERROR(-9999, "서버 에러입니다.");

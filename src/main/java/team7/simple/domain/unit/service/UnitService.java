@@ -121,7 +121,7 @@ public class UnitService {
 
     private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto,String userId) {
         ViewingRecord currentViewingRecord = viewingRecordJpaRepository
-                .findByUnitIdAndUserId(unitPlayRequestDto.getCurrentUnitId(), userId)
+                .findByUnitAndUser(unitPlayRequestDto.getCurrentUnitId(), userId)
                 .orElse(null);
         if (currentViewingRecord == null) {
             viewingRecordJpaRepository.save(ViewingRecord.builder()

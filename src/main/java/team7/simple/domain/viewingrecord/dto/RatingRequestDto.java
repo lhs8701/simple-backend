@@ -1,4 +1,4 @@
-package team7.simple.domain.rating.dto;
+package team7.simple.domain.viewingrecord.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

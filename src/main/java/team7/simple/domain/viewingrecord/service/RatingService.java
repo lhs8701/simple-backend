@@ -1,11 +1,11 @@
-package team7.simple.domain.rating.service;
+package team7.simple.domain.viewingrecord.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.rating.dto.RatingRequestDto;
+import team7.simple.domain.viewingrecord.dto.RatingRequestDto;
 import team7.simple.domain.study.repository.StudyJpaRepository;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.user.entity.User;
@@ -29,7 +29,7 @@ public class RatingService {
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Course course = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new).getCourse();
         studyJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);
-        ViewingRecord viewingRecord = viewingRecordJpaRepository.findByUnitIdAndUserId(unitId, user.getUserId()).orElse(null);
+        ViewingRecord viewingRecord = viewingRecordJpaRepository.findByUnitAndUser(unitId, user.getUserId()).orElse(null);
         if (viewingRecord == null) {
             log.error("ViewingRecord가 없습니다.");
             throw new CAccessDeniedException();
