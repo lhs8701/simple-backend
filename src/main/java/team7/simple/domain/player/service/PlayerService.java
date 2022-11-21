@@ -53,19 +53,19 @@ public class PlayerService {
         log.info("b");
         activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                 .accessToken(accessToken)
-                .userId(user.getUserId())
+                .userId(user.getId())
                 .conflict(conflictState)
                 .build());
         log.info("c");
         return new ExecuteResponseDto(PLAYER_PATH
-                + "?userId=" + user.getUserId()
+                + "?userId=" + user.getId()
                 + "&courseId=" + executeRequestDto.getCourseId()
                 + "&unitId=" + executeRequestDto.getUnitId());
     }
 
     private int doesConflicted(User user) {
         int conflictStatus = ActiveStatus.NO_CONFLICT.ordinal();
-        ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
+        ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getId()).orElse(null);
         if (existActiveAccessToken != null) {
             log.info("d");
             updateConflictStatus(existActiveAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
@@ -94,7 +94,7 @@ public class PlayerService {
     }
 
     private ActiveAccessToken 나중에_접속한_토큰_얻기(User user) {
-        List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
+        List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getId());
         if (activeAccessTokens == null){
             throw new CUserNotActiveException();
         }

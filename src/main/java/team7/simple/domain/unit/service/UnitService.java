@@ -25,13 +25,9 @@ import java.util.stream.Collectors;
 @Service
 public class UnitService {
     private final UnitJpaRepository unitJpaRepository;
-
     private final CourseService courseService;
-
     private final RecordService recordService;
-
     private final VideoService videoService;
-
     private final HlsService hlsService;
 
     @Transactional
@@ -44,7 +40,7 @@ public class UnitService {
 
         Unit unit = unitRequestDto.toEntity(videoDto.toEntity(hlsFileUrl), course);
 
-        return unitJpaRepository.save(unit).getUnitId();
+        return unitJpaRepository.save(unit).getId();
     }
 
     /*임시*/
@@ -54,7 +50,7 @@ public class UnitService {
         Course course = courseService.getCourseById(courseId);
         Unit unit = unitRequestDto.toEntity(new Video("test", "test", "test"), course);
 
-        return unitJpaRepository.save(unit).getUnitId();
+        return unitJpaRepository.save(unit).getId();
     }
 
     /*임시*/
@@ -70,7 +66,7 @@ public class UnitService {
                 .build();
         Unit unit = unitRequestByUrlDto.toEntity(video, course);
 
-        return unitJpaRepository.save(unit).getUnitId();
+        return unitJpaRepository.save(unit).getId();
     }
 
     @Transactional
@@ -99,7 +95,7 @@ public class UnitService {
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
 
         return UnitPlayResponseDto.builder()
-                .unitId(nextUnit.getUnitId())
+                .unitId(nextUnit.getId())
                 .title(nextUnit.getTitle())
                 .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
                 .time(recordService.getTimeline(user, nextUnit))

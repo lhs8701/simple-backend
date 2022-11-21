@@ -26,7 +26,7 @@ public class QuestionService {
         Unit unit = unitService.findUnitById(unitId);
         Question question = questionRequestDto.toEntity(unit);
 
-        return questionJpaRepository.save(question).getQuestionId();
+        return questionJpaRepository.save(question).getId();
     }
 
     @Transactional
@@ -38,7 +38,7 @@ public class QuestionService {
         question.setTimeline(questionUpdateParam.getTimeline());
         question.setCreatedTime(questionUpdateParam.getCreatedTime());
 
-        return question.getQuestionId();
+        return question.getId();
     }
 
     @Transactional

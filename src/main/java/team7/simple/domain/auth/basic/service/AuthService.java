@@ -44,7 +44,7 @@ public class AuthService {
     public String signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
             throw new CUserExistException();
-        return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getUserId();
+        return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
     }
 
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
@@ -56,7 +56,7 @@ public class AuthService {
         String accessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
         String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
 
-        refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), refreshToken));
+        refreshTokenRedisRepository.save(new RefreshToken(user.getId(), refreshToken));
 
         return TokenResponseDto.builder()
                 .grantType("bearer")
@@ -68,14 +68,14 @@ public class AuthService {
     public void logout(String accessToken, User user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
-        refreshTokenRedisRepository.deleteById(user.getUserId());
+        refreshTokenRedisRepository.deleteById(user.getId());
         logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, remainMilliSeconds));
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
 
     public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
-        userJpaRepository.deleteById(user.getUserId());
+        userJpaRepository.deleteById(user.getId());
     }
 
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
@@ -88,7 +88,7 @@ public class AuthService {
         Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
         User user = (User) authentication.getPrincipal();
 
-        RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getUserId()).orElseThrow(CRefreshTokenExpiredException::new);
+        RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getId()).orElseThrow(CRefreshTokenExpiredException::new);
 
         if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
             String newAccessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
@@ -98,13 +98,13 @@ public class AuthService {
             if (finded != null) {
                 activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                         .accessToken(newAccessToken)
-                        .userId(user.getUserId())
+                        .userId(user.getId())
                         .conflict(finded.getConflict())
                         .expiration(JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue())
                         .build());
                 activeAccessTokenRedisRepository.delete(finded);
             }
-            refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
+            refreshTokenRedisRepository.save(new RefreshToken(user.getId(), newRefreshToken));
             return TokenResponseDto.builder()
                     .grantType("bearer")
                     .accessToken(newAccessToken)
@@ -122,7 +122,7 @@ public class AuthService {
                 .findById(removeConflictRequestDto.getAccessToken())
                 .orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken otherAccessToken = activeAccessTokenRedisRepository
-                .findByUserIdAndConflict(user.getUserId(), 2)
+                .findByUserIdAndConflict(user.getId(), 2)
                 .orElseThrow(CUserNotFoundException::new);
         if (currentAccessToken.getConflict() != ActiveStatus.PRE_CONFLICTED.ordinal()) {
             throw new CWrongTypeTokenException();

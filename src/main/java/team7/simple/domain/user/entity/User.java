@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Entity
 public class User extends BaseTimeEntity implements UserDetails {
     @Id
-    private String userId;
+    private String id;
 
     @Column(nullable = false, length = 30)
     private String account;

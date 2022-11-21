@@ -24,7 +24,7 @@ public class UnitDetailResponseDto {
 
 
     public UnitDetailResponseDto(Unit unit) {
-        this.unitId = unit.getUnitId();
+        this.unitId = unit.getId();
         this.title = unit.getTitle();
         this.fileUrl = unit.getVideo().getHlsFileUrl();
         this.questionList = unit.getQuestionList().stream().map(QuestionThumbnailResponseDto::new).collect(Collectors.toList());

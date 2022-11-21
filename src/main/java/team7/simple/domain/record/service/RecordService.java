@@ -18,25 +18,22 @@ public class RecordService {
     private final RecordJpaRepository recordJpaRepository;
 
 
-    public void saveRecord(Unit unit, User user, double timeline, boolean completed){
-        recordJpaRepository.save(Record.builder()
+    public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
+        Record record = recordJpaRepository.save(Record.builder()
                 .unit(unit)
                 .user(user)
                 .timeline(timeline)
                 .completed(completed)
                 .build());
+        return record.getId();
     }
 
-    public Optional<Record> getRecordByUnitAndUser(Unit unit, User user){
+    public Optional<Record> getRecordByUnitAndUser(Unit unit, User user) {
         return recordJpaRepository.findByUnitAndUser(unit, user);
     }
 
-    public List<Record> getRecordListByUnit(Unit unit){
+    public List<Record> getRecordListByUnit(Unit unit) {
         return recordJpaRepository.findAllByUnit(unit);
-    }
-    public void updateRecord(Record record, RecordUpdateParam recordUpdateParam){
-        record.setTimeline(recordUpdateParam.getTimeline());
-        record.setCompleted(record.isCompleted());
     }
 
 
@@ -46,10 +43,5 @@ public class RecordService {
             return 0;
         }
         return record.getTimeline();
-    }
-
-    public boolean doesCompleted(User user, Unit unit) {
-        Record record = recordJpaRepository.findByUnitAndUser(unit, user).orElse(null);
-        return record != null && record.isCompleted();
     }
 }

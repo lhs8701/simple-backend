@@ -24,7 +24,7 @@ public class AnswerService {
         Question question = questionService.getQuestionById(questionId);
         Answer answer = answerRequestDto.toEntity(question);
 
-        return answerJpaRepository.save(answer).getAnswerId();
+        return answerJpaRepository.save(answer).getId();
     }
 
     @Transactional
