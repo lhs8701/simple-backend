@@ -30,7 +30,8 @@ public class RatingService {
         Course course = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new).getCourse();
         studyJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);
         ViewingRecord viewingRecord = viewingRecordRedisRepository.findByUnitIdAndUserId(unitId, user.getUserId()).orElse(null);
-        if (viewingRecord == null || !viewingRecord.isCheck()) {
+        if (viewingRecord == null) {
+            log.error("ViewingRecord가 없습니다.");
             throw new CAccessDeniedException();
         }
         viewingRecord.setScore(ratingRequestDto.getScore());
@@ -38,16 +39,21 @@ public class RatingService {
 
     @Transactional
     public double getAverageRatingScore(Long unitId) {
-        double rating = 0;
+        double rating;
         List<ViewingRecord> viewingRecordList = viewingRecordRedisRepository.findAllByUnitId(unitId);
         if (viewingRecordList == null) {
+            log.error("해당 강의의 ViewingRecord가 없습니다.");
             throw new CRatingNotFoundException();
         }
         double sum = 0;
+        int whole = 0;
         for (ViewingRecord viewingRecord : viewingRecordList) {
-            sum += viewingRecord.getScore();
+            if (viewingRecord.isCheck()) {
+                whole++;
+                sum += viewingRecord.getScore();
+            }
         }
-        rating = Math.round((sum / viewingRecordList.size()) * 10) / 10.0;
+        rating = (double) Math.round((sum / whole) * 10) / 10.0;
         return rating;
     }
 }
