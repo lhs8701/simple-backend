@@ -22,7 +22,7 @@ import team7.simple.global.common.ConstValue;
 import javax.validation.Valid;
 
 @Slf4j
-@Api(tags = {"Basic Auth"})
+@Api(tags = {"Auth Controller"})
 @RequiredArgsConstructor
 @RequestMapping("/open/auth")
 @RestController
