@@ -8,13 +8,11 @@ import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.viewingrecord.service.RatingService;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.repository.StudyJpaRepository;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CStudyNotFoundException;
 
@@ -27,10 +25,7 @@ public class CourseService {
 
     private final CourseJpaRepository courseJpaRepository;
     private final StudyJpaRepository studyJpaRepository;
-
-    private final RatingService ratingService;
     private final UnitService unitService;
-    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
 
     @Transactional
     public Long createCourse(CourseRequestDto courseRequestDto, User instructor) {

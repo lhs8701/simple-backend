@@ -8,8 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import team7.simple.domain.viewingrecord.dto.RatingRequestDto;
-import team7.simple.domain.viewingrecord.service.RatingService;
+import team7.simple.domain.record.dto.RatingRequestDto;
+import team7.simple.domain.record.service.RatingService;
 import team7.simple.domain.unit.dto.UnitPlayRequestDto;
 import team7.simple.domain.unit.dto.UnitRequestByUrlDto;
 import team7.simple.domain.unit.dto.UnitRequestDto;
@@ -121,8 +121,7 @@ public class UnitController {
             @ApiResponse(code=200, message = "성공"),
             @ApiResponse(code=404, message = "등록된 평점이 없는 경우"),
     })
-    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("permitAll()")
     @GetMapping("/front/course/unit/{unitId}/rating")
     public ResponseEntity<?> getRating(@PathVariable Long unitId) {
 

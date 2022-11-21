@@ -1,11 +1,6 @@
-package team7.simple.domain.viewingrecord.entity;
+package team7.simple.domain.record.entity;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 
@@ -17,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ViewingRecord {
+public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recordId;

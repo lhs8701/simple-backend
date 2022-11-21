@@ -11,10 +11,12 @@ import team7.simple.domain.player.dto.ExecuteRequestDto;
 import team7.simple.domain.player.dto.ExecuteResponseDto;
 import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
+import team7.simple.domain.record.service.RecordService;
+import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
-import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
+import team7.simple.domain.record.entity.Record;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
@@ -28,8 +30,8 @@ import java.util.List;
 public class PlayerService {
     private final UserJpaRepository userJpaRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
-
-    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+    private final UnitService unitService;
+    private final RecordService recordService;
 
     private final JwtProvider jwtProvider;
 
@@ -93,11 +95,9 @@ public class PlayerService {
 
     private ActiveAccessToken 나중에_접속한_토큰_얻기(User user) {
         List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
-        log.info("1");
         if (activeAccessTokens == null){
             throw new CUserNotActiveException();
         }
-        log.info("2");
 
         if (activeAccessTokens.size() > CONNECTION_LIMIT) {
             return activeAccessTokens.stream()
@@ -105,7 +105,6 @@ public class PlayerService {
                     .findAny()
                     .orElseThrow(CExpiredTokenException::new);
         }
-        log.info("3");
         log.info(activeAccessTokens.toString());
 
         return activeAccessTokens.get(0);
@@ -114,21 +113,14 @@ public class PlayerService {
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
         activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
-        ViewingRecord viewingRecord = viewingRecordJpaRepository
-                .findByUnitAndUser(exitRequestDto.getUnitId(), user.getUserId())
-                .orElse(null);
-        if (viewingRecord == null){
-            viewingRecord = ViewingRecord.builder()
-                    .unitId(exitRequestDto.getUnitId())
-                    .userId(user.getUserId())
-                    .check(exitRequestDto.isCheck())
-                    .time(exitRequestDto.getTime())
-                    .build();
-            viewingRecordJpaRepository.save(viewingRecord);
+
+        Unit unit = unitService.findUnitById(exitRequestDto.getUnitId()).orElseThrow(CUnitNotFoundException::new);
+        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+        if (record == null){
+            recordService.saveRecord(unit, user, exitRequestDto.getTime(), exitRequestDto.isCheck());
+            return;
         }
-        else{
-            viewingRecord.setTime(exitRequestDto.getTime());
-        }
+        record.setTimeline(exitRequestDto.getTime());
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
 }

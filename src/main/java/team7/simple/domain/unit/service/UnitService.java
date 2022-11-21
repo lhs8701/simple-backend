@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.repository.CourseJpaRepository;
+import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
@@ -13,14 +14,12 @@ import team7.simple.domain.user.entity.User;
 import team7.simple.domain.video.dto.VideoDto;
 import team7.simple.domain.video.entity.Video;
 import team7.simple.domain.video.service.VideoService;
-import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordJpaRepository;
+import team7.simple.domain.record.entity.Record;
 import team7.simple.global.error.advice.exception.CCourseNotFoundException;
 import team7.simple.global.error.advice.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class UnitService {
     private final CourseJpaRepository courseJpaRepository;
     private final UnitJpaRepository unitJpaRepository;
 
-    private final ViewingRecordJpaRepository viewingRecordJpaRepository;
+    private final RecordService recordService;
 
     private final VideoService videoService;
 
@@ -97,45 +96,35 @@ public class UnitService {
 
     @Transactional
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
-        double recordTime;
 
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
-            unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
-            saveCurrentViewingRecord(unitPlayRequestDto, user.getUserId());
+            changeCurrentUnitRecord(unitPlayRequestDto, user);
         }
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-        ViewingRecord nextUnitViewingRecord = viewingRecordJpaRepository.findByUnitId(nextUnit.getUnitId()).orElse(null);
-        if (nextUnitViewingRecord == null) {
-            recordTime = 0;
-        } else {
-            recordTime = nextUnitViewingRecord.getTime();
-        }
 
         return UnitPlayResponseDto.builder()
                 .unitId(nextUnit.getUnitId())
                 .title(nextUnit.getTitle())
                 .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
-                .time(recordTime)
+                .time(recordService.getTimeline(user, nextUnit))
                 .build();
     }
 
-    private void saveCurrentViewingRecord(UnitPlayRequestDto unitPlayRequestDto,String userId) {
-        ViewingRecord currentViewingRecord = viewingRecordJpaRepository
-                .findByUnitAndUser(unitPlayRequestDto.getCurrentUnitId(), userId)
-                .orElse(null);
-        if (currentViewingRecord == null) {
-            viewingRecordJpaRepository.save(ViewingRecord.builder()
-                    .recordId(UUID.randomUUID().toString())
-                    .unitId(unitPlayRequestDto.getCurrentUnitId())
-                    .userId(userId)
-                    .time(unitPlayRequestDto.getRecordTime())
-                    .check(unitPlayRequestDto.isComplete())
-                    .build());
-        } else {
-            currentViewingRecord.setTime(unitPlayRequestDto.getRecordTime());
-            if (unitPlayRequestDto.isComplete()) {
-                currentViewingRecord.setCheck(true);
-            }
+    private void changeCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
+        Unit unit = unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
+        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+
+        if (record == null) {
+            recordService.saveRecord(unit, user, unitPlayRequestDto.getRecordTime(), unitPlayRequestDto.isComplete());
+            return;
+        }
+        renewExistingRecordInfo(unitPlayRequestDto, record);
+    }
+
+    private void renewExistingRecordInfo(UnitPlayRequestDto unitPlayRequestDto, Record record) {
+        record.setTimeline(unitPlayRequestDto.getRecordTime());
+        if (unitPlayRequestDto.isComplete() && !record.isCompleted()) {
+            record.setCompleted(true);
         }
     }
 
@@ -146,6 +135,16 @@ public class UnitService {
         if (unitList == null)
             return null;
         return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Unit findUnitById(Long unitId){
+        return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+    }
+
+    @Transactional
+    public void deleteUnit(Unit unit){
+        unitJpaRepository.delete(unit);
     }
 }
 
