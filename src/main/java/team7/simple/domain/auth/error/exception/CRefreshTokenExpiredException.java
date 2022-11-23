@@ -1,8 +1,8 @@
-package team7.simple.global.error.advice.exception;
+package team7.simple.domain.auth.error.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import team7.simple.global.error.ErrorCode;
+import projectbuildup.saver.global.error.ErrorCode;
 
 @Getter
 @AllArgsConstructor
