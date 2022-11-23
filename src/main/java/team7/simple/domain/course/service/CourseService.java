@@ -8,16 +8,13 @@ import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
+import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.study.service.StudyService;
-import team7.simple.domain.unit.dto.UnitThumbnailResponseDto;
-import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -37,7 +34,7 @@ public class CourseService {
         Course course = getCourseById(courseId);
         int attendeeCount = 0;
         List<Study> studyList = studyService.getStudyListByCourse(course);
-        if (studyList != null){
+        if (studyList != null) {
             attendeeCount = studyList.size();
         }
         return new CourseDetailResponseDto(course, attendeeCount);
@@ -71,7 +68,7 @@ public class CourseService {
         studyService.deleteStudy(study);
     }
 
-    public Course getCourseById(Long id){
+    public Course getCourseById(Long id) {
         return courseJpaRepository.findById(id).orElseThrow(CCourseNotFoundException::new);
     }
 }

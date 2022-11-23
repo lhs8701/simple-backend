@@ -13,7 +13,6 @@ import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.file.dto.VideoDto;
-import team7.simple.domain.file.entity.Video;
 import team7.simple.domain.file.service.VideoService;
 import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
@@ -63,7 +62,7 @@ public class UnitService {
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
 
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
-            changeCurrentUnitRecord(unitPlayRequestDto, user);
+            setCurrentUnitRecord(unitPlayRequestDto, user);
         }
         Unit nextUnit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
 
@@ -75,7 +74,7 @@ public class UnitService {
                 .build();
     }
 
-    private void changeCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
+    private void setCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
         Unit unit = unitJpaRepository.findById(unitPlayRequestDto.getCurrentUnitId()).orElseThrow(CUnitNotFoundException::new);
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
 
@@ -83,10 +82,10 @@ public class UnitService {
             recordService.saveRecord(unit, user, unitPlayRequestDto.getRecordTime(), unitPlayRequestDto.isComplete());
             return;
         }
-        renewExistingRecordInfo(unitPlayRequestDto, record);
+        updateExistingRecord(unitPlayRequestDto, record);
     }
 
-    private void renewExistingRecordInfo(UnitPlayRequestDto unitPlayRequestDto, Record record) {
+    private void updateExistingRecord(UnitPlayRequestDto unitPlayRequestDto, Record record) {
         record.setTimeline(unitPlayRequestDto.getRecordTime());
         if (unitPlayRequestDto.isComplete() && !record.isCompleted()) {
             record.setCompleted(true);
