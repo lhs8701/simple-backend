@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class UnitExceptionAdvice {
     @ExceptionHandler(CUnitNotFoundException.class)
     protected ResponseEntity<?> handle(CUnitNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 
 }

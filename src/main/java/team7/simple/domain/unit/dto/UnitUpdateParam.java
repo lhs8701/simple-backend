@@ -11,7 +11,5 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class UnitUpdateParam {
     @NotNull
-    private Long unitId;
-    @NotNull
     private String title;
 }

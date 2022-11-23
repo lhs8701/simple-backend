@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 @Api(tags = {"[Front API] Player"})
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/front/player")
+@RequestMapping("/front")
 public class PlayerController {
 
     private final PlayerService playerService;
@@ -35,7 +35,7 @@ public class PlayerController {
             @ApiResponse(code=404, message = "해당 사용자를 찾을 수 없을 경우"),
     })
     @PreAuthorize("permitAll()")
-    @PostMapping("/on")
+    @PostMapping("/start")
     public ResponseEntity<?> start(@RequestBody StartRequestDto startRequestDto) {
         return new ResponseEntity<>(playerService.start(startRequestDto), HttpStatus.OK);
     }
@@ -48,7 +48,7 @@ public class PlayerController {
             @ApiResponse(code=404, message = "해당 강의을 찾을 수 없을 경우"),
     })
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/off")
+    @PostMapping("/exit")
     public ResponseEntity<?> exit(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExitRequestDto exitRequestDto) {
         playerService.exit(accessToken, exitRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);

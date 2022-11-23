@@ -24,41 +24,42 @@ public class QuestionController {
 
     @ApiOperation(value = "FRONT - 질문 등록")
     @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강의가 없을 경우"),
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
     })
-    @PostMapping("/front/course/unit/{unitId}/question")
-    public ResponseEntity<?> uploadQuestion(@PathVariable Long unitId, @Valid @RequestBody QuestionRequestDto questionRequestDto) {
+    @PostMapping("/front/unit/{unitId}/questions")
+    public ResponseEntity<?> uploadQuestion(Long unitId, @Valid @RequestBody QuestionRequestDto questionRequestDto) {
         return new ResponseEntity<>(questionService.createQuestion(unitId, questionRequestDto), HttpStatus.OK);
-    }
-    @ApiOperation(value = "FRONT - 질문 수정")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 질문이 없을 경우"),
-    })
-    @PatchMapping("/front/course/unit/question/{questionId}")
-    public ResponseEntity<?> updateQuestion(@RequestBody @Valid QuestionUpdateParam questionUpdateParam) {
-        return new ResponseEntity<>(questionService.updateQuestion(questionUpdateParam), HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "FRONT - 질문 삭제")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 질문이 없을 경우"),
-    })
-    @DeleteMapping("/front/course/unit/question/{questionId}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
-        questionService.deleteQuestionById(questionId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 강의 질문 목록 조회")
     @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강의가 없을 경우"),
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
     })
-    @GetMapping("/front/course/unit/{unitId}/question")
-    public ResponseEntity<?> getQuestionList(@PathVariable Long unitId) {
+    @RequestMapping(value = "/front/unit/{unitId}/questions", method = RequestMethod.GET)
+    public ResponseEntity<?> getQuestions(Long unitId) {
         return new ResponseEntity<>(questionService.getQuestionList(unitId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FRONT - 질문 수정")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 질문이 없을 경우"),
+    })
+    @PatchMapping("/front/questions/{questionId}")
+    public ResponseEntity<?> updateQuestion(@PathVariable Long questionId, @RequestBody @Valid QuestionUpdateParam questionUpdateParam) {
+        return new ResponseEntity<>(questionService.updateQuestion(questionId, questionUpdateParam), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FRONT - 질문 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 질문이 없을 경우"),
+    })
+    @DeleteMapping("/front/questions/{questionId}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
+        questionService.deleteQuestionById(questionId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

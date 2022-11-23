@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.question.error.exception.CQuestionNotFoundException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 
 @Slf4j
@@ -22,6 +23,6 @@ public class QuestionExceptionAdvice {
     @ExceptionHandler(CQuestionNotFoundException.class)
     protected ResponseEntity<?> handle(CQuestionNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 }

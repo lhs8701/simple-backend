@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.auth.error.exception.*;
 import team7.simple.domain.auth.error.exception.CConflictUsageException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 
 @Slf4j
@@ -21,7 +22,7 @@ public class AuthExceptionAdvice {
     @ExceptionHandler(CWrongTypeTokenException.class)
     protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -30,7 +31,7 @@ public class AuthExceptionAdvice {
     @ExceptionHandler(CExpiredTokenException.class)
     protected ResponseEntity<?> handle(CExpiredTokenException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -38,7 +39,7 @@ public class AuthExceptionAdvice {
      */
     @ExceptionHandler(CAccessDeniedException.class)
     protected ResponseEntity<?> handle(CAccessDeniedException e) {
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -49,6 +50,6 @@ public class AuthExceptionAdvice {
     @ExceptionHandler(CConflictUsageException.class)
     protected ResponseEntity<?> handle(CConflictUsageException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.CONFLICT);
     }
 }

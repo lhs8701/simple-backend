@@ -10,6 +10,7 @@ import team7.simple.domain.user.error.exception.CUserExistException;
 import team7.simple.domain.user.error.exception.CUserNotActiveException;
 import team7.simple.domain.user.error.exception.CUserNotFoundException;
 import team7.simple.domain.user.error.exception.CWrongPasswordException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class UserExceptionAdvice {
     @ExceptionHandler(CUserNotActiveException.class)
     protected ResponseEntity<?> handle(CUserNotActiveException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -35,7 +36,7 @@ public class UserExceptionAdvice {
     @ExceptionHandler(CUserExistException.class)
     protected ResponseEntity<?> handle(CUserExistException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.CONFLICT);
     }
 
     /**
@@ -46,7 +47,7 @@ public class UserExceptionAdvice {
     @ExceptionHandler(CUserNotFoundException.class)
     protected ResponseEntity<?> handle(CUserNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -57,6 +58,6 @@ public class UserExceptionAdvice {
     @ExceptionHandler(CWrongPasswordException.class)
     protected ResponseEntity<?> handle(CWrongPasswordException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
     }
 }

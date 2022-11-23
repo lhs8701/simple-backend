@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 @Api(tags = {"[Open API] Player"})
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/open/player")
+@RequestMapping("/open")
 public class PlayerOpenController {
     private final PlayerService playerService;
 

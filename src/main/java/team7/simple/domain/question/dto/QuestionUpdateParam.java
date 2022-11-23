@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 @Getter
 public class QuestionUpdateParam {
     @NotNull
-    private Long questionId;
-    @NotNull
     private String title;
     @NotNull
     private String content;
