@@ -8,6 +8,7 @@ import team7.simple.domain.auth.error.exception.CExpiredTokenException;
 import team7.simple.domain.auth.jwt.dto.AccessTokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
+import team7.simple.domain.auth.service.ConflictService;
 import team7.simple.domain.player.dto.ExecuteRequestDto;
 import team7.simple.domain.player.dto.ExecuteResponseDto;
 import team7.simple.domain.player.dto.ExitRequestDto;
@@ -37,13 +38,15 @@ public class PlayerService {
 
     private final JwtProvider jwtProvider;
 
+    private final ConflictService conflictService;
+
     static final int CONNECTION_LIMIT = 1;
 
     @Value("${path.front_page}")
     String PLAYER_PATH;
 
     /**
-     * 사용자 권한을 확인한 후, 플레이어 주소를 반환한다.
+     * 사용자 권한을 확인한 후, 플레이어 주소를 반환한다. 이 때, redis 저장소에 충돌 상태를 기록한 Active 토큰이 생성된다.
      *
      * @param accessToken       어세스토큰
      * @param executeRequestDto 강좌 아이디, 강의 아이디
@@ -51,37 +54,16 @@ public class PlayerService {
      * @return 사용자 아이디, 강좌 아이디, 강의 아이디를 쿼리 파라미터로 하는 플레이어의 주소
      */
     public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) {
-        int conflictState = doesConflicted(user);
         activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                 .accessToken(accessToken)
                 .userId(user.getId())
-                .conflict(conflictState)
+                .conflict(conflictService.doesConflicted(user))
                 .build());
+
         return new ExecuteResponseDto(PLAYER_PATH
                 + "?userId=" + user.getId()
                 + "&courseId=" + executeRequestDto.getCourseId()
                 + "&unitId=" + executeRequestDto.getUnitId());
-    }
-
-    private int doesConflicted(User user) {
-        int conflictStatus = ActiveStatus.NO_CONFLICT.ordinal();
-        ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getId()).orElse(null);
-        if (existActiveAccessToken != null) {
-            updateConflictStatus(existActiveAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
-            conflictStatus = ActiveStatus.POST_CONFLICTED.ordinal();
-        }
-        return conflictStatus;
-    }
-
-    public void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus) {
-        ActiveAccessToken newToken = ActiveAccessToken.builder()
-                .accessToken(oldToken.getAccessToken())
-                .userId(oldToken.getUserId())
-                .conflict(conflictStatus)
-                .expiration(oldToken.getExpiration())
-                .build();
-        activeAccessTokenRedisRepository.delete(oldToken);
-        activeAccessTokenRedisRepository.save(newToken);
     }
 
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
@@ -120,7 +102,7 @@ public class PlayerService {
 
         ActiveAccessToken anotherToken = getAnotherUserToken(user, activeToken);
         if (anotherToken != null) {
-            updateConflictStatus(anotherToken, ActiveStatus.NO_CONFLICT.ordinal());
+            conflictService.updateConflictStatus(anotherToken, ActiveStatus.NO_CONFLICT.ordinal());
         }
 
         activeAccessTokenRedisRepository.deleteById(accessToken);

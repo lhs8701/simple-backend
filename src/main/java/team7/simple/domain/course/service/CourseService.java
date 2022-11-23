@@ -11,7 +11,7 @@ import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.entity.Study;
-import team7.simple.domain.study.service.StudyService;
+import team7.simple.domain.study.service.EnrollService;
 import team7.simple.domain.user.entity.User;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
-    private final StudyService studyService;
+    private final EnrollService enrollService;
 
     @Transactional
     public Long createCourse(CourseRequestDto courseRequestDto, User instructor) {
@@ -33,7 +33,7 @@ public class CourseService {
     public CourseDetailResponseDto getCourseInfo(Long courseId) {
         Course course = getCourseById(courseId);
         int attendeeCount = 0;
-        List<Study> studyList = studyService.getStudyListByCourse(course);
+        List<Study> studyList = enrollService.getStudyListByCourse(course);
         if (studyList != null) {
             attendeeCount = studyList.size();
         }
@@ -58,14 +58,14 @@ public class CourseService {
     public Long register(RegisterCancelRequestDto registerCancelRequestDto, User user) {
         Long courseId = registerCancelRequestDto.getCourseId();
         Course course = getCourseById(courseId);
-        return studyService.saveStudy(course, user);
+        return enrollService.saveStudy(course, user);
     }
 
     public void cancel(RegisterCancelRequestDto registerCancelRequestDto, User user) {
         Long courseId = registerCancelRequestDto.getCourseId();
         Course course = getCourseById(courseId);
-        Study study = studyService.getStudyByCourseAndUser(course, user);
-        studyService.deleteStudy(study);
+        Study study = enrollService.getStudyByCourseAndUser(course, user);
+        enrollService.deleteStudy(study);
     }
 
     public Course getCourseById(Long id) {

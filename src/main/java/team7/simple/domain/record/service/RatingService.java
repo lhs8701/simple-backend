@@ -8,11 +8,10 @@ import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.record.dto.RatingRequestDto;
 import team7.simple.domain.record.dto.RatingResponseDto;
 import team7.simple.domain.record.entity.Record;
-import team7.simple.domain.study.service.StudyService;
+import team7.simple.domain.study.service.EnrollService;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.record.error.exception.CRatingNotFoundException;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RatingService {
 
-    private final StudyService studyService;
+    private final EnrollService enrollService;
     private final RecordService recordService;
 
     private final UnitService unitService;
@@ -42,7 +41,7 @@ public class RatingService {
     }
 
     private boolean doesUserEnrollCourse(Course course, User user) {
-        studyService.getStudyByCourseAndUser(course, user);
+        enrollService.getStudyByCourseAndUser(course, user);
         return true;
     }
 
