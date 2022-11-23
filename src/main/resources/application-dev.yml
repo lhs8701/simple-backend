@@ -27,7 +27,7 @@ spring:
       connection-test-query: select 1 from dual
 
 path:
-  front_page: https://jaeheon-sim.github.io/mediaPlayer/
+  front_page: http://34.64.177.193/
 
 hls:
   ffmpeg: /usr/bin/ffmpeg
