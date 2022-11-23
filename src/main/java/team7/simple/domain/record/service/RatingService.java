@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.record.dto.RatingRequestDto;
+import team7.simple.domain.record.dto.RatingResponseDto;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.study.service.StudyService;
 import team7.simple.domain.unit.entity.Unit;
@@ -30,12 +31,12 @@ public class RatingService {
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Unit unit = unitService.findUnitById(unitId);
         Course course = unit.getCourse();
-        if (doesUserEnrollCourse(course, user)){
+        if (doesUserEnrollCourse(course, user)) {
             Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
-    //        if (record == null || !record.isCompleted()) {
-    //            log.error("평점을 등록하기 위해서는, 해당 강의를 끝까지 시청해야합니다.");
-    //            throw new CAccessDeniedException();
-    //        }
+            //        if (record == null || !record.isCompleted()) {
+            //            log.error("평점을 등록하기 위해서는, 해당 강의를 끝까지 시청해야합니다.");
+            //            throw new CAccessDeniedException();
+            //        }
             record.setRating(ratingRequestDto.getScore());
         }
     }
@@ -46,19 +47,17 @@ public class RatingService {
     }
 
     @Transactional
-    public double getAverageRatingScore(Long unitId) {
+    public RatingResponseDto getAverageRatingScore(Long unitId) {
         double rating;
         Unit unit = unitService.findUnitById(unitId);
         List<Record> recordList = recordService.getRecordListByUnit(unit);
         if (recordList == null) {
-            log.error("해당 강의를 시청한 사용자가 아직 없습니다.");
-            throw new CRatingNotFoundException();
+            return new RatingResponseDto(0, 0);
         }
-        rating = calculate(recordList);
-        return rating;
+        return calculate(recordList);
     }
 
-    private double calculate(List<Record> recordList) {
+    private RatingResponseDto calculate(List<Record> recordList) {
         double rating;
         double sum = 0;
         int whole = 0;
@@ -69,6 +68,6 @@ public class RatingService {
             }
         }
         rating = (double) Math.round((sum / whole) * 10) / 10.0;
-        return rating;
+        return new RatingResponseDto(rating, whole);
     }
 }
