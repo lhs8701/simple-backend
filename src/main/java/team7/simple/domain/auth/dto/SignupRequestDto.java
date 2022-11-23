@@ -1,4 +1,4 @@
-package team7.simple.domain.auth.basic.dto;
+package team7.simple.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

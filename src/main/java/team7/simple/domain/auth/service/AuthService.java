@@ -1,4 +1,4 @@
-package team7.simple.domain.auth.basic.service;
+package team7.simple.domain.auth.service;
 
 
 import lombok.RequiredArgsConstructor;
@@ -7,9 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team7.simple.domain.auth.basic.dto.LoginRequestDto;
-import team7.simple.domain.auth.basic.dto.RemoveConflictRequestDto;
-import team7.simple.domain.auth.basic.dto.SignupRequestDto;
+import team7.simple.domain.auth.dto.LoginRequestDto;
+import team7.simple.domain.auth.dto.RemoveConflictRequestDto;
+import team7.simple.domain.auth.dto.SignupRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
