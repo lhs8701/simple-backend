@@ -18,7 +18,7 @@ import team7.simple.global.common.ConstValue;
 @Api(tags = {"[Open API] User"})
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/open/user")
+@RequestMapping("/open/users")
 public class UserOpenController {
     private final UserService userService;
 
@@ -29,7 +29,7 @@ public class UserOpenController {
     })
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/password")
+    @PatchMapping("/password/change")
     public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal User user) {
         userService.changePassword(user.getId(), passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);

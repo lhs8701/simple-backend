@@ -31,8 +31,7 @@ public class UnitService {
     private final HlsService hlsService;
 
     @Transactional
-    public Long createUnit(UnitRequestDto unitRequestDto, MultipartFile file) {
-        Long courseId = unitRequestDto.getCourseId();
+    public Long createUnit(Long courseId, UnitRequestDto unitRequestDto, MultipartFile file) {
         Course course = courseService.getCourseById(courseId);
 
         VideoDto videoDto = videoService.uploadVideo(file, courseId);
@@ -43,31 +42,6 @@ public class UnitService {
         return unitJpaRepository.save(unit).getId();
     }
 
-    /*임시*/
-    @Transactional
-    public Long createUnitLocal(UnitRequestDto unitRequestDto) {
-        Long courseId = unitRequestDto.getCourseId();
-        Course course = courseService.getCourseById(courseId);
-        Unit unit = unitRequestDto.toEntity(new Video("test", "test", "test"), course);
-
-        return unitJpaRepository.save(unit).getId();
-    }
-
-    /*임시*/
-    @Transactional
-    public Long createUnitByUrl(UnitRequestByUrlDto unitRequestByUrlDto) {
-        Long courseId = unitRequestByUrlDto.getCourseId();
-        Course course = courseService.getCourseById(courseId);
-        Video video = Video.builder()
-                .fileName("test")
-                .fileOriName("test")
-                .fileUrl("test")
-                .hlsFileUrl(unitRequestByUrlDto.getMediaUrl())
-                .build();
-        Unit unit = unitRequestByUrlDto.toEntity(video, course);
-
-        return unitJpaRepository.save(unit).getId();
-    }
 
     @Transactional
     public void deleteUnit(Long unitId) {
@@ -76,8 +50,7 @@ public class UnitService {
     }
 
     @Transactional
-    public Long updateUnit(UnitUpdateParam unitUpdateParam) {
-        Long unitId = unitUpdateParam.getUnitId();
+    public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam) {
         Unit unit = unitJpaRepository.findById(unitId)
                 .orElseThrow(CUnitNotFoundException::new);
 
@@ -121,17 +94,17 @@ public class UnitService {
     }
 
     @Transactional
-    public List<UnitThumbnailResponseDto> getUnitThumbnailList(Long courseId) {
+    public Unit findUnitById(Long unitId){
+        return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+    }
+
+    public List<UnitThumbnailResponseDto> getUnits(Long courseId) {
         Course course = courseService.getCourseById(courseId);
         List<Unit> unitList = course.getUnitList();
         if (unitList == null)
             return null;
         return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
     }
-
-    @Transactional
-    public Unit findUnitById(Long unitId){
-        return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-    }
 }
+
 

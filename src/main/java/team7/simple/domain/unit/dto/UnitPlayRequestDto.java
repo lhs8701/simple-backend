@@ -15,7 +15,5 @@ import lombok.NoArgsConstructor;
 public class UnitPlayRequestDto {
     private Long currentUnitId;
     private double recordTime;
-
-    @ApiParam(defaultValue = "false")
     private boolean complete;
 }

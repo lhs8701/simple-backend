@@ -78,7 +78,6 @@ public class AuthOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @ApiOperation(value = "OPEN - 액세스, 리프레시 토큰 재발급")
     @ApiResponses(value = {
             @ApiResponse(code=200, message = "성공"),

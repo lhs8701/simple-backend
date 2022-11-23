@@ -30,8 +30,8 @@ public class QuestionService {
     }
 
     @Transactional
-    public Long updateQuestion(QuestionUpdateParam questionUpdateParam) {
-        Question question = getQuestionById(questionUpdateParam.getQuestionId());
+    public Long updateQuestion(Long questionId, QuestionUpdateParam questionUpdateParam) {
+        Question question = getQuestionById(questionId);
 
         question.setTitle(questionUpdateParam.getTitle());
         question.setContent(questionUpdateParam.getContent());

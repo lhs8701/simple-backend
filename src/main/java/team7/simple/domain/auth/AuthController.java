@@ -28,7 +28,7 @@ public class AuthController {
             @ApiResponse(code=401, message = "토큰이 유효하지 않은 경우"),
             @ApiResponse(code=404, message = "접속 중인 토큰이 없을 경우"),
     })
-    @PostMapping(value = "/conflict")
+    @PostMapping(value = "/resolve-conflict")
     public ResponseEntity<?> removeConflict(@RequestBody RemoveConflictRequestDto removeConflictRequestDto) {
         authService.removeConflict(removeConflictRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);

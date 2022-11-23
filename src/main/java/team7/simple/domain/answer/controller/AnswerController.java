@@ -25,9 +25,31 @@ public class AnswerController {
             @ApiResponse(code=200, message = "성공"),
             @ApiResponse(code=404, message = "답변에 대한 질문을 찾을 수 없을 경우"),
     })
-    @PostMapping("/front/course/unit/question/{questionId}/answer")
+    @PostMapping("/front/questions/{questionId}/answers")
     public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
         return new ResponseEntity<>(answerService.createAnswer(questionId, answerRequestDto), HttpStatus.OK);
+    }
+
+    /* 질문에 대한 답변 전체 조회 추가 예정 */
+//    @ApiOperation(value = "FRONT - 답변 전체 조회")
+//    @ApiResponses(value = {
+//            @ApiResponse(code=200, message = "성공"),
+//            @ApiResponse(code=404, message = "해당 답변을 찾을 수 없을 경우"),
+//    })
+//    @GetMapping("/front/questions/{questionId}/answers")
+//    public ResponseEntity<?> getAnswers(@PathVariable Long questionId) {
+//        return new ResponseEntity<>(answerService.getAnswers(questionId), HttpStatus.OK);
+//    }
+
+    /* 필요성에 대해 다시 한번 생각해보기 */
+    @ApiOperation(value = "FRONT - 답변 상세 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code=200, message = "성공"),
+            @ApiResponse(code=404, message = "해당 답변을 찾을 수 없을 경우"),
+    })
+    @GetMapping("/front/answers/{answerId}")
+    public ResponseEntity<?> getAnswerDetail(@PathVariable Long answerId) {
+        return new ResponseEntity<>(answerService.getAnswerInfo(answerId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 답변 수정")
@@ -35,7 +57,7 @@ public class AnswerController {
             @ApiResponse(code=200, message = "성공"),
             @ApiResponse(code=404, message = "해당 답변을 찾을 수 없을 경우"),
     })
-    @PatchMapping("/front/course/unit/question/answer/{answerId}")
+    @PatchMapping("/front/answers/{answerId}")
     public ResponseEntity<?> updateAnswer(@RequestBody @Valid AnswerUpdateParam answerUpdateParam) {
         return new ResponseEntity<>(answerService.updateAnswer(answerUpdateParam), HttpStatus.OK);
     }
@@ -45,19 +67,9 @@ public class AnswerController {
             @ApiResponse(code=200, message = "성공"),
             @ApiResponse(code=404, message = "해당 답변을 찾을 수 없을 경우"),
     })
-    @DeleteMapping("/front/course/unit/question/answer/{answerId}")
+    @DeleteMapping("/front/answers/{answerId}")
     public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId) {
         answerService.deleteAnswer(answerId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "FRONT - 답변 상세 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 답변을 찾을 수 없을 경우"),
-    })
-    @GetMapping("/front/course/unit/question/answer/{answerId}")
-    public ResponseEntity<?> getAnswerInfo(@PathVariable Long answerId) {
-        return new ResponseEntity<>(answerService.getAnswerInfo(answerId), HttpStatus.OK);
     }
 }
