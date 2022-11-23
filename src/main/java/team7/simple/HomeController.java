@@ -7,7 +7,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = {"Home Controller"})
 @Controller
 public class HomeController {
-    @GetMapping("/api/usage")
+    @GetMapping("/usage")
     @ApiIgnore
     public String api() {
         return "redirect:/swagger-ui/index.html";
