@@ -47,7 +47,7 @@ public class QuestionController {
     })
     @DeleteMapping("/front/course/unit/question/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
-        questionService.deleteQuestion(questionId);
+        questionService.deleteQuestionById(questionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

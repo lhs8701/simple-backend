@@ -16,7 +16,7 @@ public class AnswerResponseDto {
     private String content;
 
     public AnswerResponseDto(Answer answer) {
-        this.answerId = answer.getAnswerId();
+        this.answerId = answer.getId();
         this.title = answer.getTitle();
         this.content = answer.getContent();
     }

@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long videoId;
+    private Long id;
 
     private String fileName;
     private String fileOriName;

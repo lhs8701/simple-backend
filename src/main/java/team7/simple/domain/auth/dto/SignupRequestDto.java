@@ -1,4 +1,4 @@
-package team7.simple.domain.auth.basic.dto;
+package team7.simple.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public class SignupRequestDto {
 
     public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
-                .userId(UUID.randomUUID().toString())
+                .id(UUID.randomUUID().toString())
                 .account(account)
                 .password(passwordEncoder.encode(password))
                 .roles(Collections.singletonList("ROLE_USER"))

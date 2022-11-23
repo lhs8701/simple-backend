@@ -1,4 +1,4 @@
-package team7.simple.domain.auth.basic.controller;
+package team7.simple.domain.auth;
 
 
 import io.swagger.annotations.*;
@@ -9,12 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import team7.simple.domain.auth.basic.dto.LoginRequestDto;
-import team7.simple.domain.auth.basic.dto.RemoveConflictRequestDto;
-import team7.simple.domain.auth.basic.dto.SignupRequestDto;
-import team7.simple.domain.auth.basic.service.AuthService;
+import team7.simple.domain.auth.dto.LoginRequestDto;
+import team7.simple.domain.auth.dto.RemoveConflictRequestDto;
+import team7.simple.domain.auth.dto.SignupRequestDto;
+import team7.simple.domain.auth.service.AuthService;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
-import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.ConstValue;
 
@@ -22,7 +21,7 @@ import team7.simple.global.common.ConstValue;
 import javax.validation.Valid;
 
 @Slf4j
-@Api(tags = {"Basic Auth"})
+@Api(tags = {"Auth Controller"})
 @RequiredArgsConstructor
 @RequestMapping("/open/auth")
 @RestController

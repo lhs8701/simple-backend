@@ -24,7 +24,7 @@ public class QuestionDetailResponseDto {
     private List<Answer> answerList;
 
     public QuestionDetailResponseDto(Question question) {
-        this.questionId = question.getQuestionId();
+        this.questionId = question.getId();
         this.title = question.getTitle();
         this.content = question.getContent();
         this.timeline = question.getTimeline();

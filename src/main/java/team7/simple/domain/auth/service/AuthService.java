@@ -1,16 +1,15 @@
-package team7.simple.domain.auth.basic.service;
+package team7.simple.domain.auth.service;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.dynamic.TypeResolutionStrategy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team7.simple.domain.auth.basic.dto.LoginRequestDto;
-import team7.simple.domain.auth.basic.dto.RemoveConflictRequestDto;
-import team7.simple.domain.auth.basic.dto.SignupRequestDto;
+import team7.simple.domain.auth.dto.LoginRequestDto;
+import team7.simple.domain.auth.dto.RemoveConflictRequestDto;
+import team7.simple.domain.auth.dto.SignupRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
@@ -26,8 +25,6 @@ import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -47,7 +44,7 @@ public class AuthService {
     public String signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
             throw new CUserExistException();
-        return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getUserId();
+        return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
     }
 
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
@@ -59,7 +56,7 @@ public class AuthService {
         String accessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
         String refreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
 
-        refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), refreshToken));
+        refreshTokenRedisRepository.save(new RefreshToken(user.getId(), refreshToken));
 
         return TokenResponseDto.builder()
                 .grantType("bearer")
@@ -71,14 +68,14 @@ public class AuthService {
     public void logout(String accessToken, User user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
-        refreshTokenRedisRepository.deleteById(user.getUserId());
+        refreshTokenRedisRepository.deleteById(user.getId());
         logoutAccessTokenRedisRepository.save(new LogoutAccessToken(accessToken, remainMilliSeconds));
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
 
     public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
-        userJpaRepository.deleteById(user.getUserId());
+        userJpaRepository.deleteById(user.getId());
     }
 
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
@@ -91,7 +88,7 @@ public class AuthService {
         Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
         User user = (User) authentication.getPrincipal();
 
-        RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getUserId()).orElseThrow(CRefreshTokenExpiredException::new);
+        RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getId()).orElseThrow(CRefreshTokenExpiredException::new);
 
         if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
             String newAccessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
@@ -101,13 +98,13 @@ public class AuthService {
             if (finded != null) {
                 activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                         .accessToken(newAccessToken)
-                        .userId(user.getUserId())
+                        .userId(user.getId())
                         .conflict(finded.getConflict())
                         .expiration(JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue())
                         .build());
                 activeAccessTokenRedisRepository.delete(finded);
             }
-            refreshTokenRedisRepository.save(new RefreshToken(user.getUserId(), newRefreshToken));
+            refreshTokenRedisRepository.save(new RefreshToken(user.getId(), newRefreshToken));
             return TokenResponseDto.builder()
                     .grantType("bearer")
                     .accessToken(newAccessToken)
@@ -125,7 +122,7 @@ public class AuthService {
                 .findById(removeConflictRequestDto.getAccessToken())
                 .orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken otherAccessToken = activeAccessTokenRedisRepository
-                .findByUserIdAndConflict(user.getUserId(), 2)
+                .findByUserIdAndConflict(user.getId(), 2)
                 .orElseThrow(CUserNotFoundException::new);
         if (currentAccessToken.getConflict() != ActiveStatus.PRE_CONFLICTED.ordinal()) {
             throw new CWrongTypeTokenException();

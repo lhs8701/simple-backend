@@ -11,15 +11,16 @@ import team7.simple.domain.player.dto.ExecuteRequestDto;
 import team7.simple.domain.player.dto.ExecuteResponseDto;
 import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
+import team7.simple.domain.record.service.RecordService;
+import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
-import team7.simple.domain.viewingrecord.entity.ViewingRecord;
-import team7.simple.domain.viewingrecord.repository.ViewingRecordRedisRepository;
+import team7.simple.domain.record.entity.Record;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
 
-import java.net.*;
 import java.util.List;
 
 
@@ -29,8 +30,8 @@ import java.util.List;
 public class PlayerService {
     private final UserJpaRepository userJpaRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
-
-    private final ViewingRecordRedisRepository viewingRecordRedisRepository;
+    private final UnitService unitService;
+    private final RecordService recordService;
 
     private final JwtProvider jwtProvider;
 
@@ -49,31 +50,28 @@ public class PlayerService {
      */
     public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) {
         int conflictState = doesConflicted(user);
-        log.info("b");
         activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                 .accessToken(accessToken)
-                .userId(user.getUserId())
+                .userId(user.getId())
                 .conflict(conflictState)
                 .build());
-        log.info("c");
         return new ExecuteResponseDto(PLAYER_PATH
-                + "?userId=" + user.getUserId()
+                + "?userId=" + user.getId()
                 + "&courseId=" + executeRequestDto.getCourseId()
                 + "&unitId=" + executeRequestDto.getUnitId());
     }
 
     private int doesConflicted(User user) {
         int conflictStatus = ActiveStatus.NO_CONFLICT.ordinal();
-        ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getUserId()).orElse(null);
+        ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getId()).orElse(null);
         if (existActiveAccessToken != null) {
-            log.info("d");
             updateConflictStatus(existActiveAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
             conflictStatus = ActiveStatus.POST_CONFLICTED.ordinal();
         }
-        log.info("e");
         return conflictStatus;
     }
-    public void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus){
+
+    public void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus) {
         ActiveAccessToken newToken = ActiveAccessToken.builder()
                 .accessToken(oldToken.getAccessToken())
                 .userId(oldToken.getUserId())
@@ -87,18 +85,15 @@ public class PlayerService {
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
         User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken token = 나중에_접속한_토큰_얻기(user);
-        log.info("4");
 
         return new AccessTokenResponseDto(token.getAccessToken());
     }
 
     private ActiveAccessToken 나중에_접속한_토큰_얻기(User user) {
-        List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getUserId());
-        log.info("1");
-        if (activeAccessTokens == null){
+        List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getId());
+        if (activeAccessTokens == null) {
             throw new CUserNotActiveException();
         }
-        log.info("2");
 
         if (activeAccessTokens.size() > CONNECTION_LIMIT) {
             return activeAccessTokens.stream()
@@ -106,30 +101,40 @@ public class PlayerService {
                     .findAny()
                     .orElseThrow(CExpiredTokenException::new);
         }
-        log.info("3");
-        log.info(activeAccessTokens.toString());
 
         return activeAccessTokens.get(0);
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
-        activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
-        ViewingRecord viewingRecord = viewingRecordRedisRepository
-                .findByUnitIdAndUserId(exitRequestDto.getUnitId(), user.getUserId())
-                .orElse(null);
-        if (viewingRecord == null){
-            viewingRecord = ViewingRecord.builder()
-                    .unitId(exitRequestDto.getUnitId())
-                    .userId(user.getUserId())
-                    .check(exitRequestDto.isCheck())
-                    .time(exitRequestDto.getTime())
-                    .build();
-            viewingRecordRedisRepository.save(viewingRecord);
+        ActiveAccessToken activeToken = activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
+        Unit unit = unitService.findUnitById(exitRequestDto.getUnitId());
+        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+        if (record == null) {
+            recordService.saveRecord(unit, user, exitRequestDto.getTime(), exitRequestDto.isCheck());
+        } else {
+            record.setTimeline(exitRequestDto.getTime());
         }
-        else{
-            viewingRecord.setTime(exitRequestDto.getTime());
+
+        ActiveAccessToken anotherToken = getAnotherUserToken(user, activeToken);
+        if (anotherToken != null) {
+            updateConflictStatus(anotherToken, ActiveStatus.NO_CONFLICT.ordinal());
         }
+
         activeAccessTokenRedisRepository.deleteById(accessToken);
+    }
+
+    private ActiveAccessToken getAnotherUserToken(User user, ActiveAccessToken activeToken) {
+        if (activeToken.getConflict() == ActiveStatus.NO_CONFLICT.ordinal()) {
+            return null;
+        }
+        if (activeToken.getConflict() == ActiveStatus.PRE_CONFLICTED.ordinal()) {
+            return activeAccessTokenRedisRepository
+                    .findByUserIdAndConflict(user.getId(), ActiveStatus.POST_CONFLICTED.ordinal())
+                    .orElseThrow(CUserNotActiveException::new);
+        }
+        return activeAccessTokenRedisRepository
+                .findByUserIdAndConflict(user.getId(), ActiveStatus.PRE_CONFLICTED.ordinal())
+                .orElseThrow(CUserNotActiveException::new);
     }
 }
