@@ -50,13 +50,11 @@ public class PlayerService {
      */
     public ExecuteResponseDto executePlayer(String accessToken, ExecuteRequestDto executeRequestDto, User user) {
         int conflictState = doesConflicted(user);
-        log.info("b");
         activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
                 .accessToken(accessToken)
                 .userId(user.getId())
                 .conflict(conflictState)
                 .build());
-        log.info("c");
         return new ExecuteResponseDto(PLAYER_PATH
                 + "?userId=" + user.getId()
                 + "&courseId=" + executeRequestDto.getCourseId()
@@ -67,14 +65,13 @@ public class PlayerService {
         int conflictStatus = ActiveStatus.NO_CONFLICT.ordinal();
         ActiveAccessToken existActiveAccessToken = activeAccessTokenRedisRepository.findByUserId(user.getId()).orElse(null);
         if (existActiveAccessToken != null) {
-            log.info("d");
             updateConflictStatus(existActiveAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
             conflictStatus = ActiveStatus.POST_CONFLICTED.ordinal();
         }
-        log.info("e");
         return conflictStatus;
     }
-    public void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus){
+
+    public void updateConflictStatus(ActiveAccessToken oldToken, int conflictStatus) {
         ActiveAccessToken newToken = ActiveAccessToken.builder()
                 .accessToken(oldToken.getAccessToken())
                 .userId(oldToken.getUserId())
@@ -88,14 +85,13 @@ public class PlayerService {
     public AccessTokenResponseDto start(StartRequestDto startRequestDto) {
         User user = userJpaRepository.findById(startRequestDto.getUserId()).orElseThrow(CUserNotFoundException::new);
         ActiveAccessToken token = 나중에_접속한_토큰_얻기(user);
-        log.info("4");
 
         return new AccessTokenResponseDto(token.getAccessToken());
     }
 
     private ActiveAccessToken 나중에_접속한_토큰_얻기(User user) {
         List<ActiveAccessToken> activeAccessTokens = activeAccessTokenRedisRepository.findAllByUserId(user.getId());
-        if (activeAccessTokens == null){
+        if (activeAccessTokens == null) {
             throw new CUserNotActiveException();
         }
 
@@ -105,22 +101,40 @@ public class PlayerService {
                     .findAny()
                     .orElseThrow(CExpiredTokenException::new);
         }
-        log.info(activeAccessTokens.toString());
 
         return activeAccessTokens.get(0);
     }
 
     public void exit(String accessToken, ExitRequestDto exitRequestDto) {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
-        activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
-
+        ActiveAccessToken activeToken = activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
         Unit unit = unitService.findUnitById(exitRequestDto.getUnitId());
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
-        if (record == null){
+        if (record == null) {
             recordService.saveRecord(unit, user, exitRequestDto.getTime(), exitRequestDto.isCheck());
-            return;
+        } else {
+            record.setTimeline(exitRequestDto.getTime());
         }
-        record.setTimeline(exitRequestDto.getTime());
+
+        ActiveAccessToken anotherToken = getAnotherUserToken(user, activeToken);
+        if (anotherToken != null) {
+            updateConflictStatus(anotherToken, ActiveStatus.NO_CONFLICT.ordinal());
+        }
+
         activeAccessTokenRedisRepository.deleteById(accessToken);
+    }
+
+    private ActiveAccessToken getAnotherUserToken(User user, ActiveAccessToken activeToken) {
+        if (activeToken.getConflict() == ActiveStatus.NO_CONFLICT.ordinal()) {
+            return null;
+        }
+        if (activeToken.getConflict() == ActiveStatus.PRE_CONFLICTED.ordinal()) {
+            return activeAccessTokenRedisRepository
+                    .findByUserIdAndConflict(user.getId(), ActiveStatus.POST_CONFLICTED.ordinal())
+                    .orElseThrow(CUserNotActiveException::new);
+        }
+        return activeAccessTokenRedisRepository
+                .findByUserIdAndConflict(user.getId(), ActiveStatus.PRE_CONFLICTED.ordinal())
+                .orElseThrow(CUserNotActiveException::new);
     }
 }
