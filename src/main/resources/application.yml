@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api # nginx 리버스 프록시 prefix를 /api로 설정
 
 spring:
   profiles:
