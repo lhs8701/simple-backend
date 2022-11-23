@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.question.dto.QuestionRequestDto;
 import team7.simple.domain.question.dto.QuestionUpdateParam;
@@ -14,8 +15,8 @@ import team7.simple.domain.question.service.QuestionService;
 
 import javax.validation.Valid;
 
-@Api(tags = {"Question Controller"})
-@RestController
+@Api(tags = {"[Front API] Question"})
+@Controller
 @RequiredArgsConstructor
 public class QuestionController {
 
