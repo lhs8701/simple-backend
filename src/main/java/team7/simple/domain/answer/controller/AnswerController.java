@@ -7,14 +7,15 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.answer.dto.AnswerRequestDto;
 import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.service.AnswerService;
 
 import javax.validation.Valid;
-@Api(tags = {"Answer Controller"})
-@RestController
+@Api(tags = {"[Front API] Answer"})
+@Controller
 @RequiredArgsConstructor
 public class AnswerController {
 
