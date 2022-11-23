@@ -7,11 +7,12 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+
+    /* 도메인 영역 */
     USER_NOT_FOUND_EXCEPTION(-1, "해당 회원을 조회할 수 없습니다."),
     WRONG_PASSWORD_EXCEPTION(-2, "잘못된 비밀번호 입니다."),
 
-    REFRESH_TOKEN_INVALID_EXCEPTION(-1007, "리프레쉬 토큰이 잘못되었습니다."),
-    REFRESH_TOKEN_EXPIRED_EXCPEPTION(-1014, "리프레쉬 토큰이 만료되었습니다. 로그인을 다시 해주세요."),
+
     AUTHENTICATION_ENTRY_POINT_EXCEPTION(-1002, "해당 리소스에 접근하기 위한 권한이 없습니다."), //정상적으로 Jwt이 제대로 오지 않은 경우
     ACCESS_DENIED(-1003, "해당 리소스에 접근할 수 없는 권한입니다."),
 
@@ -39,9 +40,19 @@ public enum ErrorCode {
     USER_NOT_ACTIVE_EXCEPTION(-5005, "현재 시청중인 계정이 아닙니다."),
     NO_RECORD_EXCEPTION(-5006, "강의를 시청한 기록이 없습니다."),
 
+
+
+    /* 시큐리티 영역 */
+    REFRESH_TOKEN_INVALID_EXCEPTION(-1007, "리프레쉬 토큰이 잘못되었습니다."),
+    REFRESH_TOKEN_EXPIRED_EXCPEPTION(-1014, "리프레쉬 토큰이 만료되었습니다. 로그인을 다시 해주세요."),
+
+
+    /* 외부 영역 */
+
+
+    /* 서버 오류 */
     WRONG_APPROACH(-9998, "잘못된 접근입니다."),
     INTERNAL_SERVER_ERROR(-9999, "서버 에러입니다.");
-
 
     private int code;
     private String message;

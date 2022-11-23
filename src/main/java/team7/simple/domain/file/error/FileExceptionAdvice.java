@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.file.error.exception.CFileNotFoundException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +22,6 @@ public class FileExceptionAdvice {
     @ExceptionHandler(CFileNotFoundException.class)
     protected ResponseEntity<?> handle(CFileNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 }

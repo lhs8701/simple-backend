@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.record.error.exception.CRatingNotFoundException;
 import team7.simple.domain.study.error.exception.CStudyNotFoundException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 import team7.simple.global.common.response.service.ResponseService;
 import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.*;
@@ -26,7 +27,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> defaultException(Exception e) {
         e.printStackTrace();
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -37,7 +38,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<?> handle(IllegalArgumentException e) {
         log.error(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION.getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION), HttpStatus.BAD_REQUEST);
     }
 
 

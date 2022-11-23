@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.auth.error.exception.*;
 import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.user.error.exception.CWrongPasswordException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
+import team7.simple.global.error.ErrorCode;
 
 
 @Slf4j
@@ -24,6 +26,6 @@ public class CourseExceptionAdvice {
     @ExceptionHandler(CCourseNotFoundException.class)
     protected ResponseEntity<?> handle(CCourseNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.record.error.exception.CRatingNotFoundException;
 import team7.simple.domain.record.error.exception.CRecordNotFoundException;
+import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class RecordExceptionAdvice {
     @ExceptionHandler(CRatingNotFoundException.class)
     protected ResponseEntity<?> handle(CRatingNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -33,6 +34,6 @@ public class RecordExceptionAdvice {
     @ExceptionHandler(CRecordNotFoundException.class)
     protected ResponseEntity<?> handle(CRecordNotFoundException e) {
         log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
     }
 }
