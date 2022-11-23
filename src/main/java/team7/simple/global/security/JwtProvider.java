@@ -18,9 +18,6 @@ import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import team7.simple.global.common.ConstValue;
 import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.CAuthenticationEntryPointException;
-import team7.simple.global.error.advice.exception.CExpiredTokenException;
-import team7.simple.global.error.advice.exception.CUserNotActiveException;
-import team7.simple.global.error.advice.exception.CWrongTypeTokenException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
@@ -131,18 +128,5 @@ public class JwtProvider {
             return false;
         }
         return activeAccessToken.getConflict() == 1;
-    }
-
-    public void validateTokenForReissue(String jwt) {
-        try {
-            Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(jwt);
-            if (logoutAccessTokenRedisRepository.existsById(jwt)) {
-                throw new CExpiredTokenException();
-            }
-        } catch (SecurityException | MalformedJwtException e) {
-            throw new CWrongTypeTokenException();
-        } catch (ExpiredJwtException e) {
-            throw new CExpiredTokenException();
-        }
     }
 }

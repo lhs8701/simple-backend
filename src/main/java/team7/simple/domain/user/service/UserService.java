@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
-import team7.simple.global.error.advice.exception.CUserNotFoundException;
+import team7.simple.domain.user.error.exception.CUserNotFoundException;
 
 @Service
 @RequiredArgsConstructor

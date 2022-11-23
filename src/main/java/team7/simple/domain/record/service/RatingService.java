@@ -11,7 +11,7 @@ import team7.simple.domain.study.service.StudyService;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.error.advice.exception.CRatingNotFoundException;
+import team7.simple.domain.record.error.exception.CRatingNotFoundException;
 
 import java.util.List;
 

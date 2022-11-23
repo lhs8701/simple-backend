@@ -12,7 +12,7 @@ import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.entity.Study;
 import team7.simple.domain.study.service.StudyService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.error.advice.exception.CCourseNotFoundException;
+import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 
 import java.util.List;
 
