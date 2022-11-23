@@ -12,10 +12,10 @@ import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.video.dto.VideoDto;
-import team7.simple.domain.video.entity.Video;
-import team7.simple.domain.video.service.VideoService;
-import team7.simple.global.error.advice.exception.CUnitNotFoundException;
+import team7.simple.domain.file.dto.VideoDto;
+import team7.simple.domain.file.entity.Video;
+import team7.simple.domain.file.service.VideoService;
+import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
 import team7.simple.infra.hls.service.HlsService;
 
 import java.util.List;

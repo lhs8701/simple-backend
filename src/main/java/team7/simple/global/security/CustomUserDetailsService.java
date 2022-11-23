@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import team7.simple.domain.user.repository.UserJpaRepository;
-import team7.simple.global.error.advice.exception.CUserNotFoundException;
+import team7.simple.domain.user.error.exception.CUserNotFoundException;
 
 @RequiredArgsConstructor
 @Service

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.domain.auth.error.exception.*;
+import team7.simple.domain.auth.error.exception.CConflictUsageException;
 
 
 @Slf4j
@@ -15,15 +16,7 @@ import team7.simple.domain.auth.error.exception.*;
 public class AuthExceptionAdvice {
 
     /**
-     * 패스워드가 불일치할 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CWrongPasswordException.class)
-    protected ResponseEntity<?> handle(CWrongPasswordException e) {
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * Security - JWT 서명이 잘못되었을 때 발생시키는 예외
+     * JWT 서명이 잘못되었을 때 발생시키는 예외
      */
     @ExceptionHandler(CWrongTypeTokenException.class)
     protected ResponseEntity<?> handle(CWrongTypeTokenException e) {
@@ -32,7 +25,7 @@ public class AuthExceptionAdvice {
     }
 
     /**
-     * Security - 토큰이 만료되었을 때 발생시키는 예외
+     * 토큰이 만료되었을 때 발생시키는 예외
      */
     @ExceptionHandler(CExpiredTokenException.class)
     protected ResponseEntity<?> handle(CExpiredTokenException e) {
@@ -41,48 +34,21 @@ public class AuthExceptionAdvice {
     }
 
     /**
-     * Security - 지원하지 않는 토큰일 때 발생시키는 예외
-     */
-    @ExceptionHandler(CUnsupportedTokenException.class)
-    protected ResponseEntity<?> handle(CUnsupportedTokenException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * 리프레시 토큰이 불일치할 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CWrongRefreshTokenException.class)
-    protected ResponseEntity<?> handle(CWrongRefreshTokenException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
-    }
-
-
-    /**
-     * refresh token이 잘못되었을 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CRefreshTokenInvalidException.class)
-    protected ResponseEntity<?> handle(CRefreshTokenInvalidException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * 리프레쉬 토큰이 만료되었을 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CRefreshTokenExpiredException.class)
-    protected ResponseEntity<?> handle(CRefreshTokenExpiredException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * Security - 권한이 없는 리소스를 요청한 경우 발생시키는 예외
+     * 권한이 없는 리소스를 요청한 경우 발생시키는 예외
      */
     @ExceptionHandler(CAccessDeniedException.class)
     protected ResponseEntity<?> handle(CAccessDeniedException e) {
         return new ResponseEntity<>(e.getErrorCode(), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * 같은 계정으로 플레이어를 동시에 이용할 경우 발생시키는 예외
+     * @param e CConflictUsageException
+     * @return CONFLICT 409
+     */
+    @ExceptionHandler(CConflictUsageException.class)
+    protected ResponseEntity<?> handle(CConflictUsageException e) {
+        log.error(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 }

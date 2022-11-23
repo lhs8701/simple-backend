@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.study.entity.Study;
+import team7.simple.domain.study.error.exception.CStudyNotFoundException;
 import team7.simple.domain.study.repository.StudyJpaRepository;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.error.advice.exception.CStudyNotFoundException;
 
 import java.util.List;
 

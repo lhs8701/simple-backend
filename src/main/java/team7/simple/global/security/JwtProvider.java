@@ -129,17 +129,4 @@ public class JwtProvider {
         }
         return activeAccessToken.getConflict() == 1;
     }
-
-    public void validateTokenForReissue(String jwt) {
-        try {
-            Jwts.parserBuilder().setSigningKey(getSigningKey(secretKey)).build().parseClaimsJws(jwt);
-            if (logoutAccessTokenRedisRepository.existsById(jwt)) {
-                throw new CExpiredTokenException();
-            }
-        } catch (SecurityException | MalformedJwtException e) {
-            throw new CWrongTypeTokenException();
-        } catch (ExpiredJwtException e) {
-            throw new CExpiredTokenException();
-        }
-    }
 }

@@ -8,14 +8,12 @@ import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import team7.simple.domain.video.dto.VideoDto;
-import team7.simple.domain.video.entity.Video;
-import team7.simple.domain.video.repository.VideoJpaRepository;
-import team7.simple.global.error.advice.exception.CFileNotFoundException;
-import team7.simple.infra.hls.dto.HlsRequestDto;
+import team7.simple.domain.file.dto.VideoDto;
+import team7.simple.domain.file.entity.Video;
+import team7.simple.domain.file.repository.VideoJpaRepository;
+import team7.simple.domain.file.error.exception.CFileNotFoundException;
 
 import javax.transaction.Transactional;
 import java.io.File;

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.unit.entity.Unit;
-import team7.simple.domain.video.entity.Video;
+import team7.simple.domain.file.entity.Video;
 
 import javax.validation.constraints.NotNull;
 

@@ -10,10 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.auth.dto.LoginRequestDto;
 import team7.simple.domain.auth.dto.RemoveConflictRequestDto;
 import team7.simple.domain.auth.dto.SignupRequestDto;
-import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
+import team7.simple.domain.auth.error.exception.CWrongTypeTokenException;
 import team7.simple.domain.auth.jwt.dto.TokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
-import team7.simple.domain.auth.jwt.entity.JwtExpiration;
 import team7.simple.domain.auth.jwt.entity.LogoutAccessToken;
 import team7.simple.domain.auth.jwt.entity.RefreshToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
@@ -21,9 +20,11 @@ import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.RefreshTokenRedisRepository;
 import team7.simple.domain.player.service.PlayerService;
 import team7.simple.domain.user.entity.User;
+import team7.simple.domain.user.error.exception.CUserExistException;
+import team7.simple.domain.user.error.exception.CUserNotFoundException;
+import team7.simple.domain.user.error.exception.CWrongPasswordException;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.common.constant.ActiveStatus;
-import team7.simple.global.error.advice.exception.*;
 import team7.simple.global.security.JwtProvider;
 
 @Slf4j
@@ -76,43 +77,6 @@ public class AuthService {
     public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
         userJpaRepository.deleteById(user.getId());
-    }
-
-    public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
-
-        String existAccessToken = tokenRequestDto.getAccessToken();
-        String existRefreshToken = tokenRequestDto.getRefreshToken();
-
-        jwtProvider.validateTokenForReissue(existAccessToken);
-
-        Authentication authentication = jwtProvider.getAuthentication(existAccessToken);
-        User user = (User) authentication.getPrincipal();
-
-        RefreshToken existRedisRefreshToken = refreshTokenRedisRepository.findById(user.getId()).orElseThrow(CRefreshTokenExpiredException::new);
-
-        if (existRefreshToken.equals(existRedisRefreshToken.getRefreshToken())) {
-            String newAccessToken = jwtProvider.generateAccessToken(user.getAccount(), user.getRoles());
-            String newRefreshToken = jwtProvider.generateRefreshToken(user.getAccount(), user.getRoles());
-
-            ActiveAccessToken finded = activeAccessTokenRedisRepository.findById(existAccessToken).orElse(null);
-            if (finded != null) {
-                activeAccessTokenRedisRepository.save(ActiveAccessToken.builder()
-                        .accessToken(newAccessToken)
-                        .userId(user.getId())
-                        .conflict(finded.getConflict())
-                        .expiration(JwtExpiration.ACCESS_TOKEN_EXPIRATION_TIME.getValue())
-                        .build());
-                activeAccessTokenRedisRepository.delete(finded);
-            }
-            refreshTokenRedisRepository.save(new RefreshToken(user.getId(), newRefreshToken));
-            return TokenResponseDto.builder()
-                    .grantType("bearer")
-                    .accessToken(newAccessToken)
-                    .refreshToken(newRefreshToken)
-                    .build();
-        } else {
-            throw new CWrongRefreshTokenException();
-        }
     }
 
     public void removeConflict(RemoveConflictRequestDto removeConflictRequestDto) {

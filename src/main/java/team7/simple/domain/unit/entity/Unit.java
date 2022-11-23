@@ -3,7 +3,7 @@ package team7.simple.domain.unit.entity;
 import lombok.*;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.question.entity.Question;
-import team7.simple.domain.video.entity.Video;
+import team7.simple.domain.file.entity.Video;
 
 import javax.persistence.*;
 import java.util.ArrayList;

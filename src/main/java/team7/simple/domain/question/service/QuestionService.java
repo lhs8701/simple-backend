@@ -10,7 +10,7 @@ import team7.simple.domain.question.entity.Question;
 import team7.simple.domain.question.repository.QuestionJpaRepository;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitService;
-import team7.simple.global.error.advice.exception.CQuestionNotFoundException;
+import team7.simple.domain.question.error.exception.CQuestionNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;

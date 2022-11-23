@@ -24,7 +24,6 @@ import javax.validation.Valid;
 @Controller
 public class AuthOpenController {
 
-
     private final AuthService authService;
 
     @ApiOperation(value = "OPEN - 회원가입")
@@ -89,6 +88,6 @@ public class AuthOpenController {
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/reissue")
     public ResponseEntity<?> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
-        return new ResponseEntity<>(authService.reissue(tokenRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
