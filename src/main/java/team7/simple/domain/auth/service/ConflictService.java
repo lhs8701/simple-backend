@@ -47,6 +47,7 @@ public class ConflictService {
                 .accessToken(token.getAccessToken())
                 .userId(token.getUserId())
                 .conflict(conflictStatus)
+                .valid(token.isValid())
                 .expiration(token.getExpiration())
                 .build();
         activeAccessTokenRedisRepository.delete(token);

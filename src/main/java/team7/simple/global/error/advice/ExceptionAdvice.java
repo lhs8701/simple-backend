@@ -41,5 +41,16 @@ public class ExceptionAdvice {
         return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.ILLEGAL_ARGUMENT_EXCEPTION), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * 잘못된 접근일 때 발생하는 예외
+     * @param e IllegalArgumentException
+     * @return BAD_REQUEST 400
+     */
+    @ExceptionHandler(CWrongApproach.class)
+    protected ResponseEntity<?> handle(CWrongApproach e) {
+        log.error(e.getErrorCode().getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

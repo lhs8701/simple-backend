@@ -40,6 +40,7 @@ public class AuthService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
+    private final ConflictService conflictService;
     private final PlayerService playerService;
 
     public String signup(SignupRequestDto signupRequestDto) {
@@ -93,11 +94,11 @@ public class AuthService {
         }
 
         if (removeConflictRequestDto.isKeepGoing()) {
-            playerService.updateConflictStatus(currentAccessToken, ActiveStatus.POST_CONFLICTED.ordinal());
-            playerService.updateConflictStatus(otherAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
+            conflictService.updateConflictStatus(currentAccessToken, ActiveStatus.POST_CONFLICTED.ordinal());
+            conflictService.updateConflictStatus(otherAccessToken, ActiveStatus.PRE_CONFLICTED.ordinal());
         } else {
             activeAccessTokenRedisRepository.delete(currentAccessToken);
-            playerService.updateConflictStatus(otherAccessToken, ActiveStatus.NO_CONFLICT.ordinal());
+            conflictService.updateConflictStatus(otherAccessToken, ActiveStatus.NO_CONFLICT.ordinal());
         }
     }
 }

@@ -40,11 +40,11 @@ public enum ErrorCode {
 
 
     /* 외부 영역 */
-    ILLEGAL_ARGUMENT_EXCEPTION(7004, "잘못된 형식입니다."),
+    ILLEGAL_ARGUMENT_EXCEPTION(7000, "잘못된 형식입니다."),
+    WRONG_APPROACH(7001, "잘못된 접근입니다."),
 
 
     /* 서버 오류 */
-    WRONG_APPROACH(9998, "잘못된 접근입니다."),
     INTERNAL_SERVER_ERROR(9999, "서버 에러입니다.");
 
     private int code;
