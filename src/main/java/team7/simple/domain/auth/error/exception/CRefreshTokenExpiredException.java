@@ -10,6 +10,6 @@ public class CRefreshTokenExpiredException extends RuntimeException{
     private final ErrorCode errorCode;
     public CRefreshTokenExpiredException(){
         super();
-        errorCode = ErrorCode.REFRESH_TOKEN_EXPIRED_EXCPEPTION;
+        errorCode = ErrorCode.REFRESH_TOKEN_EXPIRED_EXCEPTION;
     }
 }
