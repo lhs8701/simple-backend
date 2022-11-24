@@ -20,9 +20,12 @@ public class ActiveAccessToken {
     @Indexed //redis repository에서 인자로 사용하는 필드에 붙여줘야 함
     private String userId;
 
-    @TimeToLive
-    private Long expiration;
-
     @Indexed
     private int conflict;
+
+    @Indexed
+    private boolean valid;
+
+    @TimeToLive
+    private Long expiration;
 }

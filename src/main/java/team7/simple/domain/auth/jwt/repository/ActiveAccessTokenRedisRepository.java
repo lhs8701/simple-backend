@@ -12,7 +12,7 @@ public interface ActiveAccessTokenRedisRepository extends CrudRepository<ActiveA
 
     List<ActiveAccessToken> findAllByUserId(String userId);
 
-    boolean existByIdAndConflict(String accessToken, int conflict);
+    Optional<ActiveAccessToken> findByUserIdAndValid(String userId, boolean valid);
 
     Optional<ActiveAccessToken> findByUserIdAndConflict(String userId, int conflict);
 }

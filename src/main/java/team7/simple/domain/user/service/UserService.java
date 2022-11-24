@@ -21,4 +21,7 @@ public class UserService {
         User user = userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
     }
+    public User getUserById(String userId){
+        return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+    }
 }
