@@ -1,11 +1,11 @@
-package team7.simple.domain.study.service;
+package team7.simple.domain.enroll.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.study.entity.Enroll;
-import team7.simple.domain.study.error.exception.CUserNotEnrolledException;
-import team7.simple.domain.study.repository.EnrollJpaRepository;
+import team7.simple.domain.enroll.entity.Enroll;
+import team7.simple.domain.enroll.error.exception.CUserNotEnrolledException;
+import team7.simple.domain.enroll.repository.EnrollJpaRepository;
 import team7.simple.domain.user.entity.User;
 
 import java.util.List;

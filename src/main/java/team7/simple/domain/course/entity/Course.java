@@ -1,7 +1,7 @@
 package team7.simple.domain.course.entity;
 
 import lombok.*;
-import team7.simple.domain.study.entity.Enroll;
+import team7.simple.domain.enroll.entity.Enroll;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.jpa.BaseTimeEntity;

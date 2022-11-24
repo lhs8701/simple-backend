@@ -1,4 +1,4 @@
-package team7.simple.domain.study.error;
+package team7.simple.domain.enroll.error;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import team7.simple.domain.study.error.exception.CUserNotEnrolledException;
+import team7.simple.domain.enroll.error.exception.CUserNotEnrolledException;
 import team7.simple.global.common.response.dto.ErrorResponseDto;
 
 @Slf4j

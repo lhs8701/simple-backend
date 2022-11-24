@@ -1,8 +1,8 @@
-package team7.simple.domain.study.repository;
+package team7.simple.domain.enroll.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.study.entity.Enroll;
+import team7.simple.domain.enroll.entity.Enroll;
 import team7.simple.domain.user.entity.User;
 
 import java.util.List;

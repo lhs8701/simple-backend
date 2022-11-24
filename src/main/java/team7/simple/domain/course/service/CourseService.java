@@ -10,8 +10,8 @@ import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.error.exception.CAlreadyJoinedCourseException;
 import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.study.entity.Enroll;
-import team7.simple.domain.study.service.EnrollService;
+import team7.simple.domain.enroll.entity.Enroll;
+import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.user.entity.User;
 
 import java.util.List;

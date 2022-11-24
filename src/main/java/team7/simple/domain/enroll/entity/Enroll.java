@@ -1,4 +1,4 @@
-package team7.simple.domain.study.entity;
+package team7.simple.domain.enroll.entity;
 
 import lombok.*;
 import team7.simple.domain.course.entity.Course;

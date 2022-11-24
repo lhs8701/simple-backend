@@ -1,4 +1,4 @@
-package team7.simple.domain.study.error.exception;
+package team7.simple.domain.enroll.error.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

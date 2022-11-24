@@ -36,7 +36,7 @@ public class UserOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 등록한 수강 강좌 목록 조회", notes = "회원이 현재 수강중인 수강 강좌의 목록을 반환합니다.")
+    @ApiOperation(value = "OPEN - 등록한 강좌 목록 조회", notes = "회원이 현재 수강중인 수강 강좌의 목록을 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 404, message = "해당 회원을 찾을 수 없을 경우"),
