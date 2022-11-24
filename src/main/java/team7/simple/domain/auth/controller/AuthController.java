@@ -1,4 +1,4 @@
-package team7.simple.domain.auth;
+package team7.simple.domain.auth.controller;
 
 
 import io.swagger.annotations.Api;

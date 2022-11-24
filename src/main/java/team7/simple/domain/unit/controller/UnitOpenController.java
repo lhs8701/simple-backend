@@ -1,4 +1,4 @@
-package team7.simple.openapi;
+package team7.simple.domain.unit.controller;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;

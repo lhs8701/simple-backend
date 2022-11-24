@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team7.simple.domain.course.entity.Course;
+import team7.simple.domain.enroll.entity.Enroll;
 
 import java.time.LocalDateTime;
 
@@ -18,9 +19,9 @@ public class JoinedCourseResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime joinedDate;
 
-    public JoinedCourseResponseDto(Course course){
-        this.courseId = course.getId();
-        this.title = course.getTitle();
-        this.joinedDate = course.getCreatedDate();
+    public JoinedCourseResponseDto(Enroll enroll){
+        this.courseId = enroll.getCourse().getId();
+        this.title = enroll.getCourse().getTitle();
+        this.joinedDate = enroll.getCreatedDate();
     }
 }

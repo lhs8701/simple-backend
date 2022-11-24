@@ -45,13 +45,22 @@ public class UserService {
         return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
     }
 
+    /**
+     * 사용자가 현재 수강중인 강좌의 목록을 반환합니다.
+     * @param user 사용자
+     * @return 강좌 아이디, 강좌 이름, 수강 등록 날짜
+     */
     public List<JoinedCourseResponseDto> getJoinedCourses(User user) {
         List<Enroll> enrollList = enrollService.getStudyListByUser(user);
-        List<Course> joinedCourseList = enrollList.stream().map(Enroll::getCourse).toList();
-
-        return joinedCourseList.stream().map(JoinedCourseResponseDto::new).collect(Collectors.toList());
+        return enrollList.stream().map(JoinedCourseResponseDto::new).collect(Collectors.toList());
     }
 
+    /**
+     * 강좌에 대한 강의 수강 현황을 조회합니다.
+     * @param courseId 강좌 아이디
+     * @param user 사용자
+     * @return 강의 아이디, 제목, 완료 여부, 진척도
+     */
     public List<UnitHistoryResponseDto> getStudyHistory(Long courseId, User user) {
         Course course = courseService.getCourseById(courseId);
         enrollService.getStudyByCourseAndUser(course, user);

@@ -1,4 +1,4 @@
-package team7.simple.openapi;
+package team7.simple.domain.player.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
