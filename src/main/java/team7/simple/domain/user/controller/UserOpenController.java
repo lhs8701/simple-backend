@@ -32,7 +32,7 @@ public class UserOpenController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/password/change")
+    @PatchMapping("/password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal User user) {
         userService.changePassword(passwordUpdateParam, user);
         return new ResponseEntity<>(HttpStatus.OK);
