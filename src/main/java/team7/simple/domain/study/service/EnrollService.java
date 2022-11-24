@@ -19,9 +19,7 @@ public class EnrollService {
         return enrollJpaRepository.findByCourseAndUser(course, user).isPresent();
     }
 
-    public List<Study> getStudyListByCourse(Course course) {
-        return enrollJpaRepository.findAllByCourse(course);
-    }
+
 
     public Study getStudyByCourseAndUser(Course course, User user) {
         return enrollJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);
@@ -37,5 +35,13 @@ public class EnrollService {
 
     public void deleteStudy(Study study) {
         enrollJpaRepository.delete(study);
+    }
+
+    public List<Study> getStudyListByCourse(Course course) {
+        return enrollJpaRepository.findAllByCourse(course);
+    }
+
+    public List<Study> getStudyListByUser(User user) {
+        return enrollJpaRepository.findAllByUser(user);
     }
 }
