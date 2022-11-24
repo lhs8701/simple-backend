@@ -26,8 +26,10 @@ public class CourseExceptionAdvice {
      */
     @ExceptionHandler(CCourseNotFoundException.class)
     protected ResponseEntity<?> handle(CCourseNotFoundException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -37,7 +39,9 @@ public class CourseExceptionAdvice {
      */
     @ExceptionHandler(CAlreadyJoinedCourseException.class)
     protected ResponseEntity<?> handle(CAlreadyJoinedCourseException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.CONFLICT);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 }
