@@ -46,18 +46,6 @@ public class UnitOpenController {
         return new ResponseEntity<>(unitService.createUnitLocal(courseId, unitRequestDto), HttpStatus.OK);
     }
 
-    /*테스트용*/
-    @ApiOperation(value = "TEST - 강의 업로드 (url로 접근, 테스트용) ", notes = "URL로 미디어 소스에 접근합니다. 테스트 용으로 사용하는 API입니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
-    })
-    @PreAuthorize("permitAll()")
-    @PostMapping("open/course/{courseId}/units/test-url")
-    public ResponseEntity<?> uploadUnitByUrl(@PathVariable Long courseId, @RequestBody UnitRequestByUrlDto unitRequestByUrlDto) {
-        return new ResponseEntity<>(unitService.createUnitByUrl(courseId, unitRequestByUrlDto), HttpStatus.OK);
-    }
-
     @ApiOperation(value = "OPEN - 강좌 내 강의 전체 조회")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공"),

@@ -88,9 +88,6 @@ public class HlsService {
 
     public String getHlsFileUrl(Video video) {
         String hlsFileUrl = video.getHlsFileUrl();
-        if (hlsFileUrl.startsWith("http")){
-            return hlsFileUrl;
-        }
 
         /* 파일 존재하는지 확인하는 로직 추가 */
         String url = ROOT_PATH + hlsFileUrl;
