@@ -33,7 +33,7 @@ public class RoundCalculatorTest {
         double result = roundCalculator.round(number, 1);
 
         // then
-        assertThat(result).isEqualTo(10.2);
+        assertThat(result).isEqualTo(10.3);
     }
 
     @Test

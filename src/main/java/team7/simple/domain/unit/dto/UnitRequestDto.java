@@ -1,15 +1,15 @@
 package team7.simple.domain.unit.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.file.entity.Video;
 
 import javax.validation.constraints.NotNull;
 
-@AllArgsConstructor
 @Getter
+@NoArgsConstructor
 public class UnitRequestDto {
     @NotNull
     private String title;

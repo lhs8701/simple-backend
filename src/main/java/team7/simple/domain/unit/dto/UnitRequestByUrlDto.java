@@ -11,9 +11,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 public class UnitRequestByUrlDto {
-
-    @NotNull
-    private Long courseId;
     @NotNull
     private String title;
 

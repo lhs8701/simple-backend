@@ -34,18 +34,6 @@ public class UnitController {
         return new ResponseEntity<>(unitService.getUnits(courseId), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "FRONT - 강의 재생", notes = "다른 강의로 이동할 경우 호출하는 API입니다. 현재 재생중인 강의의 시간대와 완료 여부를 기록한 후, 다음 강의 영상의 경로를 포함한 정보를 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강의가 없을 경우"),
-    })
-    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/front/units/{nextUnitId}/play")
-    public ResponseEntity<?> playUnit(@PathVariable Long nextUnitId, @RequestBody UnitPlayRequestDto unitPlayRequestDto, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(unitService.playUnit(nextUnitId, unitPlayRequestDto, user), HttpStatus.OK);
-    }
-
     @ApiOperation(value = "FRONT - 강의 평점 등록")
     @ApiResponses(value = {
             @ApiResponse(code=200, message = "성공"),

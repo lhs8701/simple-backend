@@ -8,6 +8,7 @@ import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
+import team7.simple.domain.course.error.exception.CAlreadyJoinedCourseException;
 import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.study.entity.Study;
@@ -55,14 +56,15 @@ public class CourseService {
         return courseId;
     }
 
-    public Long register(RegisterCancelRequestDto registerCancelRequestDto, User user) {
-        Long courseId = registerCancelRequestDto.getCourseId();
+    public Long register(Long courseId, User user) {
         Course course = getCourseById(courseId);
+        if (enrollService.doesEnrolled(course, user)){
+            throw new CAlreadyJoinedCourseException();
+        }
         return enrollService.saveStudy(course, user);
     }
 
-    public void cancel(RegisterCancelRequestDto registerCancelRequestDto, User user) {
-        Long courseId = registerCancelRequestDto.getCourseId();
+    public void cancel(Long courseId, User user) {
         Course course = getCourseById(courseId);
         Study study = enrollService.getStudyByCourseAndUser(course, user);
         enrollService.deleteStudy(study);

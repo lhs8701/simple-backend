@@ -21,6 +21,8 @@ public enum ErrorCode {
     NO_RECORD_EXCEPTION(1007, "강의를 시청한 기록이 없습니다."),
     FILE_NOT_FOUND_EXCEPTION(1008, "해당 파일을 찾을 수 없습니다."),
 
+    ALREADY_JOINED_COURSE_EXCEPTION(1009, "이미 수강 중인 강좌입니다."),
+
     //2
     WRONG_PASSWORD_EXCEPTION(3000, "잘못된 비밀번호 입니다."),
     LOGIN_CONFLICT_EXCEPTION(3001, "로그인 충돌입니다."),

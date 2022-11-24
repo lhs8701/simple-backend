@@ -15,11 +15,9 @@ import java.util.List;
 public class EnrollService {
     private final EnrollJpaRepository enrollJpaRepository;
 
-    public boolean isUserInCourse(Course course, User user) {
+    public boolean doesEnrolled(Course course, User user) {
         return enrollJpaRepository.findByCourseAndUser(course, user).isPresent();
     }
-
-
 
     public Study getStudyByCourseAndUser(Course course, User user) {
         return enrollJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);

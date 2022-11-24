@@ -38,9 +38,9 @@ public class CourseOpenController {
             @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
     })
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/open/courses/register")
-    public ResponseEntity<?> register(@RequestBody RegisterCancelRequestDto registerCancelRequestDto, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(courseService.register(registerCancelRequestDto, user), HttpStatus.OK);
+    @PostMapping("/open/courses/{courseId}/register")
+    public ResponseEntity<?> register(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(courseService.register(courseId, user), HttpStatus.OK);
     }
 
     @ApiOperation(value = "OPEN - 강좌 수강 취소")
@@ -50,9 +50,9 @@ public class CourseOpenController {
             @ApiResponse(code=404, message = "해당 강좌에 대한 수강 정보를 찾을 수 없을 경우"),
     })
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/open/courses/cancel")
-    public ResponseEntity<?> cancel(@RequestBody RegisterCancelRequestDto registerCancelRequestDto, @AuthenticationPrincipal User user) {
-        courseService.cancel(registerCancelRequestDto, user);
+    @PostMapping("/open/courses/{courseId}/cancel")
+    public ResponseEntity<?> cancel(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
+        courseService.cancel(courseId, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

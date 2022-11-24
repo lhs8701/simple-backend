@@ -19,6 +19,7 @@ import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.domain.user.error.exception.CUserNotFoundException;
+import team7.simple.utils.RoundCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +34,15 @@ public class UserService {
     private final EnrollService enrollService;
     private final RecordService recordService;
     private final CourseService courseService;
-    private final UnitService unitService;
+    private final RoundCalculator roundCalculator;
 
     private final UserJpaRepository userJpaRepository;
-    public void changePassword(PasswordUpdateParam passwordUpdateParam, User user){
+
+    public void changePassword(PasswordUpdateParam passwordUpdateParam, User user) {
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
     }
-    public User getUserById(String userId){
+
+    public User getUserById(String userId) {
         return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
     }
 
@@ -56,7 +59,9 @@ public class UserService {
         List<Unit> unitList = course.getUnitList();
         List<UnitHistoryResponseDto> unitHistoryList = new ArrayList<>();
         for (Unit unit : unitList) {
-            unitHistoryList.add(new UnitHistoryResponseDto(unit, isCompleted(user, unit)));
+            boolean completed = isCompleted(user, unit);
+            double progress = roundCalculator.round(recordService.getTimeline(user, unit) * 100, 0);
+            unitHistoryList.add(new UnitHistoryResponseDto(unit, completed, progress));
         }
 
         return unitHistoryList;
@@ -64,7 +69,7 @@ public class UserService {
 
     private boolean isCompleted(User user, Unit unit) {
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
-        if (record == null){
+        if (record == null) {
             return false;
         }
         return record.isCompleted();

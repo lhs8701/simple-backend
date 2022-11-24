@@ -1,5 +1,8 @@
 package team7.simple.utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class RoundCalculator {
 
     /**
