@@ -26,11 +26,13 @@ public class AuthOpenController {
 
     private final AuthService authService;
 
-    @ApiOperation(value = "OPEN - 회원가입")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=409, message = "이미 가입된 계정인 경우"),
-    })
+    @ApiOperation(value = "OPEN - 회원가입",
+            notes = """
+                    회원가입을 합니다.
+                    \nparameter : 계정 아이디, 계정 비밀번호
+                    \nresponse : X
+                    """
+    )
     @PreAuthorize("permitAll()")
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupRequestDto signupRequestDto) {
@@ -38,23 +40,28 @@ public class AuthOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 로그인")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=400, message = "패스워드가 다를 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 로그인",
+            notes = """
+                    로그인을 합니다.
+                    \nparameter : 계정 아이디, 계정 비밀번호
+                    \nresponse : 액세스 토큰, 리프레시 토큰
+                    """
+    )
     @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
         return new ResponseEntity<>(authService.login(loginRequestDto), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 로그아웃")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=401, message = "토큰이 유효하지 않거나, 만료된 경우"),
-            @ApiResponse(code=403, message = "접근 권한이 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 로그아웃",
+            notes = """
+                    로그아웃을 합니다.
+                    \nparameter : X
+                    \nresponse : X
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/logout")
@@ -64,12 +71,14 @@ public class AuthOpenController {
 
     }
 
-    @ApiOperation(value = "OPEN - 회원 탈퇴")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=401, message = "토큰이 유효하지 않거나, 만료된 경우"),
-            @ApiResponse(code=403, message = "접근 권한이 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 회원 탈퇴",
+            notes = """
+                    회원 탈퇴합니다.
+                    \nparameter : X
+                    \nresponse : X
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/withdrawal")
@@ -78,12 +87,14 @@ public class AuthOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 액세스, 리프레시 토큰 재발급")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=401, message = "토큰이 유효하지 않은 경우"),
-            @ApiResponse(code=403, message = "접근 권한이 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 액세스, 리프레시 토큰 재발급 ",
+            notes = """
+                    액세스 토큰과 리프레시 토큰을 재발급합니다.
+                    \nparameter : X
+                    \nresponse : 재발급 받은 액세스 토큰과 리프레시 토큰
+                    """
+    )
     @PreAuthorize("permitAll()")
     @PostMapping(value = "/reissue")
     public ResponseEntity<?> reissue(@RequestBody @Valid TokenRequestDto tokenRequestDto) {
