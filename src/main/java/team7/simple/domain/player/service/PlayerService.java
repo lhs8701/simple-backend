@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.auth.jwt.dto.AccessTokenResponseDto;
 import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
@@ -14,13 +15,17 @@ import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.service.RecordService;
+import team7.simple.domain.unit.dto.UnitPlayRequestDto;
+import team7.simple.domain.unit.dto.UnitPlayResponseDto;
 import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.error.exception.CUserNotActiveException;
 import team7.simple.domain.user.service.UserService;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.security.JwtProvider;
+import team7.simple.infra.hls.service.HlsService;
 
 
 @Service
@@ -35,6 +40,7 @@ public class PlayerService {
     private final JwtProvider jwtProvider;
 
     private final ConflictService conflictService;
+    private final HlsService hlsService;
 
     @Value("${path.front_page}")
     String PLAYER_PATH;
@@ -76,6 +82,55 @@ public class PlayerService {
         return new AccessTokenResponseDto(token.getAccessToken());
     }
 
+    @Transactional
+    public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
+
+        if (unitPlayRequestDto.getCurrentUnitId() != -1) {
+            setCurrentUnitRecord(unitPlayRequestDto, user);
+        }
+        Unit nextUnit = unitService.getUnitById(unitId);
+
+        return UnitPlayResponseDto.builder()
+                .unitId(nextUnit.getId())
+                .title(nextUnit.getTitle())
+                .fileUrl(hlsService.getHlsFileUrl(nextUnit.getVideo()))
+                .time(recordService.getTimeline(user, nextUnit))
+                .build();
+    }
+
+    public UnitPlayResponseDto playUnitInLocal(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
+
+        if (unitPlayRequestDto.getCurrentUnitId() != -1) {
+            setCurrentUnitRecord(unitPlayRequestDto, user);
+        }
+        Unit nextUnit = unitService.getUnitById(unitId);
+
+        return UnitPlayResponseDto.builder()
+                .unitId(nextUnit.getId())
+                .title(nextUnit.getTitle())
+                .fileUrl("testHlsFileUrl")
+                .time(recordService.getTimeline(user, nextUnit))
+                .build();
+    }
+
+    private void setCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
+        Unit unit = unitService.getUnitById(unitPlayRequestDto.getCurrentUnitId());
+        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+
+        if (record == null) {
+            recordService.saveRecord(unit, user, unitPlayRequestDto.getRecordTime(), unitPlayRequestDto.isComplete());
+            return;
+        }
+        updateExistingRecord(unitPlayRequestDto, record);
+    }
+
+    private void updateExistingRecord(UnitPlayRequestDto unitPlayRequestDto, Record record) {
+        record.setTimeline(unitPlayRequestDto.getRecordTime());
+        if (unitPlayRequestDto.isComplete() && !record.isCompleted()) {
+            record.setCompleted(true);
+        }
+    }
+
 
     public void exitPlayer(String accessToken, ExitRequestDto exitRequestDto) {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
@@ -91,7 +146,7 @@ public class PlayerService {
     }
 
     private void setCurrentRecord(ExitRequestDto exitRequestDto, User user) {
-        Unit unit = unitService.findUnitById(exitRequestDto.getUnitId());
+        Unit unit = unitService.getUnitById(exitRequestDto.getUnitId());
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
 
         if (record == null) {

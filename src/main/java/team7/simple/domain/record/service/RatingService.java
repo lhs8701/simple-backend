@@ -28,7 +28,7 @@ public class RatingService {
 
     @Transactional
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
-        Unit unit = unitService.findUnitById(unitId);
+        Unit unit = unitService.getUnitById(unitId);
         Course course = unit.getCourse();
         if (doesUserEnrollCourse(course, user)) {
             Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
@@ -48,7 +48,7 @@ public class RatingService {
     @Transactional
     public RatingResponseDto getAverageRatingScore(Long unitId) {
         double rating;
-        Unit unit = unitService.findUnitById(unitId);
+        Unit unit = unitService.getUnitById(unitId);
         List<Record> recordList = recordService.getRecordListByUnit(unit);
         if (recordList == null) {
             return new RatingResponseDto(0, 0);

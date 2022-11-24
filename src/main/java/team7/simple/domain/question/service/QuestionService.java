@@ -23,7 +23,7 @@ public class QuestionService {
 
     @Transactional
     public Long createQuestion(Long unitId, QuestionRequestDto questionRequestDto) {
-        Unit unit = unitService.findUnitById(unitId);
+        Unit unit = unitService.getUnitById(unitId);
         Question question = questionRequestDto.toEntity(unit);
 
         return questionJpaRepository.save(question).getId();
@@ -43,7 +43,7 @@ public class QuestionService {
 
     @Transactional
     public List<QuestionDetailResponseDto> getQuestionList(Long unitId) {
-        Unit unit = unitService.findUnitById(unitId);
+        Unit unit = unitService.getUnitById(unitId);
         return unit.getQuestionList().stream().map(QuestionDetailResponseDto::new).collect(Collectors.toList());
     }
 
