@@ -12,4 +12,6 @@ import javax.validation.constraints.NotNull;
 public class UnitUpdateParam {
     @NotNull
     private String title;
+    private String description;
+    private String objective;
 }

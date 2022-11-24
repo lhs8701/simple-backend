@@ -46,15 +46,26 @@ public class UnitOpenController {
         return new ResponseEntity<>(unitService.createUnitLocal(courseId, unitRequestDto), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강좌 내 강의 전체 조회")
+    @ApiOperation(value = "OPEN - 강좌 목차 조회")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
     })
     @PreAuthorize("permitAll()")
     @GetMapping("/open/courses/{courseId}/units")
-    public ResponseEntity<?> getUnitThumbnailList(@PathVariable Long courseId) {
+    public ResponseEntity<?> displayTableOfContents(@PathVariable Long courseId) {
         return new ResponseEntity<>(unitService.getUnits(courseId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "OPEN - 강의 세부 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
+    })
+    @PreAuthorize("permitAll()")
+    @GetMapping("/open/units/{unitId}")
+    public ResponseEntity<?> displayUnitDetail(@PathVariable Long unitId) {
+        return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
     }
 
     @ApiOperation(value = "OPEN - 강의 수정")
@@ -65,7 +76,7 @@ public class UnitOpenController {
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/open/units/{unitId}")
-    public ResponseEntity<?> updateUnit(@PathVariable Long unitId, @RequestBody @Valid UnitUpdateParam unitUpdateParam) {
+    public ResponseEntity<?> updateUnitDetail(@PathVariable Long unitId, @RequestBody @Valid UnitUpdateParam unitUpdateParam) {
         return new ResponseEntity<>(unitService.updateUnit(unitId, unitUpdateParam), HttpStatus.OK);
     }
 

@@ -57,10 +57,10 @@ public class UnitService {
 
     @Transactional
     public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam) {
-        Unit unit = unitJpaRepository.findById(unitId)
-                .orElseThrow(CUnitNotFoundException::new);
-
+        Unit unit = getUnitById(unitId);
         unit.setTitle(unitUpdateParam.getTitle());
+        unit.setDescription(unitUpdateParam.getDescription());
+        unit.setObjective(unit.getObjective());
 
         return unitId;
     }
@@ -76,6 +76,16 @@ public class UnitService {
         if (unitList == null)
             return null;
         return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 강의의 세부 정보를 반환합니다.
+     * @param unitId 유닛아이디
+     * @return UnitDetailResponseDto (유닛아이디, 제목, 강의 소개, 강의 목표)
+     */
+    public UnitDetailResponseDto getUnitInfo(Long unitId) {
+        Unit unit = getUnitById(unitId);
+        return new UnitDetailResponseDto(unit);
     }
 }
 
