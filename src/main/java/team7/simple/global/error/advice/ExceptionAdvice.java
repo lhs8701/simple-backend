@@ -24,6 +24,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> defaultException(Exception e) {
+
         e.printStackTrace();
         return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -46,8 +47,10 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(CWrongApproach.class)
     protected ResponseEntity<?> handle(CWrongApproach e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
 

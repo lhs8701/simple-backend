@@ -18,12 +18,14 @@ public class AnswerExceptionAdvice {
 
     /**
      * 해당 답변을 찾을 수 없을 경우 발생시키는 예외
+     *
      * @param e CCourseNotFoundException
      * @return NOT_FOUND 404
      */
     @ExceptionHandler(CAnswerNotFoundException.class)
     protected ResponseEntity<?> handle(CAnswerNotFoundException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 }

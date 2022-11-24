@@ -1,4 +1,4 @@
-package team7.simple.openapi;
+package team7.simple.domain.user.controller;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +23,13 @@ import team7.simple.global.common.ConstValue;
 public class UserOpenController {
     private final UserService userService;
 
-    @ApiOperation(value = "OPEN - 회원 비밀번호 변경", notes = "회원의 비밀번호를 변경합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 회원을 찾을 수 없을 경우"),
-    })
+    @ApiOperation(value = "OPEN - 회원 비밀번호 변경",
+            notes = """
+                    회원의 비밀번호를 변경합니다.
+                    \nparameter : 변경할 비밀번호
+                    \nresponse : X
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/password/change")
@@ -36,11 +38,14 @@ public class UserOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 등록한 강좌 목록 조회", notes = "회원이 현재 수강중인 수강 강좌의 목록을 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 회원을 찾을 수 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 등록한 강좌 목록 조회",
+            notes = """
+                    회원이 현재 수강중인 강좌의 목록을 반환합니다.
+                    \nparameter : X
+                    \nresponse : 강좌 아이디, 강좌 이름, 수강 등록 날짜
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/history/courses/")
@@ -48,11 +53,14 @@ public class UserOpenController {
         return new ResponseEntity<>(userService.getJoinedCourses(user), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 학습 정보 조회", notes = "해당 강좌에 대한 사용자의 강의 수강 현황을 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 회원을 찾을 수 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 수강 현황 조회",
+            notes = """
+                    강좌에 대한 강의 수강 현황을 조회합니다.
+                    \nparameter : 강좌 아이디
+                    \nresponse : 강의 아이디, 제목, 완료 여부, 진척도
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/history/courses/{courseId}")

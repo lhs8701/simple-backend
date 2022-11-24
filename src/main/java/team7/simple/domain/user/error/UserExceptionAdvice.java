@@ -11,6 +11,7 @@ import team7.simple.domain.user.error.exception.CUserNotActiveException;
 import team7.simple.domain.user.error.exception.CUserNotFoundException;
 import team7.simple.domain.user.error.exception.CWrongPasswordException;
 import team7.simple.global.common.response.dto.ErrorResponseDto;
+import team7.simple.global.error.ErrorCode;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,8 +25,10 @@ public class UserExceptionAdvice {
      */
     @ExceptionHandler(CUserNotActiveException.class)
     protected ResponseEntity<?> handle(CUserNotActiveException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -35,8 +38,10 @@ public class UserExceptionAdvice {
      */
     @ExceptionHandler(CUserExistException.class)
     protected ResponseEntity<?> handle(CUserExistException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.CONFLICT);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -46,8 +51,10 @@ public class UserExceptionAdvice {
      */
     @ExceptionHandler(CUserNotFoundException.class)
     protected ResponseEntity<?> handle(CUserNotFoundException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.NOT_FOUND);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
     /**
@@ -57,7 +64,9 @@ public class UserExceptionAdvice {
      */
     @ExceptionHandler(CWrongPasswordException.class)
     protected ResponseEntity<?> handle(CWrongPasswordException e) {
-        log.error(e.getErrorCode().getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+        ErrorCode errorCode = e.getErrorCode();
+
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 }
