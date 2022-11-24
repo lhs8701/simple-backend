@@ -8,7 +8,7 @@ import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.record.dto.RatingRequestDto;
 import team7.simple.domain.record.dto.RatingResponseDto;
 import team7.simple.domain.record.entity.Record;
-import team7.simple.domain.study.service.EnrollService;
+import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;

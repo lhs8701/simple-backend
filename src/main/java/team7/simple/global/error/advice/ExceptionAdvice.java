@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import team7.simple.domain.record.error.exception.CRatingNotFoundException;
-import team7.simple.domain.study.error.exception.CStudyNotFoundException;
 import team7.simple.global.common.response.dto.ErrorResponseDto;
 import team7.simple.global.common.response.service.ResponseService;
 import team7.simple.global.error.ErrorCode;

@@ -13,10 +13,14 @@ import javax.validation.constraints.NotNull;
 public class UnitRequestDto {
     @NotNull
     private String title;
+    private String description;
+    private String objective;
 
     public Unit toEntity(Video video, Course course) {
         return Unit.builder()
                 .title(this.title)
+                .description(this.description)
+                .objective(this.objective)
                 .video(video)
                 .course(course)
                 .build();

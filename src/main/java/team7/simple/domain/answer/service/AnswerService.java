@@ -12,6 +12,8 @@ import team7.simple.domain.question.service.QuestionService;
 import team7.simple.domain.answer.error.exception.CAnswerNotFoundException;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +33,6 @@ public class AnswerService {
     public Long updateAnswer(AnswerUpdateParam answerUpdateParam) {
         Long answerId = answerUpdateParam.getAnswerId();
         Answer answer = getAnswerById(answerId);
-        answer.setTitle(answerUpdateParam.getTitle());
         answer.setContent(answerUpdateParam.getContent());
 
         return answerId;
@@ -43,13 +44,17 @@ public class AnswerService {
         answerJpaRepository.delete(answer);
     }
 
-    @Transactional
-    public AnswerResponseDto getAnswerInfo(Long answerId) {
-        Answer answer = getAnswerById(answerId);
-        return new AnswerResponseDto(answer);
-    }
-
     public Answer getAnswerById(Long id){
         return answerJpaRepository.findById(id).orElseThrow(CAnswerNotFoundException::new);
+    }
+
+    /**
+     * 질문에 대한 답변 목록을 반환합니다.
+     * @param questionId 질문 아이디
+     * @return AnswerResponseDto (답변 아이디, 답변 내용, 답변 등록 일자, 답변 수정 일자)
+     */
+    public List<AnswerResponseDto> getAnswerList(Long questionId) {
+        List<Answer> answerList = questionService.getQuestionById(questionId).getAnswerList();
+        return answerList.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
     }
 }

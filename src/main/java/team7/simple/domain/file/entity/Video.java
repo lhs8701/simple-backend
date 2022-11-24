@@ -2,6 +2,7 @@ package team7.simple.domain.file.entity;
 
 import lombok.*;
 import team7.simple.domain.unit.entity.Unit;
+import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Builder
-public class Video {
+public class Video extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +25,6 @@ public class Video {
 
     @OneToOne(mappedBy = "video", fetch = FetchType.LAZY)
     private Unit unit;
-
 
     /*임시*/
     public Video(String fileName, String fileOriName, String fileUrl){

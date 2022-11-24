@@ -6,13 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
-import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.error.exception.CAlreadyJoinedCourseException;
 import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.course.repository.CourseJpaRepository;
-import team7.simple.domain.study.entity.Study;
-import team7.simple.domain.study.service.EnrollService;
+import team7.simple.domain.enroll.entity.Enroll;
+import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.user.entity.User;
 
 import java.util.List;
@@ -34,9 +33,9 @@ public class CourseService {
     public CourseDetailResponseDto getCourseInfo(Long courseId) {
         Course course = getCourseById(courseId);
         int attendeeCount = 0;
-        List<Study> studyList = enrollService.getStudyListByCourse(course);
-        if (studyList != null) {
-            attendeeCount = studyList.size();
+        List<Enroll> enrollList = enrollService.getStudyListByCourse(course);
+        if (enrollList != null) {
+            attendeeCount = enrollList.size();
         }
         return new CourseDetailResponseDto(course, attendeeCount);
     }
@@ -66,8 +65,8 @@ public class CourseService {
 
     public void cancel(Long courseId, User user) {
         Course course = getCourseById(courseId);
-        Study study = enrollService.getStudyByCourseAndUser(course, user);
-        enrollService.deleteStudy(study);
+        Enroll enroll = enrollService.getStudyByCourseAndUser(course, user);
+        enrollService.deleteStudy(enroll);
     }
 
     public Course getCourseById(Long id) {
