@@ -77,12 +77,12 @@ public class CourseOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강좌 세부 정보 조회")
+    @ApiOperation(value = "OPEN - 강좌 정보 조회")
     @ApiResponses(value = {
             @ApiResponse(code=200, message = "성공"),
             @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
     })
-    @GetMapping("/open/courses/{courseId}/detail")
+    @GetMapping("/open/courses/{courseId}")
     public ResponseEntity<?> getCourseInfo(@PathVariable Long courseId) {
         return new ResponseEntity<>(courseService.getCourseInfo(courseId), HttpStatus.OK);
     }

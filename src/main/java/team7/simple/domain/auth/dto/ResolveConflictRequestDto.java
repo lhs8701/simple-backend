@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RemoveConflictRequestDto {
+public class ResolveConflictRequestDto {
     String accessToken;
     boolean keepGoing;
 }
