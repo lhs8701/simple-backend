@@ -11,13 +11,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class AnswerRequestDto {
     @NotNull
-    private String title;
-    @NotNull
     private String content;
 
     public Answer toEntity(Question question) {
         return Answer.builder()
-                .title(this.title)
                 .content(this.content)
                 .question(question)
                 .build();

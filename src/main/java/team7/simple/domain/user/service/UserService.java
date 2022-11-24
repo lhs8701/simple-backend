@@ -10,11 +10,10 @@ import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.course.dto.JoinedCourseResponseDto;
-import team7.simple.domain.study.entity.Study;
+import team7.simple.domain.study.entity.Enroll;
 import team7.simple.domain.study.service.EnrollService;
 import team7.simple.domain.unit.dto.UnitHistoryResponseDto;
 import team7.simple.domain.unit.entity.Unit;
-import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
@@ -47,8 +46,8 @@ public class UserService {
     }
 
     public List<JoinedCourseResponseDto> getJoinedCourses(User user) {
-        List<Study> studyList = enrollService.getStudyListByUser(user);
-        List<Course> joinedCourseList = studyList.stream().map(Study::getCourse).toList();
+        List<Enroll> enrollList = enrollService.getStudyListByUser(user);
+        List<Course> joinedCourseList = enrollList.stream().map(Enroll::getCourse).toList();
 
         return joinedCourseList.stream().map(JoinedCourseResponseDto::new).collect(Collectors.toList());
     }

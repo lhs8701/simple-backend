@@ -3,8 +3,8 @@ package team7.simple.domain.study.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.study.entity.Study;
-import team7.simple.domain.study.error.exception.CStudyNotFoundException;
+import team7.simple.domain.study.entity.Enroll;
+import team7.simple.domain.study.error.exception.CUserNotEnrolledException;
 import team7.simple.domain.study.repository.EnrollJpaRepository;
 import team7.simple.domain.user.entity.User;
 
@@ -19,27 +19,27 @@ public class EnrollService {
         return enrollJpaRepository.findByCourseAndUser(course, user).isPresent();
     }
 
-    public Study getStudyByCourseAndUser(Course course, User user) {
-        return enrollJpaRepository.findByCourseAndUser(course, user).orElseThrow(CStudyNotFoundException::new);
+    public Enroll getStudyByCourseAndUser(Course course, User user) {
+        return enrollJpaRepository.findByCourseAndUser(course, user).orElseThrow(CUserNotEnrolledException::new);
     }
 
     public Long saveStudy(Course course, User user) {
-        Study study = enrollJpaRepository.save(Study.builder()
+        Enroll enroll = enrollJpaRepository.save(Enroll.builder()
                 .course(course)
                 .user(user)
                 .build());
-        return study.getId();
+        return enroll.getId();
     }
 
-    public void deleteStudy(Study study) {
-        enrollJpaRepository.delete(study);
+    public void deleteStudy(Enroll enroll) {
+        enrollJpaRepository.delete(enroll);
     }
 
-    public List<Study> getStudyListByCourse(Course course) {
+    public List<Enroll> getStudyListByCourse(Course course) {
         return enrollJpaRepository.findAllByCourse(course);
     }
 
-    public List<Study> getStudyListByUser(User user) {
+    public List<Enroll> getStudyListByUser(User user) {
         return enrollJpaRepository.findAllByUser(user);
     }
 }

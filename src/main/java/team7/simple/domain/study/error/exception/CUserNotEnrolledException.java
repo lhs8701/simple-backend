@@ -6,11 +6,11 @@ import team7.simple.global.error.ErrorCode;
 
 @AllArgsConstructor
 @Getter
-public class CStudyNotFoundException extends RuntimeException {
+public class CUserNotEnrolledException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public CStudyNotFoundException() {
+    public CUserNotEnrolledException() {
         super();
-        errorCode = ErrorCode.USER_NOT_ACTIVE_EXCEPTION;
+        errorCode = ErrorCode.USER_NOT_ENROLLED_EXCEPTION;
     }
 }

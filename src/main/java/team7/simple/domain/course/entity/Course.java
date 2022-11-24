@@ -1,9 +1,10 @@
 package team7.simple.domain.course.entity;
 
 import lombok.*;
-import team7.simple.domain.study.entity.Study;
+import team7.simple.domain.study.entity.Enroll;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
+import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class Course extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +33,5 @@ public class Course {
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 
-    private List<Study> studyList = new ArrayList<>();
+    private List<Enroll> enrollList = new ArrayList<>();
 }

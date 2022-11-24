@@ -4,11 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import team7.simple.domain.question.dto.QuestionThumbnailResponseDto;
 import team7.simple.domain.unit.entity.Unit;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor

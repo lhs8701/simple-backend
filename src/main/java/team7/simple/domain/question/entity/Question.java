@@ -3,6 +3,7 @@ package team7.simple.domain.question.entity;
 import lombok.*;
 import team7.simple.domain.answer.entity.Answer;
 import team7.simple.domain.unit.entity.Unit;
+import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
+public class Question extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,6 @@ public class Question {
     private String content;
     //private Integer replyCount;
     private Integer timeline;
-    private LocalDateTime createdTime;
 
     @ManyToOne
     @JoinColumn

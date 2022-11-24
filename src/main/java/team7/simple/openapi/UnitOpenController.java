@@ -46,6 +46,10 @@ public class UnitOpenController {
         return new ResponseEntity<>(unitService.createUnitLocal(courseId, unitRequestDto), HttpStatus.OK);
     }
 
+
+    /**
+     * Course 내의 List<Unit>를 DTO(아이디, 제목)로 감싸 반환합니다.
+     */
     @ApiOperation(value = "OPEN - 강좌 목차 조회")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공"),
@@ -57,6 +61,10 @@ public class UnitOpenController {
         return new ResponseEntity<>(unitService.getUnits(courseId), HttpStatus.OK);
     }
 
+
+    /**
+     * Unit의 세부 정보 (유닛아이디, 제목, 강의 소개, 강의 목표)를 반환합니다.
+     */
     @ApiOperation(value = "OPEN - 강의 세부 정보 조회")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공"),
