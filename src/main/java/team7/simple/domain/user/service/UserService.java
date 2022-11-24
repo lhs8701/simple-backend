@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.course.entity.Course;
+import team7.simple.domain.course.service.CourseService;
+import team7.simple.domain.record.service.RecordService;
+import team7.simple.domain.study.service.EnrollService;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.repository.UserJpaRepository;
@@ -16,12 +20,22 @@ import team7.simple.domain.user.error.exception.CUserNotFoundException;
 @Slf4j
 public class UserService {
     private final PasswordEncoder passwordEncoder;
+    private final EnrollService enrollService;
+    private final RecordService recordService;
+    private final CourseService courseService;
+
     private final UserJpaRepository userJpaRepository;
-    public void changePassword(String userId, PasswordUpdateParam passwordUpdateParam){
-        User user = userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+    public void changePassword(PasswordUpdateParam passwordUpdateParam, User user){
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
     }
     public User getUserById(String userId){
         return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+    }
+
+    public Object getStudyHistory(Long courseId, User user) {
+        return null;
+    }
+
+    public Object getJoinedCourse(User user) {
     }
 }
