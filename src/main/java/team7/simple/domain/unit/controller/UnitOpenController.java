@@ -22,11 +22,13 @@ import javax.validation.Valid;
 public class UnitOpenController {
     private final UnitService unitService;
 
-    @ApiOperation(value = "OPEN - 강의 업로드", notes = "강의 원본 영상을 원격 서버에 업로드함과 동시에 m3u8 확장자로 변환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
-    })
+    @ApiOperation(value = "OPEN - 강의 업로드",
+            notes = """
+                    강의 원본 영상을 원격 서버에 업로드함과 동시에 m3u8 확장자로 변환합니다.
+                    \nparameter : 강의를 등록할 강좌의 아이디, 강의 제목, 강의 설명, 강의 목표
+                    \nresponse : 업로드한 강의 아이디
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/courses/{courseId}/units")
@@ -34,12 +36,9 @@ public class UnitOpenController {
         return new ResponseEntity<>(unitService.createUnit(courseId, unitRequestDto, file), HttpStatus.OK);
     }
 
+
     /*테스트용*/
     @ApiOperation(value = "TEST - 강의 업로드 (로컬 테스트용)", notes = "로컬 환경에서 테스트 용으로 사용하는 API입니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
-    })
     @PreAuthorize("permitAll()")
     @PostMapping("open/course/{courseId}/units/test-local")
     public ResponseEntity<?> uploadUnitLocal(@PathVariable Long courseId, @RequestBody UnitRequestDto unitRequestDto) {
@@ -47,14 +46,13 @@ public class UnitOpenController {
     }
 
 
-    /**
-     * Course 내의 List<Unit>를 DTO(아이디, 제목)로 감싸 반환합니다.
-     */
-    @ApiOperation(value = "OPEN - 강좌 목차 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
-    })
+    @ApiOperation(value = "OPEN - 강좌 목차 조회",
+            notes = """
+                    강좌의 강의 목차를 조회합니다.
+                    \nparameter : 조회할 강의 아이디
+                    \nresponse : 강의 목차 정보 (강의 아이디, 강의 제목)
+                    """
+    )
     @PreAuthorize("permitAll()")
     @GetMapping("/open/courses/{courseId}/units")
     public ResponseEntity<?> displayTableOfContents(@PathVariable Long courseId) {
@@ -62,25 +60,27 @@ public class UnitOpenController {
     }
 
 
-    /**
-     * Unit의 세부 정보 (유닛아이디, 제목, 강의 소개, 강의 목표)를 반환합니다.
-     */
-    @ApiOperation(value = "OPEN - 강의 세부 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강좌가 없을 경우"),
-    })
+    @ApiOperation(value = "OPEN - 강의 세부 정보 조회",
+            notes = """
+                    강의의 세부 정보를 조회합니다.
+                    \nparameter : 조회할 강의 아이디
+                    \nresponse : 강의 아이디, 강의 제목, 강의 설명, 강의 목표
+                    """
+    )
     @PreAuthorize("permitAll()")
     @GetMapping("/open/units/{unitId}")
     public ResponseEntity<?> displayUnitDetail(@PathVariable Long unitId) {
         return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강의 수정")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 강의 수정",
+            notes = """
+                    강의 정보를 수정합니다.
+                    \nparameter : 수정할 강의 아이디
+                    \nresponse : 수정된 강의의 아이디
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/open/units/{unitId}")
@@ -88,11 +88,14 @@ public class UnitOpenController {
         return new ResponseEntity<>(unitService.updateUnit(unitId, unitUpdateParam), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강의 삭제")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 강의 삭제",
+            notes = """
+                    강의를 삭제합니다.
+                    \nparameter : 삭제할 강의 아이디
+                    \nresponse : X
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/open/units/{unitId}")

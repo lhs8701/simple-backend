@@ -17,6 +17,7 @@ import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.ConstValue;
 
 import java.net.URISyntaxException;
+
 @Api(tags = {"[Open API] Player"})
 @Controller
 @RequiredArgsConstructor
@@ -24,7 +25,13 @@ import java.net.URISyntaxException;
 public class PlayerOpenController {
     private final PlayerService playerService;
 
-    @ApiOperation(value = "OPEN - 플레이어 실행", notes = "플레이어의 URL로 이동합니다.")
+    @ApiOperation(value = "OPEN - 플레이어 실행",
+            notes = """
+                    리다이렉트할 플레이어의 주소를 반환합니다.
+                    \nparameter : 시청할 강좌 아이디, 시청할 강의 아이디
+                    \nresponse : 리다이렉트할 플레이어의 URL
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
