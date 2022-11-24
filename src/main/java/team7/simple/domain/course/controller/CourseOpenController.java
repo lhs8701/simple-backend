@@ -23,7 +23,13 @@ public class CourseOpenController {
 
     private final CourseService courseService;
 
-    @ApiOperation(value = "OPEN - 강좌 등록")
+    @ApiOperation(value = "OPEN - 강좌 등록",
+            notes = """
+                    강좌를 등록합니다.
+                    \nparameter : 강좌 제목, 강좌 부제목
+                    \nresponse : 등록된 강좌의 아이디
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/courses")
@@ -31,24 +37,31 @@ public class CourseOpenController {
         return new ResponseEntity<>(courseService.createCourse(courseRequestDto, instructor), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강좌 수강 신청")
+
+    @ApiOperation(value = "OPEN - 강좌 수강 신청",
+            notes = """
+                    강좌를 수강신청 합니다.
+                    \nparameter : 수강 신청할 강좌의 아이디
+                    \nresponse : X
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
-    })
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/courses/{courseId}/register")
     public ResponseEntity<?> register(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(courseService.register(courseId, user), HttpStatus.OK);
+        courseService.register(courseId, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강좌 수강 취소")
+
+    @ApiOperation(value = "OPEN - 강좌 수강 취소",
+            notes = """
+                    강좌를 수강취소 합니다.
+                    \nparameter : 수강 취소할 강좌의 아이디
+                    \nresponse : X
+                    """
+    )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강좌에 대한 수강 정보를 찾을 수 없을 경우"),
-    })
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/open/courses/{courseId}/cancel")
     public ResponseEntity<?> cancel(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
@@ -56,34 +69,47 @@ public class CourseOpenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강좌 정보 수정")
+
+    @ApiOperation(value = "OPEN - 강좌 정보 조회",
+            notes = """
+                    강좌의 세부 정보를 조회합니다.
+                    \nparameter : 조회할 강좌의 아이디
+                    \nresponse : 강좌 아이디, 강좌 제목, 강좌 부제목, 강사 이름, 수강생 수
+                    """
+    )
+    @GetMapping("/open/courses/{courseId}")
+    public ResponseEntity<?> getCourseInfo(@PathVariable Long courseId) {
+        return new ResponseEntity<>(courseService.getCourseInfo(courseId), HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "OPEN - 강좌 정보 수정",
+            notes = """
+                    강좌의 세부 정보를 수정합니다.
+                    \nparameter : 수정할 강좌의 아이디
+                    \nresponse : 수정된 강좌의 아이디
+                    """
+    )
     @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 강좌을 찾을 수 없을 경우"),
     })
     @PatchMapping(value = "/open/courses/{courseId}")
     public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
         return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "OPEN - 강좌 삭제")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
-    })
+
+    @ApiOperation(value = "OPEN - 강좌 삭제",
+            notes = """
+                    강좌를 삭제합니다.
+                    \nparameter : 삭제할 강좌의 아이디
+                    \nresponse : X
+                    """
+    )
     @DeleteMapping(value = "/open/courses/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "OPEN - 강좌 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
-    })
-    @GetMapping("/open/courses/{courseId}")
-    public ResponseEntity<?> getCourseInfo(@PathVariable Long courseId) {
-        return new ResponseEntity<>(courseService.getCourseInfo(courseId), HttpStatus.OK);
     }
 }

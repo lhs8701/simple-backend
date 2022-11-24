@@ -55,12 +55,12 @@ public class CourseService {
         return courseId;
     }
 
-    public Long register(Long courseId, User user) {
+    public void register(Long courseId, User user) {
         Course course = getCourseById(courseId);
         if (enrollService.doesEnrolled(course, user)){
             throw new CAlreadyJoinedCourseException();
         }
-        return enrollService.saveStudy(course, user);
+        enrollService.saveStudy(course, user);
     }
 
     public void cancel(Long courseId, User user) {
