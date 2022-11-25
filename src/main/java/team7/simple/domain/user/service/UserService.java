@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-@Slf4j
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EnrollService enrollService;
@@ -42,6 +40,7 @@ public class UserService {
      * @param passwordUpdateParam 변경할 비밀번호
      * @param account 사용자 계정
      */
+    @Transactional
     public void changePassword(String account, PasswordUpdateParam passwordUpdateParam) {
         User user = getUserByAccount(account);
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
@@ -52,6 +51,7 @@ public class UserService {
      * @param account 사용자 계정
      * @return 강좌 아이디, 강좌 이름, 수강 등록 날짜
      */
+    @Transactional
     public List<JoinedCourseResponseDto> getJoinedCourses(String account) {
         User user = getUserByAccount(account);
         List<Enroll> enrollList = enrollService.getStudyListByUser(user);
@@ -64,6 +64,7 @@ public class UserService {
      * @param courseId 강좌 아이디
      * @return 강의 아이디, 제목, 완료 여부, 진척도
      */
+    @Transactional
     public List<UnitHistoryResponseDto> getStudyHistory(String account, Long courseId) {
         User user = getUserByAccount(account);
         Course course = courseService.getCourseById(courseId);
@@ -86,13 +87,13 @@ public class UserService {
         }
         return record.isCompleted();
     }
-
+    @Transactional
     public User getUserById(String userId) {
         return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
     }
 
+    @Transactional
     public User getUserByAccount(String account){
         return userJpaRepository.findByAccount(account).orElseThrow(CUserNotFoundException::new);
     }
-
 }
