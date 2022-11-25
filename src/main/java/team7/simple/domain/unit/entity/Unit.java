@@ -36,4 +36,10 @@ public class Unit extends BaseTimeEntity {
     @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
     private List<Question> questionList = new ArrayList<Question>();
+
+    public void update(String title, String description, String objective){
+        this.title = title;
+        this.description = description;
+        this.objective = objective;
+    }
 }

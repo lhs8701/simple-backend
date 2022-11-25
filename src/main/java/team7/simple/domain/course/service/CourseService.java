@@ -46,7 +46,7 @@ public class CourseService {
     @Transactional
     public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam, User user) {
         Course course = getCourseById(courseId);
-        if (!course.getInstructor().equals(user)){
+        if (!course.getInstructor().getAccount().equals(user.getAccount())) {
             throw new CAccessDeniedException();
         }
         course.setTitle(courseUpdateParam.getTitle());
@@ -57,7 +57,7 @@ public class CourseService {
     @Transactional
     public void deleteCourse(Long courseId, User user) {
         Course course = getCourseById(courseId);
-        if (!course.getInstructor().equals(user)){
+        if (!course.getInstructor().getAccount().equals(user.getAccount())) {
             throw new CAccessDeniedException();
         }
         courseJpaRepository.delete(course);
@@ -65,7 +65,7 @@ public class CourseService {
 
     public void register(Long courseId, User user) {
         Course course = getCourseById(courseId);
-        if (enrollService.doesEnrolled(course, user)){
+        if (enrollService.doesEnrolled(course, user)) {
             throw new CAlreadyJoinedCourseException();
         }
         enrollService.saveStudy(course, user);
