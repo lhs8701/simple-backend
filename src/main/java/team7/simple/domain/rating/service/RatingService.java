@@ -14,6 +14,8 @@ import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
+import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
@@ -28,13 +30,12 @@ public class RatingService {
 
     private final EnrollService enrollService;
     private final RecordService recordService;
-
-    private final UnitService unitService;
+    private final UnitJpaRepository unitJpaRepository;
     private final RatingJpaRepository ratingJpaRepository;
 
     @Transactional
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
-        Unit unit = unitService.getUnitById(unitId);
+        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
         validateAbility(user, unit);
         Rating rating = ratingJpaRepository.findByUnitAndUser(unit,user).orElse(null);
         if (rating != null){
@@ -69,7 +70,8 @@ public class RatingService {
 
     @Transactional
     public RatingResponseDto getAverageRatingScore(Long unitId) {
-        List<Rating> ratingList = unitService.getUnitById(unitId).getRatingList();
+        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+        List<Rating> ratingList = unit.getRatingList();
         if (ratingList == null) {
             return new RatingResponseDto(0, 0);
         }
