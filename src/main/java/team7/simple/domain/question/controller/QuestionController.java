@@ -29,12 +29,8 @@ public class QuestionController {
                     \nresponse : 등록된 질문의 아이디
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
-    })
     @PostMapping("/front/unit/{unitId}/questions")
-    public ResponseEntity<?> uploadQuestion(Long unitId, @Valid @RequestBody QuestionRequestDto questionRequestDto) {
+    public ResponseEntity<?> uploadQuestion(@PathVariable Long unitId, @Valid @RequestBody QuestionRequestDto questionRequestDto) {
         return new ResponseEntity<>(questionService.createQuestion(unitId, questionRequestDto), HttpStatus.OK);
     }
 
@@ -46,10 +42,6 @@ public class QuestionController {
                     \nresponse : 질문 아이디, 질문 제목, 답변 수
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
-    })
     @RequestMapping(value = "/front/unit/{unitId}/questions", method = RequestMethod.GET)
     public ResponseEntity<?> getQuestions(@PathVariable Long unitId) {
         return new ResponseEntity<>(questionService.getQuestionList(unitId), HttpStatus.OK);
@@ -64,10 +56,6 @@ public class QuestionController {
                     \nresponse : 강의 아이디, 질문 제목, 질문 내용, 답변 수, 질문 시간대, 질문 생성 시간
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강의가 없을 경우"),
-    })
     @RequestMapping(value = "/front/questions/{questionId}", method = RequestMethod.GET)
     public ResponseEntity<?> getQuestionDetail(@PathVariable Long questionId) {
         return new ResponseEntity<>(questionService.getQuestionDetail(questionId), HttpStatus.OK);
@@ -81,10 +69,6 @@ public class QuestionController {
                     \nresponse : 수정한 질문의 아이디
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 질문이 없을 경우"),
-    })
     @PatchMapping("/front/questions/{questionId}")
     public ResponseEntity<?> updateQuestion(@PathVariable Long questionId, @RequestBody @Valid QuestionUpdateParam questionUpdateParam) {
         return new ResponseEntity<>(questionService.updateQuestion(questionId, questionUpdateParam), HttpStatus.OK);
@@ -98,10 +82,6 @@ public class QuestionController {
                     \nresponse : X
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 질문이 없을 경우"),
-    })
     @DeleteMapping("/front/questions/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
         questionService.deleteQuestionById(questionId);

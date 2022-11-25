@@ -10,10 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.record.dto.RatingRequestDto;
 import team7.simple.domain.record.service.RatingService;
-import team7.simple.domain.unit.dto.UnitPlayRequestDto;
 import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 import javax.validation.Valid;
 

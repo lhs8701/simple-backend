@@ -8,11 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import team7.simple.domain.unit.dto.UnitRequestByUrlDto;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
 import team7.simple.domain.unit.service.UnitService;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 import javax.validation.Valid;
 

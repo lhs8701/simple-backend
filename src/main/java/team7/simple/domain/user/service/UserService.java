@@ -37,31 +37,35 @@ public class UserService {
 
     private final UserJpaRepository userJpaRepository;
 
-    public void changePassword(PasswordUpdateParam passwordUpdateParam, User user) {
+    /**
+     * 사용자의 비밀번호를 변경합니다.
+     * @param passwordUpdateParam 변경할 비밀번호
+     * @param account 사용자 계정
+     */
+    public void changePassword(String account, PasswordUpdateParam passwordUpdateParam) {
+        User user = getUserByAccount(account);
         user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
-    }
-
-    public User getUserById(String userId) {
-        return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
     }
 
     /**
      * 사용자가 현재 수강중인 강좌의 목록을 반환합니다.
-     * @param user 사용자
+     * @param account 사용자 계정
      * @return 강좌 아이디, 강좌 이름, 수강 등록 날짜
      */
-    public List<JoinedCourseResponseDto> getJoinedCourses(User user) {
+    public List<JoinedCourseResponseDto> getJoinedCourses(String account) {
+        User user = getUserByAccount(account);
         List<Enroll> enrollList = enrollService.getStudyListByUser(user);
         return enrollList.stream().map(JoinedCourseResponseDto::new).collect(Collectors.toList());
     }
 
     /**
      * 강좌에 대한 강의 수강 현황을 조회합니다.
+     * @param account 사용자 계정
      * @param courseId 강좌 아이디
-     * @param user 사용자
      * @return 강의 아이디, 제목, 완료 여부, 진척도
      */
-    public List<UnitHistoryResponseDto> getStudyHistory(Long courseId, User user) {
+    public List<UnitHistoryResponseDto> getStudyHistory(String account, Long courseId) {
+        User user = getUserByAccount(account);
         Course course = courseService.getCourseById(courseId);
         enrollService.getStudyByCourseAndUser(course, user);
         List<Unit> unitList = course.getUnitList();
@@ -82,4 +86,13 @@ public class UserService {
         }
         return record.isCompleted();
     }
+
+    public User getUserById(String userId) {
+        return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
+    }
+
+    public User getUserByAccount(String account){
+        return userJpaRepository.findByAccount(account).orElseThrow(CUserNotFoundException::new);
+    }
+
 }
