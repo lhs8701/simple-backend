@@ -22,10 +22,8 @@ import java.io.IOException;
 //필터를 Security 설정 시 UsernamePasswordAuthentication 앞에 세팅해서 로그인폼으로 반환하기 전에 인증 여부를 Json으로 반환
 
 @RequiredArgsConstructor
-@Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     private final JwtProvider jwtProvider;
 
     @Override

@@ -19,7 +19,7 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
   datasource:
-    url: jdbc:mysql://34.64.36.79:3306/dev_db?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
+    url: jdbc:mysql://34.64.36.79:3306/dev_db?validationQuery="select 1"&useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: devuser
     password: simple0311
     driver-class-name: com.mysql.cj.jdbc.Driver
