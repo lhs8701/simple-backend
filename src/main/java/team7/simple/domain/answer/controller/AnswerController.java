@@ -29,10 +29,6 @@ public class AnswerController {
                     \nresponse : 등록한 답변의 아이디
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "답변에 대한 질문을 찾을 수 없을 경우"),
-    })
     @PostMapping("/front/questions/{questionId}/answers")
     public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
         return new ResponseEntity<>(answerService.createAnswer(questionId, answerRequestDto), HttpStatus.OK);
@@ -46,10 +42,6 @@ public class AnswerController {
                     \nresponse : 답변 아이디, 답변 내용, 답변 등록 일자, 답변 수정 일자
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 답변을 찾을 수 없을 경우"),
-    })
     @GetMapping("/front/questions/{questionId}/answers")
     public ResponseEntity<?> getAnswers(@PathVariable Long questionId) {
         return new ResponseEntity<>(answerService.getAnswerList(questionId), HttpStatus.OK);
@@ -63,10 +55,6 @@ public class AnswerController {
                     \nresponse : 수정된 답변의 아이디
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 답변을 찾을 수 없을 경우"),
-    })
     @PatchMapping("/front/answers/{answerId}")
     public ResponseEntity<?> updateAnswer(@RequestBody @Valid AnswerUpdateParam answerUpdateParam) {
         return new ResponseEntity<>(answerService.updateAnswer(answerUpdateParam), HttpStatus.OK);
@@ -80,10 +68,6 @@ public class AnswerController {
                     \nresponse : X
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 답변을 찾을 수 없을 경우"),
-    })
     @DeleteMapping("/front/answers/{answerId}")
     public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId) {
         answerService.deleteAnswer(answerId);
