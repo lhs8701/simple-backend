@@ -7,7 +7,7 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레이어입니다.
 [오픈 API 문서](https://jaeheon-sim.github.io/simplayer_apidocs/)
 
 
-## 프로젝트 배경
+## ? 프로젝트 배경
 
 본 프로젝트는 2022-2학기 산학협력 프로젝트에 참여하여 진행하였습니다.  
 현재 클라이언트 플랫폼인 '기사친구'가 사용하는 플레이어의 문제점은 다음과 같습니다.
@@ -23,12 +23,12 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레이어입니다.
 
 따라서 현재의 플레이어를 보완함과 동시에, 플랫폼에 구애받지 않고 양질의 컨텐츠를 재생할 수 있는 플레이어를 개발하고자 하였습니다.
 
-## 프로젝트 개요
+## ? 프로젝트 개요
 
 - 진행 기간 : 2022.09.02 ~ 
 
 
-## 기술 스택
+## ? 기술 스택
 <div align=center> 
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
@@ -38,7 +38,7 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레이어입니다.
 </div> 
 
 
-## 주요 기능
+## ? 주요 기능
 
 ### 실시간 질문 / 답변
 ![img_1.png](readme/img_1.png)
@@ -72,7 +72,7 @@ HLS 프로토콜의 높은 호환성으로 인해 인터넷을 지원하는 장치 대부분에서 Simplayer�
 [오픈 API 문서](https://jaeheon-sim.github.io/simplayer_apidocs/)
 
 
-## 프로젝트 구조
+## ? 프로젝트 구조
 
 ```
 ├─java
