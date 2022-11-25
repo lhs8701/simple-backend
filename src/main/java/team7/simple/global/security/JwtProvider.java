@@ -15,7 +15,7 @@ import team7.simple.domain.auth.jwt.entity.ActiveAccessToken;
 import team7.simple.domain.auth.jwt.entity.JwtExpiration;
 import team7.simple.domain.auth.jwt.repository.ActiveAccessTokenRedisRepository;
 import team7.simple.domain.auth.jwt.repository.LogoutAccessTokenRedisRepository;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.CAuthenticationEntryPointException;
 

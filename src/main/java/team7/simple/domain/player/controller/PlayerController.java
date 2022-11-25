@@ -13,7 +13,7 @@ import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.player.service.PlayerService;
 import team7.simple.domain.unit.dto.UnitPlayRequestDto;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 @Api(tags = {"[Front API] Player"})
 @Controller
@@ -42,7 +42,7 @@ public class PlayerController {
     })
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/play/units/{nextUnitId}/")
+    @PostMapping("/play/units/{nextUnitId}")
     public ResponseEntity<?> playUnit(@PathVariable Long nextUnitId, @RequestBody UnitPlayRequestDto unitPlayRequestDto, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(playerService.playUnit(nextUnitId, unitPlayRequestDto, user), HttpStatus.OK);
     }

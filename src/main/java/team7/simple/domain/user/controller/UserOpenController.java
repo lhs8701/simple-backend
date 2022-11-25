@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.service.UserService;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 @Api(tags = {"[Open API] User"})
 @Controller
@@ -32,9 +32,9 @@ public class UserOpenController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/password")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordUpdateParam passwordUpdateParam, @AuthenticationPrincipal User user) {
-        userService.changePassword(passwordUpdateParam, user);
+    @PatchMapping("/{account}/password")
+    public ResponseEntity<?> changePassword(@PathVariable String account, @RequestBody PasswordUpdateParam passwordUpdateParam) {
+        userService.changePassword(account, passwordUpdateParam);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -48,9 +48,9 @@ public class UserOpenController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/history/courses/")
-    public ResponseEntity<?> getJoinedCourse(@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(userService.getJoinedCourses(user), HttpStatus.OK);
+    @PatchMapping("/{account}/history/courses/")
+    public ResponseEntity<?> getJoinedCourse(@PathVariable String account) {
+        return new ResponseEntity<>(userService.getJoinedCourses(account), HttpStatus.OK);
     }
 
 
@@ -63,8 +63,8 @@ public class UserOpenController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/history/courses/{courseId}")
-    public ResponseEntity<?> getStudyHistory(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(userService.getStudyHistory(courseId, user), HttpStatus.OK);
+    @PatchMapping("/{account}/history/courses/{courseId}")
+    public ResponseEntity<?> getStudyHistory(@PathVariable String account, @PathVariable Long courseId) {
+        return new ResponseEntity<>(userService.getStudyHistory(account, courseId), HttpStatus.OK);
     }
 }

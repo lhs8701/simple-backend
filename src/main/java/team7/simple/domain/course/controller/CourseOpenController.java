@@ -9,10 +9,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
-import team7.simple.domain.course.dto.RegisterCancelRequestDto;
 import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 import javax.validation.Valid;
 

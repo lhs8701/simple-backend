@@ -10,10 +10,12 @@ public class QuestionThumbnailResponseDto {
     private Long questionId;
     private String title;
     private int replyCount;
+    private double timeline;
 
     public QuestionThumbnailResponseDto(Question question) {
         this.questionId = question.getId();
         this.title = question.getTitle();
         this.replyCount = question.getAnswerList().size();
+        this.timeline = question.getTimeline();
     }
 }

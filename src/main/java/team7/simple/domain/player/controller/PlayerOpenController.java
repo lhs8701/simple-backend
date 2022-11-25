@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.player.dto.ExecuteRequestDto;
 import team7.simple.domain.player.service.PlayerService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 import java.net.URISyntaxException;
 

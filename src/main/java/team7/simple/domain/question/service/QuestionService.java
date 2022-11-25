@@ -45,7 +45,7 @@ public class QuestionService {
     /**
      * Unit에 대한 List<Question>을 반환합니다.
      * @param unitId 강의 아이디
-     * @return QuestionDetailResponseDto (질문 아이디, 질문 제목, 답변 수)
+     * @return QuestionDetailResponseDto (질문 아이디, 질문 제목, 답변 수, 질문 타임라인)
      */
     @Transactional
     public List<QuestionThumbnailResponseDto> getQuestionList(Long unitId) {
@@ -56,7 +56,7 @@ public class QuestionService {
     /**
      * Question의 세부 정보를 반환합니다.
      * @param questionId 질문 아이디
-     * @return QuestionDetailResponseDto (강의 아이디, 질문 제목, 질문 내용, 답변 수, 질문 시간대, 질문 등록 일자, 질문 수정 일자)
+     * @return QuestionDetailResponseDto (강의 아이디, 질문 제목, 질문 내용, 답변 수, 질문 타임라인, 질문 등록 일자, 질문 수정 일자)
      */
     public QuestionDetailResponseDto getQuestionDetail(Long questionId) {
         Question question = getQuestionById(questionId);

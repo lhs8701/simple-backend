@@ -18,7 +18,7 @@ import team7.simple.domain.auth.dto.SignupRequestDto;
 import team7.simple.domain.auth.jwt.dto.TokenRequestDto;
 import team7.simple.domain.auth.service.AuthService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.common.ConstValue;
+import team7.simple.global.common.constant.ConstValue;
 
 import javax.validation.Valid;
 
