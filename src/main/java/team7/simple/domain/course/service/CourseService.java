@@ -49,8 +49,7 @@ public class CourseService {
         if (!course.getInstructor().getAccount().equals(user.getAccount())) {
             throw new CAccessDeniedException();
         }
-        course.setTitle(courseUpdateParam.getTitle());
-        course.setSubtitle(courseUpdateParam.getSubtitle());
+        course.update(courseUpdateParam.getTitle(), courseUpdateParam.getSubtitle());
         return courseId;
     }
 

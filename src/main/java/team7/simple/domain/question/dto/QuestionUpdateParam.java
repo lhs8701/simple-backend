@@ -15,8 +15,4 @@ public class QuestionUpdateParam {
     private String title;
     @NotNull
     private String content;
-    @NotNull
-    private Integer timeline;
-    @NotNull
-    private LocalDateTime createdTime;
 }

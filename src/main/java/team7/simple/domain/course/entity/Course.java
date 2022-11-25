@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -34,4 +33,9 @@ public class Course extends BaseTimeEntity {
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 
     private List<Enroll> enrollList = new ArrayList<>();
+
+    public void update(String title, String subtitle) {
+        this.title = title;
+        this.subtitle = subtitle;
+    }
 }

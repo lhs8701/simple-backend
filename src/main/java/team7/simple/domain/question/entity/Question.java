@@ -3,6 +3,7 @@ package team7.simple.domain.question.entity;
 import lombok.*;
 import team7.simple.domain.answer.entity.Answer;
 import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -23,15 +23,22 @@ public class Question extends BaseTimeEntity {
     private Long id;
     private String title;
     private String content;
-    //private Integer replyCount;
-    private Integer timeline;
+    private int timeline;
 
     @ManyToOne
     @JoinColumn
     private Unit unit;
 
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
-    private List<Answer> answerList = new ArrayList<Answer>();
+    private List<Answer> answerList = new ArrayList<>();
 
+    public void update(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }

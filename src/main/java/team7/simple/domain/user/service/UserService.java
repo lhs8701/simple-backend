@@ -42,7 +42,7 @@ public class UserService {
     @Transactional
     public void changePassword(String account, PasswordUpdateParam passwordUpdateParam) {
         User user = getUserByAccount(account);
-        user.setPassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
+        user.changePassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
     }
 
     /**
