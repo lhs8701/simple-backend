@@ -55,7 +55,7 @@ public class UnitController {
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/front/units/{unitId}/rating")
-    public ResponseEntity<?> addRating(@PathVariable Long courseId, @PathVariable Long unitId, @RequestBody @Valid RatingRequestDto ratingRequestDto, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> addRating(@PathVariable Long unitId, @RequestBody @Valid RatingRequestDto ratingRequestDto, @AuthenticationPrincipal User user) {
         ratingService.addRating(unitId, ratingRequestDto, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

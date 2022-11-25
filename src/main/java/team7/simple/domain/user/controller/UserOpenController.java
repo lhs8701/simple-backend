@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.service.UserService;
@@ -48,7 +45,7 @@ public class UserOpenController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{account}/history/courses/")
+    @PostMapping("/{account}/history/courses/")
     public ResponseEntity<?> getJoinedCourse(@PathVariable String account) {
         return new ResponseEntity<>(userService.getJoinedCourses(account), HttpStatus.OK);
     }
@@ -63,7 +60,7 @@ public class UserOpenController {
     )
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("isAuthenticated()")
-    @PatchMapping("/{account}/history/courses/{courseId}")
+    @PostMapping("/{account}/history/courses/{courseId}")
     public ResponseEntity<?> getStudyHistory(@PathVariable String account, @PathVariable Long courseId) {
         return new ResponseEntity<>(userService.getStudyHistory(account, courseId), HttpStatus.OK);
     }
