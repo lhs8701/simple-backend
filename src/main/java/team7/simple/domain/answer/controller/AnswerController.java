@@ -1,17 +1,18 @@
 package team7.simple.domain.answer.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.answer.dto.AnswerRequestDto;
 import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.service.AnswerService;
+import team7.simple.domain.user.entity.User;
+import team7.simple.global.common.constant.ConstValue;
 
 import javax.validation.Valid;
 
@@ -29,9 +30,11 @@ public class AnswerController {
                     \nresponse : 등록한 답변의 아이디
                     """
     )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/front/questions/{questionId}/answers")
-    public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto) {
-        return new ResponseEntity<>(answerService.createAnswer(questionId, answerRequestDto), HttpStatus.OK);
+    public ResponseEntity<?> uploadAnswer(@PathVariable Long questionId, @Valid @RequestBody AnswerRequestDto answerRequestDto, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(answerService.createAnswer(questionId, answerRequestDto, user), HttpStatus.OK);
     }
 
 
@@ -55,9 +58,11 @@ public class AnswerController {
                     \nresponse : 수정된 답변의 아이디
                     """
     )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/front/answers/{answerId}")
-    public ResponseEntity<?> updateAnswer(@RequestBody @Valid AnswerUpdateParam answerUpdateParam) {
-        return new ResponseEntity<>(answerService.updateAnswer(answerUpdateParam), HttpStatus.OK);
+    public ResponseEntity<?> updateAnswer(@PathVariable Long answerId, @RequestBody @Valid AnswerUpdateParam answerUpdateParam, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(answerService.updateAnswer(answerId, answerUpdateParam, user), HttpStatus.OK);
     }
 
 
@@ -68,9 +73,11 @@ public class AnswerController {
                     \nresponse : X
                     """
     )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/front/answers/{answerId}")
-    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId) {
-        answerService.deleteAnswer(answerId);
+    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId, @AuthenticationPrincipal User user) {
+        answerService.deleteAnswer(answerId, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

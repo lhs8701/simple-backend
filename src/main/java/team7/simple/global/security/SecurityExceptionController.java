@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+import team7.simple.domain.auth.error.exception.CAccessDeniedException;
 import team7.simple.global.error.advice.exception.*;
 
 @RequiredArgsConstructor

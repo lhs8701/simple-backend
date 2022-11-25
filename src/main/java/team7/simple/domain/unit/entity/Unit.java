@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -35,8 +34,14 @@ public class Unit extends BaseTimeEntity {
     private Video video;
 
     @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Question> questionList = new ArrayList<>();
+    private List<Question> questionList = new ArrayList<Question>();
 
     @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> ratingList = new ArrayList<>();
+
+    public void update(String title, String description, String objective){
+        this.title = title;
+        this.description = description;
+        this.objective = objective;
+    }
 }

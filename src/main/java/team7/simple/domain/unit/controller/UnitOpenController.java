@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.unit.dto.UnitRequestDto;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
 import team7.simple.domain.unit.service.UnitService;
+import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.constant.ConstValue;
 
 import javax.validation.Valid;
@@ -83,8 +85,8 @@ public class UnitOpenController {
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/open/units/{unitId}")
-    public ResponseEntity<?> updateUnitDetail(@PathVariable Long unitId, @RequestBody @Valid UnitUpdateParam unitUpdateParam) {
-        return new ResponseEntity<>(unitService.updateUnit(unitId, unitUpdateParam), HttpStatus.OK);
+    public ResponseEntity<?> updateUnitDetail(@PathVariable Long unitId, @RequestBody @Valid UnitUpdateParam unitUpdateParam, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(unitService.updateUnit(unitId, unitUpdateParam, user), HttpStatus.OK);
     }
 
 
@@ -98,8 +100,8 @@ public class UnitOpenController {
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/open/units/{unitId}")
-    public ResponseEntity<?> deleteUnit(@PathVariable Long unitId) {
-        unitService.deleteUnit(unitId);
+    public ResponseEntity<?> deleteUnit(@PathVariable Long unitId, @AuthenticationPrincipal User user) {
+        unitService.deleteUnit(unitId, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

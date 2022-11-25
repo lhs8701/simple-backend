@@ -35,7 +35,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID_EXCEPTION(-5001, "리프레쉬 토큰이 잘못되었습니다.", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_EXPIRED_EXCEPTION(-5002, "리프레쉬 토큰이 만료되었습니다. 로그인을 다시 해주세요.", HttpStatus.UNAUTHORIZED),
     AUTHENTICATION_ENTRY_POINT_EXCEPTION(-5003, "해당 리소스에 접근하기 위한 권한이 없습니다.", HttpStatus.FORBIDDEN),
-    ACCESS_DENIED(-5004, "해당 리소스에 접근할 수 없는 권한입니다.", HttpStatus.FORBIDDEN),
+    ACCESS_DENIED(-5004, "권한이 없습니다.", HttpStatus.FORBIDDEN),
     WRONG_REFRESH_TOKEN_EXCEPTION(-5005, "refresh 토큰이 잘못되었습니다", HttpStatus.UNAUTHORIZED),
     WRONG_TYPE_TOKEN_EXCEPTION(-5006, "잘못된 Jwt 서명입니다.", HttpStatus.UNAUTHORIZED),
     EXPIRED_TOKEN_EXCEPTION(-5007, "만료된 토큰입니다.", HttpStatus.UNAUTHORIZED),

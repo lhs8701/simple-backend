@@ -2,13 +2,13 @@ package team7.simple.domain.answer.entity;
 
 import lombok.*;
 import team7.simple.domain.question.entity.Question;
+import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -23,4 +23,12 @@ public class Answer extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn
     private Question question;
+
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
+    public void update(String content){
+        this.content = content;
+    }
 }

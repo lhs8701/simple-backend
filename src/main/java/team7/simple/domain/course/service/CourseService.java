@@ -1,8 +1,10 @@
 package team7.simple.domain.course.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.auth.error.exception.CAccessDeniedException;
 import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
@@ -18,6 +20,7 @@ import java.util.List;
 
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
@@ -40,24 +43,28 @@ public class CourseService {
         return new CourseDetailResponseDto(course, attendeeCount);
     }
 
-
     @Transactional
-    public void deleteCourse(Long courseId) {
+    public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam, User user) {
         Course course = getCourseById(courseId);
-        courseJpaRepository.delete(course);
+        if (!course.getInstructor().getAccount().equals(user.getAccount())) {
+            throw new CAccessDeniedException();
+        }
+        course.update(courseUpdateParam.getTitle(), courseUpdateParam.getSubtitle());
+        return courseId;
     }
 
     @Transactional
-    public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam) {
+    public void deleteCourse(Long courseId, User user) {
         Course course = getCourseById(courseId);
-        course.setTitle(courseUpdateParam.getTitle());
-        course.setSubtitle(courseUpdateParam.getSubtitle());
-        return courseId;
+        if (!course.getInstructor().getAccount().equals(user.getAccount())) {
+            throw new CAccessDeniedException();
+        }
+        courseJpaRepository.delete(course);
     }
 
     public void register(Long courseId, User user) {
         Course course = getCourseById(courseId);
-        if (enrollService.doesEnrolled(course, user)){
+        if (enrollService.doesEnrolled(course, user)) {
             throw new CAlreadyJoinedCourseException();
         }
         enrollService.saveStudy(course, user);

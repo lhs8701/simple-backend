@@ -1,6 +1,9 @@
 package team7.simple.domain.enroll.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.user.entity.User;
 import team7.simple.global.common.jpa.BaseTimeEntity;
@@ -12,7 +15,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 public class Enroll extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

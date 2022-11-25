@@ -11,10 +11,5 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class AnswerUpdateParam {
     @NotNull
-    private Long answerId;
-    @NotNull
-    private String title;
-    @NotNull
     private String content;
-
 }
