@@ -89,13 +89,9 @@ public class CourseOpenController {
                     \nresponse : 수정된 강좌의 아이디
                     """
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "해당 강좌을 찾을 수 없을 경우"),
-    })
     @PatchMapping(value = "/open/courses/{courseId}")
-    public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
-        return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
+    public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam, user), HttpStatus.OK);
     }
 
 
@@ -107,8 +103,8 @@ public class CourseOpenController {
                     """
     )
     @DeleteMapping(value = "/open/courses/{courseId}")
-    public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
-        courseService.deleteCourse(courseId);
+    public ResponseEntity<?> deleteCourse(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
+        courseService.deleteCourse(courseId, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
