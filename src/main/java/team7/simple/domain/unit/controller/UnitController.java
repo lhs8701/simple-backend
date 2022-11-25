@@ -33,6 +33,19 @@ public class UnitController {
         return new ResponseEntity<>(unitService.getUnits(courseId), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "FRONT - 강의 세부 정보 조회",
+            notes = """
+                    강의의 세부 정보를 조회합니다.
+                    \nparameter : 조회할 강의 아이디
+                    \nresponse : 강의 아이디, 강의 제목, 강의 설명, 강의 목표
+                    """
+    )
+    @PreAuthorize("permitAll()")
+    @GetMapping("/front/units/{unitId}")
+    public ResponseEntity<?> displayUnitDetail(@PathVariable Long unitId) {
+        return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
+    }
+
     @ApiOperation(value = "FRONT - 강의 평점 등록")
     @ApiResponses(value = {
             @ApiResponse(code=200, message = "성공"),
