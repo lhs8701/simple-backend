@@ -1,34 +1,34 @@
 # Simplayer 
 
 
-Simplayer´Â ¿ÀÇÂ API ÇüÅÂ·Î Á¦°øµÇ´Â ¿Â¶óÀÎ ÇÐ½À ¹Ìµð¾î ÇÃ·¹ÀÌ¾îÀÔ´Ï´Ù.
+SimplayerëŠ” ì˜¤í”ˆ API í˜•íƒœë¡œ ì œê³µë˜ëŠ” ì˜¨ë¼ì¸ í•™ìŠµ ë¯¸ë””ì–´ í”Œë ˆì´ì–´ìž…ë‹ˆë‹¤.
 
-[µ¥¸ð ¿µ»ó](http://localhost) (ÁØºñÁß)   
-[¿ÀÇÂ API ¹®¼­](https://jaeheon-sim.github.io/simplayer_apidocs/)
-
-
-## ? ÇÁ·ÎÁ§Æ® ¹è°æ
-
-º» ÇÁ·ÎÁ§Æ®´Â 2022-2ÇÐ±â »êÇÐÇù·Â ÇÁ·ÎÁ§Æ®¿¡ Âü¿©ÇÏ¿© ÁøÇàÇÏ¿´½À´Ï´Ù.  
-ÇöÀç Å¬¶óÀÌ¾ðÆ® ÇÃ·§ÆûÀÎ '±â»çÄ£±¸'°¡ »ç¿ëÇÏ´Â ÇÃ·¹ÀÌ¾îÀÇ ¹®Á¦Á¡Àº ´ÙÀ½°ú °°½À´Ï´Ù.
-- ½ºÅ©·Ñ ¹Ù Á¶ÀÛ ºÒ°¡
-- PIP ¸ðµå¸¦ Áö¿øÇÏÁö ¾ÊÀ½
-- °­ÀÇ °£ÀÇ À¯±âÀûÀÎ ÀÌµ¿ ºÒ°¡
-- È­¸é ³ìÈ­ ¶Ç´Â ½ºÅ©¸°¼¦À¸·Î ÀÎÇÑ ÀúÀÛ¹° À¯Ãâ À§Çè¼º
-- Áú¹® ¹× ´äº¯ÀÇ ºÒÆíÇÔ
-- Áßº¹ ·Î±×ÀÎÀ¸·Î ÀÎÇÑ ºÎÁ¤ ¼ö°­ °¡´É¼º ¹× º¸¾È Ãë¾à
-- »ç¿ëÀÚÀÇ °­ÀÇ Æò°¡ ºÒ°¡´É
-
-[±â»çÄ£±¸ ÇÃ·§Æû](http://www.gisa79.com/)
-
-µû¶ó¼­ ÇöÀçÀÇ ÇÃ·¹ÀÌ¾î¸¦ º¸¿ÏÇÔ°ú µ¿½Ã¿¡, ÇÃ·§Æû¿¡ ±¸¾Ö¹ÞÁö ¾Ê°í ¾çÁúÀÇ ÄÁÅÙÃ÷¸¦ Àç»ýÇÒ ¼ö ÀÖ´Â ÇÃ·¹ÀÌ¾î¸¦ °³¹ßÇÏ°íÀÚ ÇÏ¿´½À´Ï´Ù.
-
-## ? ÇÁ·ÎÁ§Æ® °³¿ä
-
-- ÁøÇà ±â°£ : 2022.09.02 ~ 
+[ë°ëª¨ ì˜ìƒ](http://localhost) (ì¤€ë¹„ì¤‘)   
+[ì˜¤í”ˆ API ë¬¸ì„œ](https://jaeheon-sim.github.io/simplayer_apidocs/)
 
 
-## ? ±â¼ú ½ºÅÃ
+## ðŸŒŽ í”„ë¡œì íŠ¸ ë°°ê²½
+
+ë³¸ í”„ë¡œì íŠ¸ëŠ” 2022-2í•™ê¸° ì‚°í•™í˜‘ë ¥ í”„ë¡œì íŠ¸ì— ì°¸ì—¬í•˜ì—¬ ì§„í–‰í•˜ì˜€ìŠµë‹ˆë‹¤.  
+í˜„ìž¬ í´ë¼ì´ì–¸íŠ¸ í”Œëž«í¼ì¸ 'ê¸°ì‚¬ì¹œêµ¬'ê°€ ì‚¬ìš©í•˜ëŠ” í”Œë ˆì´ì–´ì˜ ë¬¸ì œì ì€ ë‹¤ìŒê³¼ ê°™ìŠµë‹ˆë‹¤.
+- ìŠ¤í¬ë¡¤ ë°” ì¡°ìž‘ ë¶ˆê°€
+- PIP ëª¨ë“œë¥¼ ì§€ì›í•˜ì§€ ì•ŠìŒ
+- ê°•ì˜ ê°„ì˜ ìœ ê¸°ì ì¸ ì´ë™ ë¶ˆê°€
+- í™”ë©´ ë…¹í™” ë˜ëŠ” ìŠ¤í¬ë¦°ìƒ·ìœ¼ë¡œ ì¸í•œ ì €ìž‘ë¬¼ ìœ ì¶œ ìœ„í—˜ì„±
+- ì§ˆë¬¸ ë° ë‹µë³€ì˜ ë¶ˆíŽ¸í•¨
+- ì¤‘ë³µ ë¡œê·¸ì¸ìœ¼ë¡œ ì¸í•œ ë¶€ì • ìˆ˜ê°• ê°€ëŠ¥ì„± ë° ë³´ì•ˆ ì·¨ì•½
+- ì‚¬ìš©ìžì˜ ê°•ì˜ í‰ê°€ ë¶ˆê°€ëŠ¥
+
+[ê¸°ì‚¬ì¹œêµ¬ í”Œëž«í¼](http://www.gisa79.com/)
+
+ë”°ë¼ì„œ í˜„ìž¬ì˜ í”Œë ˆì´ì–´ë¥¼ ë³´ì™„í•¨ê³¼ ë™ì‹œì—, í”Œëž«í¼ì— êµ¬ì• ë°›ì§€ ì•Šê³  ì–‘ì§ˆì˜ ì»¨í…ì¸ ë¥¼ ìž¬ìƒí•  ìˆ˜ ìžˆëŠ” í”Œë ˆì´ì–´ë¥¼ ê°œë°œí•˜ê³ ìž í•˜ì˜€ìŠµë‹ˆë‹¤.
+
+## ðŸŒ³ í”„ë¡œì íŠ¸ ê°œìš”
+
+- ì§„í–‰ ê¸°ê°„ : 2022.09.02 ~ 
+
+
+## ðŸ–¥ ê¸°ìˆ  ìŠ¤íƒ
 <div align=center> 
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
@@ -38,140 +38,140 @@ Simplayer´Â ¿ÀÇÂ API ÇüÅÂ·Î Á¦°øµÇ´Â ¿Â¶óÀÎ ÇÐ½À ¹Ìµð¾î ÇÃ·¹ÀÌ¾îÀÔ´Ï´Ù.
 </div> 
 
 
-## ? ÁÖ¿ä ±â´É
+## âš¡ ì£¼ìš” ê¸°ëŠ¥
 
-### ½Ç½Ã°£ Áú¹® / ´äº¯
+### ì‹¤ì‹œê°„ ì§ˆë¬¸ / ë‹µë³€
 ![img_1.png](readme/img_1.png)
-°­ÀÇ¸¦ µè´Ù°¡ ±Ã±ÝÇÑ °ÍÀÌ »ý±â¸é, »çÀÌµå ¹ÙÀÇ '¼ö¾÷ Áú¹®'¶õÀ» ÅëÇØ Áú¹®À» ³²±æ ¼ö ÀÖ½À´Ï´Ù.   
-Áú¹®Àº Å¸ÀÓ¶óÀÎ¿¡ µû¶ó ½Ç½Ã°£À¸·Î Á¤·ÄµË´Ï´Ù. »ç¿ëÀÚ°¡ ÇöÀç ½ÃÃ» ÁßÀÎ ½Ã°£´ë¿¡ µî·ÏµÈ Áú¹®µéÀÌ °¡Àå »óÀ§¿¡ Ç¥½ÃµË´Ï´Ù. 
+ê°•ì˜ë¥¼ ë“£ë‹¤ê°€ ê¶ê¸ˆí•œ ê²ƒì´ ìƒê¸°ë©´, ì‚¬ì´ë“œ ë°”ì˜ 'ìˆ˜ì—… ì§ˆë¬¸'ëž€ì„ í†µí•´ ì§ˆë¬¸ì„ ë‚¨ê¸¸ ìˆ˜ ìžˆìŠµë‹ˆë‹¤.   
+ì§ˆë¬¸ì€ íƒ€ìž„ë¼ì¸ì— ë”°ë¼ ì‹¤ì‹œê°„ìœ¼ë¡œ ì •ë ¬ë©ë‹ˆë‹¤. ì‚¬ìš©ìžê°€ í˜„ìž¬ ì‹œì²­ ì¤‘ì¸ ì‹œê°„ëŒ€ì— ë“±ë¡ëœ ì§ˆë¬¸ë“¤ì´ ê°€ìž¥ ìƒìœ„ì— í‘œì‹œë©ë‹ˆë‹¤. 
    
-´äº¯ ±â´ÉÀº ¼ö°­»ý ¸ðµÎ¿¡°Ô ¿­·ÁÀÖ½À´Ï´Ù. 
+ë‹µë³€ ê¸°ëŠ¥ì€ ìˆ˜ê°•ìƒ ëª¨ë‘ì—ê²Œ ì—´ë ¤ìžˆìŠµë‹ˆë‹¤. 
 
-### µ¿½Ã ½ÃÃ» Á¦ÇÑ
+### ë™ì‹œ ì‹œì²­ ì œí•œ
 ![img_2.png](readme/img_2.png)
-ÇÑ °èÁ¤À¸·Î µ¿½Ã¿¡ °­ÀÇ¸¦ ½ÃÃ»ÇÒ ¼ö ¾ø½À´Ï´Ù.   
-°èÁ¤ °øÀ¯¸¦ ¹æÁöÇÏ°í, °­ÀÇ ÄÁÅÙÃ÷ À¯ÃâÀ» ¸·±â À§ÇÔÀÔ´Ï´Ù.
+í•œ ê³„ì •ìœ¼ë¡œ ë™ì‹œì— ê°•ì˜ë¥¼ ì‹œì²­í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.   
+ê³„ì • ê³µìœ ë¥¼ ë°©ì§€í•˜ê³ , ê°•ì˜ ì»¨í…ì¸  ìœ ì¶œì„ ë§‰ê¸° ìœ„í•¨ìž…ë‹ˆë‹¤.
 
-### °­ÀÇ Æò°¡ ±â´É
+### ê°•ì˜ í‰ê°€ ê¸°ëŠ¥
 ![img_3.png](readme/img_3.png)
-°­ÀÇ¸¦ ³¡±îÁö ½ÃÃ»ÇÑ °æ¿ì, °­ÀÇ¿¡ ´ëÇÑ Æò°¡¸¦ ³²±æ ¼ö ÀÖ½À´Ï´Ù.  
-°­¿¬ÀÚ´Â Áú ³ôÀº °­ÀÇ¸¦ Á¦°øÇÏ´Âµ¥ µµ¿òÀ» ¹ÞÀ» ¼ö ÀÖ½À´Ï´Ù. 
+ê°•ì˜ë¥¼ ëê¹Œì§€ ì‹œì²­í•œ ê²½ìš°, ê°•ì˜ì— ëŒ€í•œ í‰ê°€ë¥¼ ë‚¨ê¸¸ ìˆ˜ ìžˆìŠµë‹ˆë‹¤.  
+ê°•ì—°ìžëŠ” ì§ˆ ë†’ì€ ê°•ì˜ë¥¼ ì œê³µí•˜ëŠ”ë° ë„ì›€ì„ ë°›ì„ ìˆ˜ ìžˆìŠµë‹ˆë‹¤. 
 
-### HLS ÇÁ·ÎÅäÄÝ
-![](readme/±×¸²1.png)
+### HLS í”„ë¡œí† ì½œ
+![](readme/ê·¸ë¦¼1.png)
 
-½ºÆ®¸®¹Ö ¹æ¹ýÀ¸·Î HLS ÇÁ·ÎÅäÄÝÀ» Ã¤ÅÃÇß½À´Ï´Ù.   
-HLS ÇÁ·ÎÅäÄÝÀÇ ³ôÀº È£È¯¼ºÀ¸·Î ÀÎÇØ ÀÎÅÍ³ÝÀ» Áö¿øÇÏ´Â ÀåÄ¡ ´ëºÎºÐ¿¡¼­ Simplayer¸¦ ÅëÇÑ ½ºÆ®¸®¹ÖÀÌ °¡´ÉÇÕ´Ï´Ù.   
-¶ÇÇÑ, °¡º¯ ºñÆ®·¹ÀÌÆ® ½ºÆ®¸®¹Ö ±â¼úÀ» ÀÌ¿ëÇØ, °íÈ­Áú·Î ¿µ»óÀ» ½ÃÃ»ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+ìŠ¤íŠ¸ë¦¬ë° ë°©ë²•ìœ¼ë¡œ HLS í”„ë¡œí† ì½œì„ ì±„íƒí–ˆìŠµë‹ˆë‹¤.   
+HLS í”„ë¡œí† ì½œì˜ ë†’ì€ í˜¸í™˜ì„±ìœ¼ë¡œ ì¸í•´ ì¸í„°ë„·ì„ ì§€ì›í•˜ëŠ” ìž¥ì¹˜ ëŒ€ë¶€ë¶„ì—ì„œ Simplayerë¥¼ í†µí•œ ìŠ¤íŠ¸ë¦¬ë°ì´ ê°€ëŠ¥í•©ë‹ˆë‹¤.   
+ë˜í•œ, ê°€ë³€ ë¹„íŠ¸ë ˆì´íŠ¸ ìŠ¤íŠ¸ë¦¬ë° ê¸°ìˆ ì„ ì´ìš©í•´, ê³ í™”ì§ˆë¡œ ì˜ìƒì„ ì‹œì²­í•  ìˆ˜ ìžˆìŠµë‹ˆë‹¤.
 
 
-### ¿ÀÇÂ API 
+### ì˜¤í”ˆ API 
 ![img_4.png](readme/img_4.png)
-ÇÃ·§Æû¿¡¼­ ½±°Ô Simplayer¸¦ Àû¿ëÇÒ ¼ö ÀÖµµ·Ï, ¿ÀÇÂ API ÇüÅÂ·Î Á¦°øÇÕ´Ï´Ù.   
-¿ÀÇÂ APIÀÇ »ç¿ë ¹æ¹ýÀ» ¼³¸íÇÏ´Â ¹®¼­¸¦ Á¦°øÇÕ´Ï´Ù.  
-[¿ÀÇÂ API ¹®¼­](https://jaeheon-sim.github.io/simplayer_apidocs/)
+í”Œëž«í¼ì—ì„œ ì‰½ê²Œ Simplayerë¥¼ ì ìš©í•  ìˆ˜ ìžˆë„ë¡, ì˜¤í”ˆ API í˜•íƒœë¡œ ì œê³µí•©ë‹ˆë‹¤.   
+ì˜¤í”ˆ APIì˜ ì‚¬ìš© ë°©ë²•ì„ ì„¤ëª…í•˜ëŠ” ë¬¸ì„œë¥¼ ì œê³µí•©ë‹ˆë‹¤.  
+[ì˜¤í”ˆ API ë¬¸ì„œ](https://jaeheon-sim.github.io/simplayer_apidocs/)
 
 
-## ? ÇÁ·ÎÁ§Æ® ±¸Á¶
+## ðŸŽ® í”„ë¡œì íŠ¸ êµ¬ì¡°
 
 ```
-¦§¦¡java
-¦¢  ¦¦¦¡team7
-¦¢      ¦¦¦¡simple
-¦¢          ¦§¦¡domain
-¦¢          ¦¢  ¦§¦¡answer
-¦¢          ¦¢  ¦¢  ¦§¦¡controller
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡auth
-¦¢          ¦¢  ¦¢  ¦§¦¡controller
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡jwt
-¦¢          ¦¢  ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡course
-¦¢          ¦¢  ¦¢  ¦§¦¡controller
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡enroll
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡file
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡player
-¦¢          ¦¢  ¦¢  ¦§¦¡controller
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡question
-¦¢          ¦¢  ¦¢  ¦§¦¡controller
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡record
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡unit
-¦¢          ¦¢  ¦¢  ¦§¦¡controller
-¦¢          ¦¢  ¦¢  ¦§¦¡dto
-¦¢          ¦¢  ¦¢  ¦§¦¡entity
-¦¢          ¦¢  ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¢  ¦¦¦¡exception
-¦¢          ¦¢  ¦¢  ¦§¦¡repository
-¦¢          ¦¢  ¦¢  ¦¦¦¡service
-¦¢          ¦¢  ¦¦¦¡user
-¦¢          ¦¢      ¦§¦¡controller
-¦¢          ¦¢      ¦§¦¡dto
-¦¢          ¦¢      ¦§¦¡entity
-¦¢          ¦¢      ¦§¦¡error
-¦¢          ¦¢      ¦¢  ¦¦¦¡exception
-¦¢          ¦¢      ¦§¦¡repository
-¦¢          ¦¢      ¦¦¦¡service
-¦¢          ¦§¦¡global
-¦¢          ¦¢  ¦§¦¡common
-¦¢          ¦¢  ¦¢  ¦§¦¡constant
-¦¢          ¦¢  ¦¢  ¦§¦¡jpa
-¦¢          ¦¢  ¦¢  ¦¦¦¡response
-¦¢          ¦¢  ¦¢      ¦§¦¡dto
-¦¢          ¦¢  ¦¢      ¦¦¦¡service
-¦¢          ¦¢  ¦§¦¡config
-¦¢          ¦¢  ¦§¦¡error
-¦¢          ¦¢  ¦¢  ¦¦¦¡advice
-¦¢          ¦¢  ¦¢      ¦¦¦¡exception
-¦¢          ¦¢  ¦§¦¡security
-¦¢          ¦¢  ¦§¦¡util
-¦¢          ¦¢  ¦¦¦¡_test
-¦¢          ¦§¦¡infra
-¦¢          ¦¢  ¦¦¦¡hls
-¦¢          ¦¢      ¦§¦¡dto
-¦¢          ¦¢      ¦¦¦¡service
-¦¢          ¦¦¦¡utils
-¦¦¦¡resources
+â”œâ”€java
+â”‚  â””â”€team7
+â”‚      â””â”€simple
+â”‚          â”œâ”€domain
+â”‚          â”‚  â”œâ”€answer
+â”‚          â”‚  â”‚  â”œâ”€controller
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€auth
+â”‚          â”‚  â”‚  â”œâ”€controller
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€jwt
+â”‚          â”‚  â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”‚  â””â”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€course
+â”‚          â”‚  â”‚  â”œâ”€controller
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€enroll
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€file
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€player
+â”‚          â”‚  â”‚  â”œâ”€controller
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€question
+â”‚          â”‚  â”‚  â”œâ”€controller
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€record
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â”œâ”€unit
+â”‚          â”‚  â”‚  â”œâ”€controller
+â”‚          â”‚  â”‚  â”œâ”€dto
+â”‚          â”‚  â”‚  â”œâ”€entity
+â”‚          â”‚  â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â”‚  â””â”€exception
+â”‚          â”‚  â”‚  â”œâ”€repository
+â”‚          â”‚  â”‚  â””â”€service
+â”‚          â”‚  â””â”€user
+â”‚          â”‚      â”œâ”€controller
+â”‚          â”‚      â”œâ”€dto
+â”‚          â”‚      â”œâ”€entity
+â”‚          â”‚      â”œâ”€error
+â”‚          â”‚      â”‚  â””â”€exception
+â”‚          â”‚      â”œâ”€repository
+â”‚          â”‚      â””â”€service
+â”‚          â”œâ”€global
+â”‚          â”‚  â”œâ”€common
+â”‚          â”‚  â”‚  â”œâ”€constant
+â”‚          â”‚  â”‚  â”œâ”€jpa
+â”‚          â”‚  â”‚  â””â”€response
+â”‚          â”‚  â”‚      â”œâ”€dto
+â”‚          â”‚  â”‚      â””â”€service
+â”‚          â”‚  â”œâ”€config
+â”‚          â”‚  â”œâ”€error
+â”‚          â”‚  â”‚  â””â”€advice
+â”‚          â”‚  â”‚      â””â”€exception
+â”‚          â”‚  â”œâ”€security
+â”‚          â”‚  â”œâ”€util
+â”‚          â”‚  â””â”€_test
+â”‚          â”œâ”€infra
+â”‚          â”‚  â””â”€hls
+â”‚          â”‚      â”œâ”€dto
+â”‚          â”‚      â””â”€service
+â”‚          â””â”€utils
+â””â”€resources
 ```
