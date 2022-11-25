@@ -23,8 +23,6 @@ public class Record {
     @ColumnDefault("false")
     private boolean completed;
 
-    double rating;
-
     @ManyToOne
     @JoinColumn
     private User user;

@@ -1,4 +1,4 @@
-package team7.simple.domain.record.error.exception;
+package team7.simple.domain.rating.error.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
