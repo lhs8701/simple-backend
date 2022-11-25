@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.auth.error.exception.CAccessDeniedException;
 import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
@@ -14,7 +15,6 @@ import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.enroll.entity.Enroll;
 import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.error.advice.exception.CAccessDeniedException;
 
 import java.util.List;
 
@@ -47,7 +47,6 @@ public class CourseService {
     public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam, User user) {
         Course course = getCourseById(courseId);
         if (!course.getInstructor().equals(user)){
-            log.info("강의자에게만 수정 권한이 있습니다.");
             throw new CAccessDeniedException();
         }
         course.setTitle(courseUpdateParam.getTitle());
@@ -59,7 +58,6 @@ public class CourseService {
     public void deleteCourse(Long courseId, User user) {
         Course course = getCourseById(courseId);
         if (!course.getInstructor().equals(user)){
-            log.info("강의자에게만 삭제 권한이 있습니다.");
             throw new CAccessDeniedException();
         }
         courseJpaRepository.delete(course);

@@ -89,6 +89,8 @@ public class CourseOpenController {
                     \nresponse : 수정된 강좌의 아이디
                     """
     )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping(value = "/open/courses/{courseId}")
     public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam, user), HttpStatus.OK);
@@ -102,6 +104,8 @@ public class CourseOpenController {
                     \nresponse : X
                     """
     )
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping(value = "/open/courses/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
         courseService.deleteCourse(courseId, user);

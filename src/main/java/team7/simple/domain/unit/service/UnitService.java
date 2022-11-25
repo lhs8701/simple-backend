@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import team7.simple.domain.auth.error.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.file.entity.Video;
@@ -14,6 +15,7 @@ import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.file.dto.VideoDto;
 import team7.simple.domain.file.service.VideoService;
 import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
+import team7.simple.domain.user.entity.User;
 import team7.simple.infra.hls.service.HlsService;
 
 import java.util.List;
@@ -24,7 +26,6 @@ import java.util.stream.Collectors;
 public class UnitService {
     private final UnitJpaRepository unitJpaRepository;
     private final CourseService courseService;
-    private final RecordService recordService;
     private final VideoService videoService;
     private final HlsService hlsService;
 
@@ -50,14 +51,20 @@ public class UnitService {
     }
 
     @Transactional
-    public void deleteUnit(Long unitId) {
+    public void deleteUnit(Long unitId, User user) {
         Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+        if (!unit.getCourse().getInstructor().equals(user)){
+            throw new CAccessDeniedException();
+        }
         unitJpaRepository.delete(unit);
     }
 
     @Transactional
-    public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam) {
+    public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam, User user) {
         Unit unit = getUnitById(unitId);
+        if (!unit.getCourse().getInstructor().equals(user)){
+            throw new CAccessDeniedException();
+        }
         unit.setTitle(unitUpdateParam.getTitle());
         unit.setDescription(unitUpdateParam.getDescription());
         unit.setObjective(unit.getObjective());
