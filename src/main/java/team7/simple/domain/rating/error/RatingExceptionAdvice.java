@@ -1,4 +1,4 @@
-package team7.simple.domain.record.error;
+package team7.simple.domain.rating.error;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import team7.simple.global.error.ErrorCode;
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
-public class RecordExceptionAdvice {
+public class RatingExceptionAdvice {
 
     /**
      * 평점을 찾을 수 없는 경우 발생하는 예외
@@ -22,19 +22,6 @@ public class RecordExceptionAdvice {
      */
     @ExceptionHandler(CRatingNotFoundException.class)
     protected ResponseEntity<?> handle(CRatingNotFoundException e) {
-        ErrorCode errorCode = e.getErrorCode();
-
-        log.error(errorCode.getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
-    }
-
-    /**
-     * 기록을 찾을 수 없는 경우 발생하는 예외
-     * @param e CRecordNotFoundException
-     * @return NOT_FOUND 404
-     */
-    @ExceptionHandler(CRecordNotFoundException.class)
-    protected ResponseEntity<?> handle(CRecordNotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
 
         log.error(errorCode.getMessage());

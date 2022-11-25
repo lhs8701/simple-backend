@@ -31,7 +31,6 @@ public class Question extends BaseTimeEntity {
     private Unit unit;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Builder.Default
-    private List<Answer> answerList = new ArrayList<Answer>();
+    private List<Answer> answerList = new ArrayList<>();
 
 }

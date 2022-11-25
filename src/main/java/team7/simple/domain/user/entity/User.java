@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.enroll.entity.Enroll;
+import team7.simple.domain.rating.entity.Rating;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.global.common.jpa.BaseTimeEntity;
 
@@ -44,6 +45,9 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Record> recordList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Rating> ratingList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
