@@ -11,5 +11,5 @@ public class RatingRequestDto {
     @NotNull
     double score;
 
-    String content;
+    String comment;
 }

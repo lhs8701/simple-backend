@@ -35,6 +35,22 @@ public class RatingService {
     @Transactional
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Unit unit = unitService.getUnitById(unitId);
+        validateAbility(user, unit);
+        Rating rating = ratingJpaRepository.findByUnitAndUser(unit,user).orElse(null);
+        if (rating != null){
+            rating.update(ratingRequestDto.getScore(), ratingRequestDto.getComment());
+            return;
+        }
+
+        ratingJpaRepository.save(Rating.builder()
+                .comment(ratingRequestDto.getComment())
+                .score(ratingRequestDto.getScore())
+                .unit(unit)
+                .user(user)
+                .build());
+    }
+
+    private void validateAbility(User user, Unit unit) {
         Course course = unit.getCourse();
         if (!doesUserEnrollCourse(course, user)) {
             throw new CUserNotEnrolledException();
@@ -44,11 +60,6 @@ public class RatingService {
             log.error("평점을 등록하기 위해서는, 해당 강의를 끝까지 시청해야합니다.");
             throw new CAccessDeniedException();
         }
-        Rating rating = Rating.builder()
-                .content(ratingRequestDto.getContent())
-                .score(ratingRequestDto.getScore())
-                .build();
-        ratingJpaRepository.save(rating);
     }
 
     private boolean doesUserEnrollCourse(Course course, User user) {
@@ -67,9 +78,8 @@ public class RatingService {
 
     private RatingResponseDto calculate(List<Rating> ratingList) {
         double sum = 0;
-        int whole = 0;
+        int whole = ratingList.size();
         for (Rating rating : ratingList) {
-            whole++;
             sum += rating.getScore();
         }
         double averageScore = (double) Math.round((sum / whole) * 10) / 10.0;
