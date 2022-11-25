@@ -96,7 +96,18 @@ public class UnitService {
      * @param unitId 유닛아이디
      * @return UnitDetailResponseDto (유닛아이디, 제목, 강의 소개, 강의 목표)
      */
-    public UnitDetailResponseDto getUnitInfo(Long unitId) {
+    public UnitResponseDto getUnitInfo(Long unitId) {
+        Unit unit = getUnitById(unitId);
+        return new UnitResponseDto(unit);
+    }
+
+
+    /**
+     * 강의 세부 정보를 조회합니다.
+     * @param unitId 유닛아이디
+     * @return UnitDetailResponseDto (유닛아이디, 제목, 강의 소개, 강의 목표, 강의 평균 평점, 세부 평점 목록)
+     */
+    public UnitDetailResponseDto getUnitDetail(Long unitId) {
         Unit unit = getUnitById(unitId);
         double averageScore = ratingService.getAverageRatingScore(unitId).getScore();
         List<RatingDetailResponseDto> ratingList = ratingJpaRepository.findAllByUnit(unit).stream().map(RatingDetailResponseDto::new).toList();

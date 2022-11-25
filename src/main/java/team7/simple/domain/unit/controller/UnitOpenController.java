@@ -65,13 +65,13 @@ public class UnitOpenController {
             notes = """
                     강의의 세부 정보를 조회합니다.
                     \nparameter : 조회할 강의 아이디
-                    \nresponse : 강의 아이디, 강의 제목, 강의 설명, 강의 목표
+                    \nresponse : 강의 아이디, 강의 제목, 강의 설명, 강의 목표, 강의 평균 평점, 세부 평점 목록
                     """
     )
     @PreAuthorize("permitAll()")
     @GetMapping("/open/units/{unitId}")
     public ResponseEntity<?> displayUnitDetail(@PathVariable Long unitId) {
-        return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
+        return new ResponseEntity<>(unitService.getUnitDetail(unitId), HttpStatus.OK);
     }
 
 

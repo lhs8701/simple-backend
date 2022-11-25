@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.auth.error.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.enroll.error.exception.CUserNotEnrolledException;
 import team7.simple.domain.rating.dto.RatingRequestDto;
@@ -16,9 +17,7 @@ import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
-import team7.simple.domain.unit.service.UnitService;
 import team7.simple.domain.user.entity.User;
-import team7.simple.global.error.advice.exception.CAccessDeniedException;
 
 import java.util.List;
 

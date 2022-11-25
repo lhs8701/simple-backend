@@ -38,7 +38,7 @@ public class UnitController {
     )
     @PreAuthorize("permitAll()")
     @GetMapping("/front/units/{unitId}")
-    public ResponseEntity<?> displayUnitDetail(@PathVariable Long unitId) {
+    public ResponseEntity<?> displayUnitInfo(@PathVariable Long unitId) {
         return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
     }
 
