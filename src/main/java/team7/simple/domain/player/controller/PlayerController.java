@@ -24,11 +24,6 @@ public class PlayerController {
     private final PlayerService playerService;
 
     @ApiOperation(value = "FRONT - 플레이어 시작", notes = "플레이어가 실행되자마자 가장 먼저 호출되어야 하는 API로, userId에 해당하는 어세스 토큰을 반환합니다.")
-    @ResponseBody
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 사용자를 찾을 수 없을 경우"),
-    })
     @PreAuthorize("permitAll()")
     @PostMapping("/start")
     public ResponseEntity<?> start(@RequestBody StartRequestDto startRequestDto) {
@@ -36,10 +31,6 @@ public class PlayerController {
     }
 
     @ApiOperation(value = "FRONT - 강의 재생", notes = "다른 강의로 이동할 경우 호출하는 API입니다. 현재 재생중인 강의의 시간대와 완료 여부를 기록한 후, 다음 강의 영상의 경로를 포함한 정보를 반환합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강의가 없을 경우"),
-    })
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/play/units/{nextUnitId}")
@@ -57,11 +48,6 @@ public class PlayerController {
 
     @ApiOperation(value = "FRONT - 플레이어 종료", notes = "플레이어가 종료될 때 호출되어야 하는 API로, 현재 재생중인 강의의 시청 기록을 갱신합니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @ResponseBody
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강의을 찾을 수 없을 경우"),
-    })
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/exit")
     public ResponseEntity<?> exit(@RequestHeader(ConstValue.JWT_HEADER) String accessToken, @RequestBody ExitRequestDto exitRequestDto) {

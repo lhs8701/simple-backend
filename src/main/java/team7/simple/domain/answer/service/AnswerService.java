@@ -44,10 +44,6 @@ public class AnswerService {
         answerJpaRepository.delete(answer);
     }
 
-    public Answer getAnswerById(Long id){
-        return answerJpaRepository.findById(id).orElseThrow(CAnswerNotFoundException::new);
-    }
-
     /**
      * 질문에 대한 답변 목록을 반환합니다.
      * @param questionId 질문 아이디
@@ -56,5 +52,10 @@ public class AnswerService {
     public List<AnswerResponseDto> getAnswerList(Long questionId) {
         List<Answer> answerList = questionService.getQuestionById(questionId).getAnswerList();
         return answerList.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Answer getAnswerById(Long id){
+        return answerJpaRepository.findById(id).orElseThrow(CAnswerNotFoundException::new);
     }
 }

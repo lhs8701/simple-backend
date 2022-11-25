@@ -1,23 +1,22 @@
 package team7.simple.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.course.dto.JoinedCourseResponseDto;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.service.CourseService;
-import team7.simple.domain.record.entity.Record;
-import team7.simple.domain.record.service.RecordService;
-import team7.simple.domain.course.dto.JoinedCourseResponseDto;
 import team7.simple.domain.enroll.entity.Enroll;
 import team7.simple.domain.enroll.service.EnrollService;
+import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.dto.UnitHistoryResponseDto;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.domain.user.error.exception.CUserNotFoundException;
+import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.utils.RoundCalculator;
 
 import java.util.ArrayList;

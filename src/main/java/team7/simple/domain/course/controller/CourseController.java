@@ -23,10 +23,6 @@ public class CourseController {
     private final CourseService courseService;
 
     @ApiOperation(value = "FRONT - 강좌 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(code=200, message = "성공"),
-            @ApiResponse(code=404, message = "해당 강좌을 찾을 수 없을 경우"),
-    })
     @GetMapping("/{courseId}")
     public ResponseEntity<?> getCourseInfo(@PathVariable Long courseId) {
         return new ResponseEntity<>(courseService.getCourseInfo(courseId), HttpStatus.OK);
