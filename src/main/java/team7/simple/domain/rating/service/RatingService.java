@@ -36,7 +36,7 @@ public class RatingService {
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Unit unit = unitService.getUnitById(unitId);
         Course course = unit.getCourse();
-        if (!doesUserEnrollCourse(course, user)){
+        if (!doesUserEnrollCourse(course, user)) {
             throw new CUserNotEnrolledException();
         }
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
@@ -58,26 +58,21 @@ public class RatingService {
 
     @Transactional
     public RatingResponseDto getAverageRatingScore(Long unitId) {
-        double rating;
-        Unit unit = unitService.getUnitById(unitId);
-        List<Record> recordList = recordService.getRecordListByUnit(unit);
-        if (recordList == null) {
+        List<Rating> ratingList = unitService.getUnitById(unitId).getRatingList();
+        if (ratingList == null) {
             return new RatingResponseDto(0, 0);
         }
-        return calculate(recordList);
+        return calculate(ratingList);
     }
 
-    private RatingResponseDto calculate(List<Record> recordList) {
-        double rating;
+    private RatingResponseDto calculate(List<Rating> ratingList) {
         double sum = 0;
         int whole = 0;
-        for (Record record : recordList) {
-            if (record.isCompleted()) {
-                whole++;
-                sum += record.getRating();
-            }
+        for (Rating rating : ratingList) {
+            whole++;
+            sum += rating.getScore();
         }
-        rating = (double) Math.round((sum / whole) * 10) / 10.0;
-        return new RatingResponseDto(rating, whole);
+        double averageScore = (double) Math.round((sum / whole) * 10) / 10.0;
+        return new RatingResponseDto(averageScore, whole);
     }
 }
