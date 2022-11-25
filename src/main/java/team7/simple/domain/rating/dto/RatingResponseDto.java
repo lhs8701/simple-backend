@@ -1,4 +1,4 @@
-package team7.simple.domain.record.dto;
+package team7.simple.domain.rating.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

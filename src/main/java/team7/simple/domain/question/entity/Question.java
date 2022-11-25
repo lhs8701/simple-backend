@@ -34,7 +34,6 @@ public class Question extends BaseTimeEntity {
     private User user;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Builder.Default
     private List<Answer> answerList = new ArrayList<>();
 
     public void update(String title, String content){

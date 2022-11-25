@@ -9,6 +9,9 @@ import team7.simple.domain.auth.error.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.file.entity.Video;
+import team7.simple.domain.rating.dto.RatingDetailResponseDto;
+import team7.simple.domain.rating.repository.RatingJpaRepository;
+import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
@@ -30,6 +33,8 @@ public class UnitService {
     private final CourseService courseService;
     private final VideoService videoService;
     private final HlsService hlsService;
+    private final RatingJpaRepository ratingJpaRepository;
+    private final RatingService ratingService;
 
     @Transactional
     public Long createUnit(Long courseId, UnitRequestDto unitRequestDto, MultipartFile file) {
@@ -93,7 +98,9 @@ public class UnitService {
      */
     public UnitDetailResponseDto getUnitInfo(Long unitId) {
         Unit unit = getUnitById(unitId);
-        return new UnitDetailResponseDto(unit);
+        double averageScore = ratingService.getAverageRatingScore(unitId).getScore();
+        List<RatingDetailResponseDto> ratingList = ratingJpaRepository.findAllByUnit(unit).stream().map(RatingDetailResponseDto::new).toList();
+        return new UnitDetailResponseDto(unit, averageScore, ratingList);
     }
 }
 

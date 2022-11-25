@@ -38,15 +38,6 @@ public class AuthExceptionAdvice {
         return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
-    /**
-     * 권한이 없는 리소스를 요청한 경우 발생시키는 예외
-     */
-    @ExceptionHandler(CAccessDeniedException.class)
-    protected ResponseEntity<?> handle(CAccessDeniedException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        log.error(errorCode.getMessage());
-        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
-    }
 
     /**
      * 같은 계정으로 플레이어를 동시에 이용할 경우 발생시키는 예외
