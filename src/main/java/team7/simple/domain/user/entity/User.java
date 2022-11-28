@@ -100,7 +100,7 @@ public class User extends BaseTimeEntity implements UserDetails {
         return true;
     }
 
-    public void changePassword(String password){
+    public void changePassword(String password) {
         this.password = password;
     }
 }

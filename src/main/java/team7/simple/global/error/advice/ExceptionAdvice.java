@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.global.common.response.dto.ErrorResponseDto;
 import team7.simple.global.common.response.service.ResponseService;
 import team7.simple.global.error.ErrorCode;
@@ -42,8 +43,8 @@ public class ExceptionAdvice {
 
     /**
      * 잘못된 접근일 때 발생하는 예외
-     * @param e IllegalArgumentException
-     * @return BAD_REQUEST 400
+     * @param e CWrongApproach
+     * @return FORBIDDEN 403
      */
     @ExceptionHandler(CWrongApproach.class)
     protected ResponseEntity<?> handle(CWrongApproach e) {
@@ -53,5 +54,16 @@ public class ExceptionAdvice {
         return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
 
+    /**
+     * 접근이 제한되었을 때 발생하는 예외
+     * @param e CAccessDeniedException
+     * @return BAD_REQUEST 400
+     */
+    @ExceptionHandler(CAccessDeniedException.class)
+    protected ResponseEntity<?> handle(CAccessDeniedException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error(errorCode.getMessage());
+        return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
+    }
 
 }

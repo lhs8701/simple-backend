@@ -3,7 +3,7 @@ package team7.simple.domain.question.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team7.simple.domain.auth.error.exception.CAccessDeniedException;
+import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.question.dto.QuestionDetailResponseDto;
 import team7.simple.domain.question.dto.QuestionRequestDto;
 import team7.simple.domain.question.dto.QuestionThumbnailResponseDto;

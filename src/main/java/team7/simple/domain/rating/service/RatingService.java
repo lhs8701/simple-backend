@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team7.simple.domain.auth.error.exception.CAccessDeniedException;
+import team7.simple.domain.record.error.exception.CRecordNotFoundException;
+import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.enroll.error.exception.CUserNotEnrolledException;
 import team7.simple.domain.rating.dto.RatingRequestDto;
@@ -55,11 +56,7 @@ public class RatingService {
         if (!doesUserEnrollCourse(course, user)) {
             throw new CUserNotEnrolledException();
         }
-        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
-        if (record == null || !record.isCompleted()) {
-            log.error("평점을 등록하기 위해서는, 해당 강의를 끝까지 시청해야합니다.");
-            throw new CAccessDeniedException();
-        }
+        recordService.getRecordByUnitAndUser(unit, user).orElseThrow(CRecordNotFoundException::new);
     }
 
     private boolean doesUserEnrollCourse(Course course, User user) {

@@ -50,4 +50,6 @@ public class AuthExceptionAdvice {
         log.error(errorCode.getMessage());
         return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
+
+
 }

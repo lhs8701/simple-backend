@@ -8,7 +8,7 @@ import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.entity.Answer;
 import team7.simple.domain.answer.error.exception.CAnswerNotFoundException;
 import team7.simple.domain.answer.repository.AnswerJpaRepository;
-import team7.simple.domain.auth.error.exception.CAccessDeniedException;
+import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.question.entity.Question;
 import team7.simple.domain.question.service.QuestionService;
 import team7.simple.domain.user.entity.User;
