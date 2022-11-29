@@ -56,6 +56,20 @@ public class QuestionService {
         questionJpaRepository.delete(question);
     }
 
+    @Transactional
+    public Long updateQuestion(Long questionId, QuestionUpdateParam questionUpdateParam) {
+        Question question = getQuestionById(questionId);
+        question.update(questionUpdateParam.getTitle(), questionUpdateParam.getContent());
+
+        return question.getId();
+    }
+
+    @Transactional
+    public void deleteQuestion(Long questionId) {
+        Question question = getQuestionById(questionId);
+        questionJpaRepository.delete(question);
+    }
+
     /**
      * Unit에 대한 List<Question>을 반환합니다.
      * @param unitId 강의 아이디

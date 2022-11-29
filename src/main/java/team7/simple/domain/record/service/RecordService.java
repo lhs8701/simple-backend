@@ -2,7 +2,9 @@ package team7.simple.domain.record.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.record.dto.RecordUpdateParam;
+import team7.simple.domain.record.error.exception.CRecordNotFoundException;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.record.entity.Record;
@@ -16,7 +18,6 @@ import java.util.Optional;
 public class RecordService {
 
     private final RecordJpaRepository recordJpaRepository;
-
 
     public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
         Record record = recordJpaRepository.save(Record.builder()
@@ -44,4 +45,5 @@ public class RecordService {
         }
         return record.getTimeline();
     }
+
 }

@@ -35,9 +35,6 @@ public class AuthService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
-    private final ConflictService conflictService;
-    private final PlayerService playerService;
-
     public String signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
             throw new CUserExistException();

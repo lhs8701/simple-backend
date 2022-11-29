@@ -5,6 +5,7 @@ import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.question.entity.Question;
 import team7.simple.domain.file.entity.Video;
 import team7.simple.domain.rating.entity.Rating;
+import team7.simple.domain.record.entity.Record;
 import team7.simple.global.common.jpa.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -38,6 +39,9 @@ public class Unit extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> ratingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Record> recordList = new ArrayList<>();
 
     public void update(String title, String description, String objective){
         this.title = title;

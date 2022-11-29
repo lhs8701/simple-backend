@@ -62,6 +62,19 @@ public class CourseService {
         courseJpaRepository.delete(course);
     }
 
+    @Transactional
+    public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam) {
+        Course course = getCourseById(courseId);
+        course.update(courseUpdateParam.getTitle(), courseUpdateParam.getSubtitle());
+        return courseId;
+    }
+
+    @Transactional
+    public void deleteCourse(Long courseId) {
+        Course course = getCourseById(courseId);
+        courseJpaRepository.delete(course);
+    }
+
     public void register(Long courseId, User user) {
         Course course = getCourseById(courseId);
         if (enrollService.doesEnrolled(course, user)) {

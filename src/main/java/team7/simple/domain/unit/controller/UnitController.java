@@ -25,8 +25,8 @@ public class UnitController {
 
     @ApiOperation(value = "FRONT - 강좌 내 강의 목록 조회")
     @GetMapping("/front/courses/{courseId}/units")
-    public ResponseEntity<?> getUnits(@PathVariable Long courseId) {
-        return new ResponseEntity<>(unitService.getUnits(courseId), HttpStatus.OK);
+    public ResponseEntity<?> getUnits(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(unitService.getUnits(courseId, user), HttpStatus.OK);
     }
 
     @ApiOperation(value = "FRONT - 강의 세부 정보 조회",
@@ -36,7 +36,8 @@ public class UnitController {
                     \nresponse : 강의 아이디, 강의 제목, 강의 설명, 강의 목표
                     """
     )
-    @PreAuthorize("permitAll()")
+    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/front/units/{unitId}")
     public ResponseEntity<?> displayUnitInfo(@PathVariable Long unitId) {
         return new ResponseEntity<>(unitService.getUnitInfo(unitId), HttpStatus.OK);
