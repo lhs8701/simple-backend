@@ -56,6 +56,19 @@ public class AnswerService {
         answerJpaRepository.delete(answer);
     }
 
+    @Transactional
+    public Long updateAnswer(Long answerId, AnswerUpdateParam answerUpdateParam) {
+        Answer answer = getAnswerById(answerId);
+        answer.update(answerUpdateParam.getContent());
+        return answerId;
+    }
+
+    @Transactional
+    public void deleteAnswer(Long answerId) {
+        Answer answer = getAnswerById(answerId);
+        answerJpaRepository.delete(answer);
+    }
+
     /**
      * 질문에 대한 답변 목록을 반환합니다.
      * @param questionId 질문 아이디

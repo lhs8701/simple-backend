@@ -77,6 +77,19 @@ public class UnitService {
     }
 
     @Transactional
+    public void deleteUnit(Long unitId) {
+        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+        unitJpaRepository.delete(unit);
+    }
+
+    @Transactional
+    public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam) {
+        Unit unit = getUnitById(unitId);
+        unit.update(unitUpdateParam.getTitle(), unitUpdateParam.getDescription(), unitUpdateParam.getObjective());
+        return unitId;
+    }
+
+    @Transactional
     public Unit getUnitById(Long unitId) {
         return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
     }
