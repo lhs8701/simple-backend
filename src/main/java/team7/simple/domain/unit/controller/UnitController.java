@@ -24,6 +24,7 @@ public class UnitController {
     private final RatingService ratingService;
 
     @ApiOperation(value = "FRONT - 강좌 내 강의 목록 조회")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/front/courses/{courseId}/units")
     public ResponseEntity<?> getUnits(@PathVariable Long courseId, @AuthenticationPrincipal User user) {
         return new ResponseEntity<>(unitService.getUnits(courseId, user), HttpStatus.OK);
