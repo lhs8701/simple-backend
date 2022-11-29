@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.record.repository.RecordJpaRepository;
+import team7.simple.domain.record.service.RecordService;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.service.CourseService;
@@ -21,6 +24,7 @@ import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
 import team7.simple.domain.user.entity.User;
 import team7.simple.infra.hls.service.HlsService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +38,7 @@ public class UnitService {
     private final HlsService hlsService;
     private final RatingJpaRepository ratingJpaRepository;
     private final RatingService ratingService;
+    private final RecordJpaRepository recordJpaRepository;
 
     @Transactional
     public Long createUnit(Long courseId, UnitRequestDto unitRequestDto, MultipartFile file) {
@@ -89,6 +94,11 @@ public class UnitService {
         return unitId;
     }
 
+    /**
+     * 강의 정보를 반환합니다.
+     * @param unitId
+     * @return
+     */
     @Transactional
     public Unit getUnitById(Long unitId) {
         return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
@@ -99,7 +109,32 @@ public class UnitService {
         List<Unit> unitList = course.getUnitList();
         if (unitList == null)
             return null;
+
         return unitList.stream().map(UnitThumbnailResponseDto::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 사용자의 시청 완료 여부도 유닛 정보에 담아 함께 반환합니다.
+     * @param courseId 강좌아이디
+     * @param user 사용자
+     * @return
+     */
+    public List<UnitThumbnailResponseDto> getUnits(Long courseId, User user) {
+        List<UnitThumbnailResponseDto> returnList = new ArrayList<>();
+        Course course = courseService.getCourseById(courseId);
+        List<Unit> unitList = course.getUnitList();
+        if (unitList == null)
+            return null;
+
+        for (Unit unit : unitList) {
+            boolean completed = true;
+            Record record = recordJpaRepository.findByUnitAndUser(unit, user).orElse(null);
+            if (record == null || !record.isCompleted()) {
+                completed = false;
+            }
+            returnList.add(new UnitThumbnailResponseDto(unit, completed));
+        }
+        return returnList;
     }
 
     /**
