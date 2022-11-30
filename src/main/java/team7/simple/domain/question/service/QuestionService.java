@@ -3,6 +3,7 @@ package team7.simple.domain.question.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.unit.service.UnitFindService;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.question.dto.QuestionDetailResponseDto;
 import team7.simple.domain.question.dto.QuestionRequestDto;
@@ -28,13 +29,36 @@ public class QuestionService {
     private final UserJpaRepository userJpaRepository;
     private final QuestionFindService questionFindService;
 
+    private final UnitFindService unitFindService;
+
     @Transactional
     public Long createQuestion(Long unitId, QuestionRequestDto questionRequestDto, User authUser) {
         User user = userJpaRepository.findById(authUser.getId()).orElseThrow(CUserNotFoundException::new);
-        Unit unit = unitService.getUnitById(unitId);
+        Unit unit = unitFindService.getUnitById(unitId);
         Question question = questionRequestDto.toEntity(unit, user);
 
         return questionJpaRepository.save(question).getId();
+    }
+
+    /**
+     * Question의 세부 정보를 반환합니다.
+     * @param questionId 질문 아이디
+     * @return QuestionDetailResponseDto (강의 아이디, 질문 제목, 질문 내용, 답변 수, 질문 타임라인, 질문 등록 일자, 질문 수정 일자)
+     */
+    public QuestionDetailResponseDto getQuestionDetail(Long questionId) {
+        Question question = questionFindService.getQuestionById(questionId);
+        return new QuestionDetailResponseDto(question);
+    }
+
+    /**
+     * Unit에 대한 List<Question>을 반환합니다.
+     * @param unitId 강의 아이디
+     * @return QuestionDetailResponseDto (질문 아이디, 질문 제목, 답변 수, 질문 타임라인)
+     */
+    @Transactional
+    public List<QuestionThumbnailResponseDto> getQuestionList(Long unitId) {
+        Unit unit = unitFindService.getUnitById(unitId);
+        return unit.getQuestionList().stream().map(QuestionThumbnailResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional
@@ -56,6 +80,4 @@ public class QuestionService {
         }
         questionJpaRepository.delete(question);
     }
-
-
 }

@@ -3,10 +3,12 @@ package team7.simple.domain.answer.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team7.simple.domain.answer.dto.AnswerRequestDto;
+import team7.simple.domain.answer.dto.AnswerResponseDto;
 import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.entity.Answer;
 import team7.simple.domain.answer.repository.AnswerJpaRepository;
 import team7.simple.domain.question.entity.Question;
+import team7.simple.domain.question.service.QuestionFindService;
 import team7.simple.domain.question.service.QuestionService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.error.exception.CUserNotFoundException;
@@ -14,6 +16,8 @@ import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +27,7 @@ public class AnswerService {
     private final AnswerJpaRepository answerJpaRepository;
     private final QuestionService questionService;
 
+    private final QuestionFindService questionFindService;
     private final UserJpaRepository userJpaRepository;
 
     /**
@@ -35,7 +40,7 @@ public class AnswerService {
     @Transactional
     public Long createAnswer(Long questionId, AnswerRequestDto answerRequestDto, User authUser) {
         User user = userJpaRepository.findById(authUser.getId()).orElseThrow(CUserNotFoundException::new);
-        Question question = questionService.getQuestionById(questionId);
+        Question question = questionFindService.getQuestionById(questionId);
         Answer answer = answerRequestDto.toEntity(question, user);
 
         return answerJpaRepository.save(answer).getId();
@@ -73,6 +78,16 @@ public class AnswerService {
             throw new CAccessDeniedException();
         }
         answerJpaRepository.delete(answer);
+    }
+
+    /**
+     * 질문에 대한 답변 목록을 반환합니다.
+     * @param questionId 질문 아이디
+     * @return AnswerResponseDto (답변 아이디, 답변 내용, 답변 등록 일자, 답변 수정 일자)
+     */
+    public List<AnswerResponseDto> getAnswerList(Long questionId) {
+        List<Answer> answerList = questionFindService.getQuestionById(questionId).getAnswerList();
+        return answerList.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
     }
 
 
