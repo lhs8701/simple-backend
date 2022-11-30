@@ -4,20 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team7.simple.domain.record.error.exception.CRecordNotFoundException;
-import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.enroll.error.exception.CUserNotEnrolledException;
+import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.rating.dto.RatingRequestDto;
 import team7.simple.domain.rating.dto.RatingResponseDto;
 import team7.simple.domain.rating.entity.Rating;
 import team7.simple.domain.rating.repository.RatingJpaRepository;
-import team7.simple.domain.record.entity.Record;
-import team7.simple.domain.enroll.service.EnrollService;
-import team7.simple.domain.record.service.RecordService;
+import team7.simple.domain.record.error.exception.CRecordNotFoundException;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
 import team7.simple.domain.unit.repository.UnitJpaRepository;
+import team7.simple.domain.unit.service.UnitFindService;
 import team7.simple.domain.user.entity.User;
 
 import java.util.List;
@@ -29,15 +27,16 @@ import java.util.List;
 public class RatingService {
 
     private final EnrollService enrollService;
-    private final RecordService recordService;
-    private final UnitJpaRepository unitJpaRepository;
+
+    private final UnitFindService unitFindService;
     private final RatingJpaRepository ratingJpaRepository;
+    private final RatingFindService ratingFindService;
 
     @Transactional
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
-        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+        Unit unit = unitFindService.getUnitById(unitId);
         validateAbility(user, unit);
-        Rating rating = ratingJpaRepository.findByUnitAndUser(unit,user).orElse(null);
+        Rating rating = ratingFindService.getRatingByUnitAndUserWithOptional(unit,user).orElse(null);
         if (rating != null){
             rating.update(ratingRequestDto.getScore(), ratingRequestDto.getComment());
             return;
@@ -56,7 +55,7 @@ public class RatingService {
         if (!doesUserEnrollCourse(course, user)) {
             throw new CUserNotEnrolledException();
         }
-        recordService.getRecordByUnitAndUser(unit, user).orElseThrow(CRecordNotFoundException::new);
+        ratingFindService.getRatingByUnitAndUserWithOptional(unit, user).orElseThrow(CRecordNotFoundException::new);
     }
 
     private boolean doesUserEnrollCourse(Course course, User user) {
@@ -66,7 +65,7 @@ public class RatingService {
 
     @Transactional
     public RatingResponseDto getAverageRatingScore(Long unitId) {
-        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
+        Unit unit = unitFindService.getUnitById(unitId);
         List<Rating> ratingList = unit.getRatingList();
         if (ratingList == null) {
             return new RatingResponseDto(0, 0);

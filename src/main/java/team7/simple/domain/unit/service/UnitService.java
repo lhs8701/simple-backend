@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import team7.simple.domain.course.service.CourseFindService;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.repository.RecordJpaRepository;
+import team7.simple.domain.record.service.RecordFindService;
 import team7.simple.domain.record.service.RecordService;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
@@ -33,18 +35,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UnitService {
     private final UnitJpaRepository unitJpaRepository;
-    private final CourseService courseService;
+    private final CourseFindService courseFindService;
     private final VideoService videoService;
     private final HlsService hlsService;
     private final RatingJpaRepository ratingJpaRepository;
     private final RatingService ratingService;
-    private final RecordJpaRepository recordJpaRepository;
+    private final RecordFindService recordFindService;
 
     private final UnitFindService unitFindService;
 
     @Transactional
     public Long createUnit(Long courseId, UnitRequestDto unitRequestDto, MultipartFile file) {
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
 
         VideoDto videoDto = videoService.uploadVideo(file, courseId);
         String hlsFileUrl = hlsService.convertToM3u8(videoDto);
@@ -57,7 +59,7 @@ public class UnitService {
     /*임시*/
     @Transactional
     public Long createUnitLocal(Long courseId, UnitRequestDto unitRequestDto) {
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         Video video = new Video("test", "test", "test");
         Unit unit = unitRequestDto.toEntity(video, course);
         return unitJpaRepository.save(unit).getId();
@@ -84,7 +86,7 @@ public class UnitService {
     }
 
     public List<UnitThumbnailResponseDto> getUnits(Long courseId) {
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         List<Unit> unitList = course.getUnitList();
         if (unitList == null)
             return null;
@@ -100,14 +102,14 @@ public class UnitService {
      */
     public List<UnitThumbnailResponseDto> getUnits(Long courseId, User user) {
         List<UnitThumbnailResponseDto> returnList = new ArrayList<>();
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         List<Unit> unitList = course.getUnitList();
         if (unitList == null)
             return null;
 
         for (Unit unit : unitList) {
             boolean completed = true;
-            Record record = recordJpaRepository.findByUnitAndUser(unit, user).orElse(null);
+            Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
             if (record == null || !record.isCompleted()) {
                 completed = false;
             }
