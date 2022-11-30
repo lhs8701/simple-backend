@@ -14,15 +14,15 @@ import team7.simple.domain.player.dto.ExecuteResponseDto;
 import team7.simple.domain.player.dto.ExitRequestDto;
 import team7.simple.domain.player.dto.StartRequestDto;
 import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.record.service.RecordFindService;
 import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.dto.UnitPlayRequestDto;
 import team7.simple.domain.unit.dto.UnitPlayResponseDto;
 import team7.simple.domain.unit.entity.Unit;
-import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
-import team7.simple.domain.unit.service.UnitService;
+import team7.simple.domain.unit.service.UnitFindService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.error.exception.CUserNotActiveException;
-import team7.simple.domain.user.service.UserService;
+import team7.simple.domain.user.service.UserFindService;
 import team7.simple.global.common.constant.ActiveStatus;
 import team7.simple.global.security.JwtProvider;
 import team7.simple.infra.hls.service.HlsService;
@@ -32,9 +32,10 @@ import team7.simple.infra.hls.service.HlsService;
 @Slf4j
 @RequiredArgsConstructor
 public class PlayerService {
-    private final UserService userService;
+    private final UserFindService userFindService;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
-    private final UnitService unitService;
+    private final UnitFindService unitFindService;
+    private final RecordFindService recordFindService;
     private final RecordService recordService;
 
     private final JwtProvider jwtProvider;
@@ -78,7 +79,7 @@ public class PlayerService {
      * @return 가장 최근에 접속한 레디스 액티브 토큰
      */
     public AccessTokenResponseDto initPlayer(StartRequestDto startRequestDto) {
-        User user = userService.getUserById(startRequestDto.getUserId());
+        User user = userFindService.getUserById(startRequestDto.getUserId());
         ActiveAccessToken token = conflictService.getLatestActiveToken(user);
 
         return new AccessTokenResponseDto(token.getAccessToken());
@@ -99,7 +100,7 @@ public class PlayerService {
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
             setCurrentUnitRecord(unitPlayRequestDto, user);
         }
-        Unit nextUnit = unitService.getUnitById(unitId);
+        Unit nextUnit = unitFindService.getUnitById(unitId);
 
         return UnitPlayResponseDto.builder()
                 .unitId(nextUnit.getId())
@@ -122,7 +123,7 @@ public class PlayerService {
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
             setCurrentUnitRecord(unitPlayRequestDto, user);
         }
-        Unit nextUnit = unitService.getUnitById(unitId);
+        Unit nextUnit = unitFindService.getUnitById(unitId);
 
         return UnitPlayResponseDto.builder()
                 .unitId(nextUnit.getId())
@@ -140,8 +141,8 @@ public class PlayerService {
      * @param user 사용자
      */
     private void setCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
-        Unit unit = unitService.getUnitById(unitPlayRequestDto.getCurrentUnitId());
-        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+        Unit unit = unitFindService.getUnitById(unitPlayRequestDto.getCurrentUnitId());
+        Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
 
         if (record == null) {
             recordService.saveRecord(unit, user, unitPlayRequestDto.getRecordTime(), unitPlayRequestDto.isComplete());
@@ -185,8 +186,8 @@ public class PlayerService {
 
 
     private void setCurrentRecord(ExitRequestDto exitRequestDto, User user) {
-        Unit unit = unitService.getUnitById(exitRequestDto.getUnitId());
-        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
+        Unit unit = unitFindService.getUnitById(exitRequestDto.getUnitId());
+        Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
 
         if (record == null) {
             recordService.saveRecord(unit, user, exitRequestDto.getTime(), exitRequestDto.isCheck());

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.course.service.CourseFindService;
+import team7.simple.domain.rating.service.RatingFindService;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.repository.RecordJpaRepository;
 import team7.simple.domain.record.service.RecordFindService;
@@ -38,10 +39,9 @@ public class UnitService {
     private final CourseFindService courseFindService;
     private final VideoService videoService;
     private final HlsService hlsService;
-    private final RatingJpaRepository ratingJpaRepository;
+    private final RatingFindService ratingFindService;
     private final RatingService ratingService;
     private final RecordFindService recordFindService;
-
     private final UnitFindService unitFindService;
 
     @Transactional
@@ -138,7 +138,7 @@ public class UnitService {
     public UnitDetailResponseDto getUnitDetail(Long unitId) {
         Unit unit = unitFindService.getUnitById(unitId);
         double averageScore = ratingService.getAverageRatingScore(unitId).getScore();
-        List<RatingDetailResponseDto> ratingList = ratingJpaRepository.findAllByUnit(unit).stream().map(RatingDetailResponseDto::new).toList();
+        List<RatingDetailResponseDto> ratingList = ratingFindService.getAllByUnit(unit).stream().map(RatingDetailResponseDto::new).toList();
         return new UnitDetailResponseDto(unit, averageScore, ratingList);
     }
 }

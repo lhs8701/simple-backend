@@ -19,6 +19,8 @@ public class RecordService {
 
     private final RecordFindService recordFindService;
 
+    private final RecordJpaRepository recordJpaRepository;
+
 
     public double getTimeline(User user, Unit unit) {
         Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
@@ -26,5 +28,15 @@ public class RecordService {
             return 0;
         }
         return record.getTimeline();
+    }
+
+    public void saveRecord(Unit unit, User user, double recordTime, boolean complete) {
+        Record record = Record.builder()
+                .unit(unit)
+                .user(user)
+                .timeline(recordTime)
+                .completed(complete)
+                .build();
+        recordJpaRepository.save(record);
     }
 }

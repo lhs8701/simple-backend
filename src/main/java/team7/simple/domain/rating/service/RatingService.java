@@ -6,12 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.enroll.error.exception.CUserNotEnrolledException;
+import team7.simple.domain.enroll.service.EnrollFindService;
 import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.rating.dto.RatingRequestDto;
 import team7.simple.domain.rating.dto.RatingResponseDto;
 import team7.simple.domain.rating.entity.Rating;
 import team7.simple.domain.rating.repository.RatingJpaRepository;
+import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.error.exception.CRecordNotFoundException;
+import team7.simple.domain.record.repository.RecordJpaRepository;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitFindService;
 import team7.simple.domain.user.entity.User;
@@ -25,9 +28,12 @@ import java.util.List;
 public class RatingService {
 
     private final EnrollService enrollService;
+    private final EnrollFindService enrollFindService;
     private final UnitFindService unitFindService;
     private final RatingJpaRepository ratingJpaRepository;
     private final RatingFindService ratingFindService;
+
+    private final RecordJpaRepository recordJpaRepository;
 
     @Transactional
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
@@ -56,8 +62,18 @@ public class RatingService {
     }
 
     private boolean doesUserEnrollCourse(Course course, User user) {
-        enrollService.getStudyByCourseAndUser(course, user);
+        enrollFindService.getStudyByCourseAndUser(course, user);
         return true;
+    }
+
+    public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
+        Record record = recordJpaRepository.save(Record.builder()
+                .unit(unit)
+                .user(user)
+                .timeline(timeline)
+                .completed(completed)
+                .build());
+        return record.getId();
     }
 
     @Transactional

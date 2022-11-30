@@ -8,6 +8,7 @@ import team7.simple.domain.rating.repository.RatingJpaRepository;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,5 +19,9 @@ public class RatingFindService {
 
     public Optional<Rating> getRatingByUnitAndUserWithOptional(Unit unit, User user){
         return ratingJpaRepository.findByUnitAndUser(unit, user);
+    }
+
+    public List<Rating> getAllByUnit(Unit unit){
+        return ratingJpaRepository.findAllByUnit(unit);
     }
 }

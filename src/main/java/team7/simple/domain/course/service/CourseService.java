@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team7.simple.domain.enroll.service.EnrollFindService;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.course.dto.CourseDetailResponseDto;
 import team7.simple.domain.course.dto.CourseRequestDto;
@@ -26,13 +27,13 @@ public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
     private final CourseFindService courseFindService;
     private final EnrollService enrollService;
-
+    private final EnrollFindService enrollFindService;
 
     /**
-     * °­ÁÂ¸¦ µî·ÏÇÕ´Ï´Ù.
-     * @param courseRequestDto °­ÁÂ Á¦¸ñ, °­ÁÂ ºÎÁ¦¸ñ
-     * @param instructor °­»ç
-     * @return µî·ÏµÈ °­ÁÂ ¾ÆÀÌµğ
+     * ê°•ì¢Œë¥¼ ë“±ë¡í•©ë‹ˆë‹¤.
+     * @param courseRequestDto ê°•ì¢Œ ì œëª©, ê°•ì¢Œ ë¶€ì œëª©
+     * @param instructor ê°•ì‚¬
+     * @return ë“±ë¡ëœ ê°•ì¢Œ ì•„ì´ë””
      */
     @Transactional
     public Long createCourse(CourseRequestDto courseRequestDto, User instructor) {
@@ -42,15 +43,15 @@ public class CourseService {
 
 
     /**
-     * °­ÁÂ Á¤º¸¸¦ Á¶È¸ÇÕ´Ï´Ù.
-     * @param courseId Á¶È¸ÇÒ °­ÁÂ ¾ÆÀÌµğ
-     * @return CourseDetailResponseDto (°­ÁÂ ¾ÆÀÌµğ, °­ÁÂ Á¦¸ñ, °­ÁÂ ºÎÁ¦¸ñ, °­»ç ÀÌ¸§, ¼ö°­»ı ¼ö)
+     * ê°•ì¢Œ ì •ë³´ë¥¼ ì¡°íšŒí•©ë‹ˆë‹¤.
+     * @param courseId ì¡°íšŒí•  ê°•ì¢Œ ì•„ì´ë””
+     * @return CourseDetailResponseDto (ê°•ì¢Œ ì•„ì´ë””, ê°•ì¢Œ ì œëª©, ê°•ì¢Œ ë¶€ì œëª©, ê°•ì‚¬ ì´ë¦„, ìˆ˜ê°•ìƒ ìˆ˜)
      */
     @Transactional
     public CourseDetailResponseDto getCourseInfo(Long courseId) {
         Course course = courseFindService.getCourseById(courseId);
         int attendeeCount = 0;
-        List<Enroll> enrollList = enrollService.getStudyListByCourse(course);
+        List<Enroll> enrollList = enrollFindService.getStudyListByCourse(course);
         if (enrollList != null) {
             attendeeCount = enrollList.size();
         }
@@ -59,11 +60,11 @@ public class CourseService {
 
 
     /**
-     * °­ÁÂ Á¤º¸¸¦ ¼öÁ¤ÇÕ´Ï´Ù.
-     * @param courseId °­ÁÂ ¾ÆÀÌµğ
-     * @param courseUpdateParam °­ÁÂ Á¦¸ñ, °­ÁÂ ºÎÁ¦¸ñ
-     * @param user »ç¿ëÀÚ
-     * @return ¼öÁ¤µÈ °­ÁÂ ¾ÆÀÌµğ
+     * ê°•ì¢Œ ì •ë³´ë¥¼ ìˆ˜ì •í•©ë‹ˆë‹¤.
+     * @param courseId ê°•ì¢Œ ì•„ì´ë””
+     * @param courseUpdateParam ê°•ì¢Œ ì œëª©, ê°•ì¢Œ ë¶€ì œëª©
+     * @param user ì‚¬ìš©ì
+     * @return ìˆ˜ì •ëœ ê°•ì¢Œ ì•„ì´ë””
      */
     @Transactional
     public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam, User user) {
@@ -77,9 +78,9 @@ public class CourseService {
 
 
     /**
-     * °­ÁÂ¸¦ »èÁ¦ÇÕ´Ï´Ù.
-     * @param courseId »èÁ¦ÇÒ °­ÁÂ ¾ÆÀÌµğ
-     * @param user »ç¿ëÀÚ
+     * ê°•ì¢Œë¥¼ ì‚­ì œí•©ë‹ˆë‹¤.
+     * @param courseId ì‚­ì œí•  ê°•ì¢Œ ì•„ì´ë””
+     * @param user ì‚¬ìš©ì
      */
     @Transactional
     public void deleteCourse(Long courseId, User user) {
@@ -92,9 +93,9 @@ public class CourseService {
 
 
     /**
-     * °­ÁÂ¿¡ ¼ö°­ µî·ÏÇÕ´Ï´Ù.
-     * @param courseId °­ÁÂ ¾ÆÀÌµğ
-     * @param user »ç¿ëÀÚ
+     * ê°•ì¢Œì— ìˆ˜ê°• ë“±ë¡í•©ë‹ˆë‹¤.
+     * @param courseId ê°•ì¢Œ ì•„ì´ë””
+     * @param user ì‚¬ìš©ì
      */
     public void register(Long courseId, User user) {
         Course course = courseFindService.getCourseById(courseId);
@@ -106,13 +107,13 @@ public class CourseService {
 
 
     /**
-     * °­ÁÂ¸¦ ¼ö°­ Ãë¼ÒÇÕ´Ï´Ù.
-     * @param courseId °­ÁÂ ¾ÆÀÌµğ
-     * @param user »ç¿ëÀÚ
+     * ê°•ì¢Œë¥¼ ìˆ˜ê°• ì·¨ì†Œí•©ë‹ˆë‹¤.
+     * @param courseId ê°•ì¢Œ ì•„ì´ë””
+     * @param user ì‚¬ìš©ì
      */
     public void cancel(Long courseId, User user) {
         Course course = courseFindService.getCourseById(courseId);
-        Enroll enroll = enrollService.getStudyByCourseAndUser(course, user);
+        Enroll enroll = enrollFindService.getStudyByCourseAndUser(course, user);
         enrollService.deleteStudy(enroll);
     }
 }

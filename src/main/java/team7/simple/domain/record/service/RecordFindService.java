@@ -16,16 +16,6 @@ public class RecordFindService {
 
     private final RecordJpaRepository recordJpaRepository;
 
-    public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
-        Record record = recordJpaRepository.save(Record.builder()
-                .unit(unit)
-                .user(user)
-                .timeline(timeline)
-                .completed(completed)
-                .build());
-        return record.getId();
-    }
-
     public Optional<Record> getRecordByUnitAndUser(Unit unit, User user) {
         return recordJpaRepository.findByUnitAndUser(unit, user);
     }
