@@ -27,6 +27,13 @@ public class AnswerService {
 
     private final UserJpaRepository userJpaRepository;
 
+    /**
+     * 답변을 등록합니다.
+     * @param questionId 질문 아이디
+     * @param answerRequestDto 답변 내용
+     * @param authUser 사용자
+     * @return 등록된 답변 아이디
+     */
     @Transactional
     public Long createAnswer(Long questionId, AnswerRequestDto answerRequestDto, User authUser) {
         User user = userJpaRepository.findById(authUser.getId()).orElseThrow(CUserNotFoundException::new);
@@ -36,6 +43,14 @@ public class AnswerService {
         return answerJpaRepository.save(answer).getId();
     }
 
+
+    /**
+     * 답변을 수정합니다. 답변의 등록자만 수정할 권한이 있습니다.
+     * @param answerId 수정할 답변 아이디
+     * @param answerUpdateParam 답변 수정 파라미터 (답변 내용)
+     * @param user 사용자
+     * @return 수정된 답변 아이디
+     */
     @Transactional
     public Long updateAnswer(Long answerId, AnswerUpdateParam answerUpdateParam, User user) {
         Answer answer = getAnswerById(answerId);
@@ -47,6 +62,25 @@ public class AnswerService {
         return answerId;
     }
 
+
+    /**
+     * 답변을 수정합니다. 관리자용 API입니다.
+     * @param answerId 수정할 답변 아이디
+     * @param answerUpdateParam 답변 수정 파라미터 (답변 내용)
+     * @return 수정된 답변 아이디
+     */
+    @Transactional
+    public Long updateAnswer(Long answerId, AnswerUpdateParam answerUpdateParam) {
+        Answer answer = getAnswerById(answerId);
+        answer.update(answerUpdateParam.getContent());
+        return answerId;
+    }
+
+    /**
+     * 답변을 삭제합니다. 답변의 등록자만 삭제할 권한이 있습니다.
+     * @param answerId 삭제할 답변 아이디
+     * @param user 사용자
+     */
     @Transactional
     public void deleteAnswer(Long answerId, User user) {
         Answer answer = getAnswerById(answerId);
@@ -56,18 +90,17 @@ public class AnswerService {
         answerJpaRepository.delete(answer);
     }
 
-    @Transactional
-    public Long updateAnswer(Long answerId, AnswerUpdateParam answerUpdateParam) {
-        Answer answer = getAnswerById(answerId);
-        answer.update(answerUpdateParam.getContent());
-        return answerId;
-    }
 
+    /**
+     * 답변을 삭제 합니다. 관리자용 API입니다.
+     * @param answerId 삭제할 답변 아이디
+     */
     @Transactional
     public void deleteAnswer(Long answerId) {
         Answer answer = getAnswerById(answerId);
         answerJpaRepository.delete(answer);
     }
+
 
     /**
      * 질문에 대한 답변 목록을 반환합니다.
@@ -78,6 +111,7 @@ public class AnswerService {
         List<Answer> answerList = questionService.getQuestionById(questionId).getAnswerList();
         return answerList.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
     }
+
 
     @Transactional
     public Answer getAnswerById(Long id){
