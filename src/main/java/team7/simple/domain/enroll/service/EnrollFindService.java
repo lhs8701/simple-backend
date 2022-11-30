@@ -12,22 +12,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EnrollService {
+public class EnrollFindService {
+
     private final EnrollJpaRepository enrollJpaRepository;
 
-    public boolean doesEnrolled(Course course, User user) {
-        return enrollJpaRepository.findByCourseAndUser(course, user).isPresent();
+    public Enroll getStudyByCourseAndUser(Course course, User user) {
+        return enrollJpaRepository.findByCourseAndUser(course, user).orElseThrow(CUserNotEnrolledException::new);
     }
 
-    public Long saveStudy(Course course, User user) {
-        Enroll enroll = enrollJpaRepository.save(Enroll.builder()
-                .course(course)
-                .user(user)
-                .build());
-        return enroll.getId();
+    public List<Enroll> getStudyListByCourse(Course course) {
+        return enrollJpaRepository.findAllByCourse(course);
     }
 
-    public void deleteStudy(Enroll enroll) {
-        enrollJpaRepository.delete(enroll);
+    public List<Enroll> getStudyListByUser(User user) {
+        return enrollJpaRepository.findAllByUser(user);
     }
 }

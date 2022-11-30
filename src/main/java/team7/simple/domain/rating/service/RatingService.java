@@ -13,8 +13,6 @@ import team7.simple.domain.rating.entity.Rating;
 import team7.simple.domain.rating.repository.RatingJpaRepository;
 import team7.simple.domain.record.error.exception.CRecordNotFoundException;
 import team7.simple.domain.unit.entity.Unit;
-import team7.simple.domain.unit.error.exception.CUnitNotFoundException;
-import team7.simple.domain.unit.repository.UnitJpaRepository;
 import team7.simple.domain.unit.service.UnitFindService;
 import team7.simple.domain.user.entity.User;
 
@@ -27,7 +25,6 @@ import java.util.List;
 public class RatingService {
 
     private final EnrollService enrollService;
-
     private final UnitFindService unitFindService;
     private final RatingJpaRepository ratingJpaRepository;
     private final RatingFindService ratingFindService;
