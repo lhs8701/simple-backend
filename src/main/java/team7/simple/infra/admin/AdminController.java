@@ -8,13 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.answer.dto.AnswerUpdateParam;
-import team7.simple.domain.answer.service.AnswerService;
+import team7.simple.domain.answer.service.AnswerAdminService;
 import team7.simple.domain.course.dto.CourseUpdateParam;
-import team7.simple.domain.course.service.CourseService;
+import team7.simple.domain.course.service.CourseAdminService;
 import team7.simple.domain.question.dto.QuestionUpdateParam;
-import team7.simple.domain.question.service.QuestionService;
+import team7.simple.domain.question.service.QuestionAdminService;
 import team7.simple.domain.unit.dto.UnitUpdateParam;
-import team7.simple.domain.unit.service.UnitService;
+import team7.simple.domain.unit.service.UnitAdminService;
 
 import javax.validation.Valid;
 
@@ -24,10 +24,13 @@ import javax.validation.Valid;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final CourseService courseService;
-    private final UnitService unitService;
-    private final QuestionService questionService;
-    private final AnswerService answerService;
+
+    private final CourseAdminService courseAdminService;
+    private final AnswerAdminService answerAdminService;
+
+    private final QuestionAdminService questionAdminService;
+
+    private final UnitAdminService unitAdminService;
 
     @ApiOperation(value = "OPEN - 강좌 정보 수정",
             notes = """
@@ -38,7 +41,7 @@ public class AdminController {
     )
     @PatchMapping(value = "/courses/{courseId}")
     public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
-        return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
+        return new ResponseEntity<>(courseAdminService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
     }
 
 
@@ -51,7 +54,7 @@ public class AdminController {
     )
     @DeleteMapping(value = "/courses/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
-        courseService.deleteCourse(courseId);
+        courseAdminService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -64,7 +67,7 @@ public class AdminController {
     )
     @PatchMapping("/units/{unitId}")
     public ResponseEntity<?> updateUnitDetail(@PathVariable Long unitId, @RequestBody @Valid UnitUpdateParam unitUpdateParam) {
-        return new ResponseEntity<>(unitService.updateUnit(unitId, unitUpdateParam), HttpStatus.OK);
+        return new ResponseEntity<>(unitAdminService.updateUnit(unitId, unitUpdateParam), HttpStatus.OK);
     }
 
 
@@ -77,7 +80,7 @@ public class AdminController {
     )
     @DeleteMapping("/units/{unitId}")
     public ResponseEntity<?> deleteUnit(@PathVariable Long unitId) {
-        unitService.deleteUnit(unitId);
+        unitAdminService.deleteUnit(unitId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -90,7 +93,7 @@ public class AdminController {
     )
     @PatchMapping("/questions/{questionId}")
     public ResponseEntity<?> updateQuestion(@PathVariable Long questionId, @RequestBody @Valid QuestionUpdateParam questionUpdateParam) {
-        return new ResponseEntity<>(questionService.updateQuestion(questionId, questionUpdateParam), HttpStatus.OK);
+        return new ResponseEntity<>(questionAdminService.updateQuestion(questionId, questionUpdateParam), HttpStatus.OK);
     }
 
 
@@ -103,7 +106,7 @@ public class AdminController {
     )
     @DeleteMapping("/questions/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
-        questionService.deleteQuestion(questionId);
+        questionAdminService.deleteQuestion(questionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -116,7 +119,7 @@ public class AdminController {
     )
     @PatchMapping("/front/answers/{answerId}")
     public ResponseEntity<?> updateAnswer(@PathVariable Long answerId, @RequestBody @Valid AnswerUpdateParam answerUpdateParam) {
-        return new ResponseEntity<>(answerService.updateAnswer(answerId, answerUpdateParam), HttpStatus.OK);
+        return new ResponseEntity<>(answerAdminService.updateAnswer(answerId, answerUpdateParam), HttpStatus.OK);
     }
 
 
@@ -129,7 +132,7 @@ public class AdminController {
     )
     @DeleteMapping("/front/answers/{answerId}")
     public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId) {
-        answerService.deleteAnswer(answerId);
+        answerAdminService.deleteAnswer(answerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

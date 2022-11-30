@@ -6,17 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.dto.JoinedCourseResponseDto;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.course.service.CourseService;
+import team7.simple.domain.course.service.CourseFindService;
 import team7.simple.domain.enroll.entity.Enroll;
-import team7.simple.domain.enroll.service.EnrollService;
+import team7.simple.domain.enroll.service.EnrollFindService;
 import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.record.service.RecordFindService;
 import team7.simple.domain.record.service.RecordService;
 import team7.simple.domain.unit.dto.UnitHistoryResponseDto;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.user.error.exception.CUserNotFoundException;
-import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.utils.RoundCalculator;
 
 import java.util.ArrayList;
@@ -27,12 +26,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final PasswordEncoder passwordEncoder;
-    private final EnrollService enrollService;
+    private final EnrollFindService enrollFindService;
+    private final CourseFindService courseFindService;
     private final RecordService recordService;
-    private final CourseService courseService;
     private final RoundCalculator roundCalculator;
-
-    private final UserJpaRepository userJpaRepository;
+    private final UserFindService userFindService;
 
     /**
      * 사용자의 비밀번호를 변경합니다.
@@ -41,7 +39,7 @@ public class UserService {
      */
     @Transactional
     public void changePassword(String account, PasswordUpdateParam passwordUpdateParam) {
-        User user = getUserByAccount(account);
+        User user = userFindService.getUserByAccount(account);
         user.changePassword(passwordEncoder.encode(passwordUpdateParam.getPassword()));
     }
 
@@ -52,8 +50,8 @@ public class UserService {
      */
     @Transactional
     public List<JoinedCourseResponseDto> getJoinedCourses(String account) {
-        User user = getUserByAccount(account);
-        List<Enroll> enrollList = enrollService.getStudyListByUser(user);
+        User user = userFindService.getUserByAccount(account);
+        List<Enroll> enrollList = enrollFindService.getStudyListByUser(user);
         return enrollList.stream().map(JoinedCourseResponseDto::new).collect(Collectors.toList());
     }
 
@@ -65,34 +63,17 @@ public class UserService {
      */
     @Transactional
     public List<UnitHistoryResponseDto> getStudyHistory(String account, Long courseId) {
-        User user = getUserByAccount(account);
-        Course course = courseService.getCourseById(courseId);
-        enrollService.getStudyByCourseAndUser(course, user);
+        User user = userFindService.getUserByAccount(account);
+        Course course = courseFindService.getCourseById(courseId);
+        enrollFindService.getStudyByCourseAndUser(course, user);
         List<Unit> unitList = course.getUnitList();
         List<UnitHistoryResponseDto> unitHistoryList = new ArrayList<>();
         for (Unit unit : unitList) {
-            boolean completed = isCompleted(user, unit);
+            boolean completed = recordService.isCompleted(user, unit);
             double progress = roundCalculator.round(recordService.getTimeline(user, unit) * 100, 0);
             unitHistoryList.add(new UnitHistoryResponseDto(unit, completed, progress));
         }
 
         return unitHistoryList;
-    }
-
-    private boolean isCompleted(User user, Unit unit) {
-        Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
-        if (record == null) {
-            return false;
-        }
-        return record.isCompleted();
-    }
-    @Transactional
-    public User getUserById(String userId) {
-        return userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new);
-    }
-
-    @Transactional
-    public User getUserByAccount(String account){
-        return userJpaRepository.findByAccount(account).orElseThrow(CUserNotFoundException::new);
     }
 }

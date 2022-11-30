@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.global.common.response.dto.ErrorResponseDto;
-import team7.simple.global.common.response.service.ResponseService;
 import team7.simple.global.error.ErrorCode;
 import team7.simple.global.error.advice.exception.*;
 
@@ -16,7 +15,6 @@ import team7.simple.global.error.advice.exception.*;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class ExceptionAdvice {
-    private final ResponseService responseService;
 
     /**
      * 서버 내부에서 에러가 발생할 경우

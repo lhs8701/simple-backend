@@ -15,13 +15,16 @@ import java.util.List;
 public class EnrollService {
     private final EnrollJpaRepository enrollJpaRepository;
 
+    /**
+     * 사용자가 해당 강좌를 수강하고 있는지 확인합니다.
+     * @param course 강좌
+     * @param user 사용자
+     * @return 수강 여부 True/False
+     */
     public boolean doesEnrolled(Course course, User user) {
         return enrollJpaRepository.findByCourseAndUser(course, user).isPresent();
     }
 
-    public Enroll getStudyByCourseAndUser(Course course, User user) {
-        return enrollJpaRepository.findByCourseAndUser(course, user).orElseThrow(CUserNotEnrolledException::new);
-    }
 
     public Long saveStudy(Course course, User user) {
         Enroll enroll = enrollJpaRepository.save(Enroll.builder()
@@ -31,15 +34,8 @@ public class EnrollService {
         return enroll.getId();
     }
 
+
     public void deleteStudy(Enroll enroll) {
         enrollJpaRepository.delete(enroll);
-    }
-
-    public List<Enroll> getStudyListByCourse(Course course) {
-        return enrollJpaRepository.findAllByCourse(course);
-    }
-
-    public List<Enroll> getStudyListByUser(User user) {
-        return enrollJpaRepository.findAllByUser(user);
     }
 }
