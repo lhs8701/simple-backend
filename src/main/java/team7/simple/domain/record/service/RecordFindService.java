@@ -1,0 +1,36 @@
+package team7.simple.domain.record.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import team7.simple.domain.record.entity.Record;
+import team7.simple.domain.record.repository.RecordJpaRepository;
+import team7.simple.domain.unit.entity.Unit;
+import team7.simple.domain.user.entity.User;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class RecordFindService {
+
+    private final RecordJpaRepository recordJpaRepository;
+
+    public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
+        Record record = recordJpaRepository.save(Record.builder()
+                .unit(unit)
+                .user(user)
+                .timeline(timeline)
+                .completed(completed)
+                .build());
+        return record.getId();
+    }
+
+    public Optional<Record> getRecordByUnitAndUser(Unit unit, User user) {
+        return recordJpaRepository.findByUnitAndUser(unit, user);
+    }
+
+    public List<Record> getRecordListByUnit(Unit unit) {
+        return recordJpaRepository.findAllByUnit(unit);
+    }
+}

@@ -17,33 +17,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RecordService {
 
-    private final RecordJpaRepository recordJpaRepository;
-
-    public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
-        Record record = recordJpaRepository.save(Record.builder()
-                .unit(unit)
-                .user(user)
-                .timeline(timeline)
-                .completed(completed)
-                .build());
-        return record.getId();
-    }
-
-    public Optional<Record> getRecordByUnitAndUser(Unit unit, User user) {
-        return recordJpaRepository.findByUnitAndUser(unit, user);
-    }
-
-    public List<Record> getRecordListByUnit(Unit unit) {
-        return recordJpaRepository.findAllByUnit(unit);
-    }
+    private final RecordFindService recordFindService;
 
 
     public double getTimeline(User user, Unit unit) {
-        Record record = recordJpaRepository.findByUnitAndUser(unit, user).orElse(null);
+        Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
         if (record == null) {
             return 0;
         }
         return record.getTimeline();
     }
-
 }

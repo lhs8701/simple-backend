@@ -91,9 +91,6 @@ public class CourseService {
     }
 
 
-
-
-
     /**
      * 강좌에 수강 등록합니다.
      * @param courseId 강좌 아이디
