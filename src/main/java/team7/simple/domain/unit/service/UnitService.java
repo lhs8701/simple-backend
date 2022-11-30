@@ -40,6 +40,8 @@ public class UnitService {
     private final RatingService ratingService;
     private final RecordJpaRepository recordJpaRepository;
 
+    private final UnitFindService unitFindService;
+
     @Transactional
     public Long createUnit(Long courseId, UnitRequestDto unitRequestDto, MultipartFile file) {
         Course course = courseService.getCourseById(courseId);
@@ -72,7 +74,7 @@ public class UnitService {
 
     @Transactional
     public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam, User user) {
-        Unit unit = getUnitById(unitId);
+        Unit unit = unitFindService.getUnitById(unitId);
         if (!unit.getCourse().getInstructor().getAccount().equals(user.getAccount())) {
             throw new CAccessDeniedException();
         }
@@ -81,28 +83,9 @@ public class UnitService {
         return unitId;
     }
 
-    @Transactional
-    public void deleteUnit(Long unitId) {
-        Unit unit = unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-        unitJpaRepository.delete(unit);
-    }
 
-    @Transactional
-    public Long updateUnit(Long unitId, UnitUpdateParam unitUpdateParam) {
-        Unit unit = getUnitById(unitId);
-        unit.update(unitUpdateParam.getTitle(), unitUpdateParam.getDescription(), unitUpdateParam.getObjective());
-        return unitId;
-    }
 
-    /**
-     * 강의 정보를 반환합니다.
-     * @param unitId
-     * @return
-     */
-    @Transactional
-    public Unit getUnitById(Long unitId) {
-        return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);
-    }
+
 
     public List<UnitThumbnailResponseDto> getUnits(Long courseId) {
         Course course = courseService.getCourseById(courseId);
@@ -144,7 +127,7 @@ public class UnitService {
      * @return UnitDetailResponseDto (유닛아이디, 제목, 강의 소개, 강의 목표)
      */
     public UnitResponseDto getUnitInfo(Long unitId) {
-        Unit unit = getUnitById(unitId);
+        Unit unit = unitFindService.getUnitById(unitId);
         return new UnitResponseDto(unit);
     }
 
@@ -155,7 +138,7 @@ public class UnitService {
      * @return UnitDetailResponseDto (유닛아이디, 제목, 강의 소개, 강의 목표, 강의 평균 평점, 세부 평점 목록)
      */
     public UnitDetailResponseDto getUnitDetail(Long unitId) {
-        Unit unit = getUnitById(unitId);
+        Unit unit = unitFindService.getUnitById(unitId);
         double averageScore = ratingService.getAverageRatingScore(unitId).getScore();
         List<RatingDetailResponseDto> ratingList = ratingJpaRepository.findAllByUnit(unit).stream().map(RatingDetailResponseDto::new).toList();
         return new UnitDetailResponseDto(unit, averageScore, ratingList);
