@@ -13,6 +13,7 @@ import team7.simple.domain.question.service.QuestionService;
 import team7.simple.domain.user.entity.User;
 import team7.simple.domain.user.error.exception.CUserNotFoundException;
 import team7.simple.domain.user.repository.UserJpaRepository;
+import team7.simple.domain.user.service.UserFindService;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 
 import javax.transaction.Transactional;
@@ -23,10 +24,11 @@ import java.util.stream.Collectors;
 @Service
 public class AnswerService {
 
+    private final QuestionFindService questionFindService;
+    private final UserFindService userFindService;
     private final AnswerFindService answerFindService;
     private final AnswerJpaRepository answerJpaRepository;
-    private final QuestionFindService questionFindService;
-    private final UserJpaRepository userJpaRepository;
+
 
     /**
      * 답변을 등록합니다.
@@ -37,7 +39,7 @@ public class AnswerService {
      */
     @Transactional
     public Long createAnswer(Long questionId, AnswerRequestDto answerRequestDto, User authUser) {
-        User user = userJpaRepository.findById(authUser.getId()).orElseThrow(CUserNotFoundException::new);
+        User user = userFindService.getUserById(authUser.getId());
         Question question = questionFindService.getQuestionById(questionId);
         Answer answer = answerRequestDto.toEntity(question, user);
 
@@ -78,6 +80,7 @@ public class AnswerService {
         answerJpaRepository.delete(answer);
     }
 
+
     /**
      * 질문에 대한 답변 목록을 반환합니다.
      * @param questionId 질문 아이디
@@ -87,6 +90,4 @@ public class AnswerService {
         List<Answer> answerList = questionFindService.getQuestionById(questionId).getAnswerList();
         return answerList.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
     }
-
-
 }

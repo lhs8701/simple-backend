@@ -8,15 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 import team7.simple.domain.course.service.CourseFindService;
 import team7.simple.domain.rating.service.RatingFindService;
 import team7.simple.domain.record.entity.Record;
-import team7.simple.domain.record.repository.RecordJpaRepository;
 import team7.simple.domain.record.service.RecordFindService;
-import team7.simple.domain.record.service.RecordService;
 import team7.simple.global.error.advice.exception.CAccessDeniedException;
 import team7.simple.domain.course.entity.Course;
-import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.file.entity.Video;
 import team7.simple.domain.rating.dto.RatingDetailResponseDto;
-import team7.simple.domain.rating.repository.RatingJpaRepository;
 import team7.simple.domain.rating.service.RatingService;
 import team7.simple.domain.unit.dto.*;
 import team7.simple.domain.unit.entity.Unit;
@@ -109,7 +105,7 @@ public class UnitService {
 
         for (Unit unit : unitList) {
             boolean completed = true;
-            Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
+            Record record = recordFindService.getRecordByUnitAndUserWithOptional(unit, user).orElse(null);
             if (record == null || !record.isCompleted()) {
                 completed = false;
             }

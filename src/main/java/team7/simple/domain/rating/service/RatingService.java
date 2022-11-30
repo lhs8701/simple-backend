@@ -12,9 +12,7 @@ import team7.simple.domain.rating.dto.RatingRequestDto;
 import team7.simple.domain.rating.dto.RatingResponseDto;
 import team7.simple.domain.rating.entity.Rating;
 import team7.simple.domain.rating.repository.RatingJpaRepository;
-import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.error.exception.CRecordNotFoundException;
-import team7.simple.domain.record.repository.RecordJpaRepository;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.unit.service.UnitFindService;
 import team7.simple.domain.user.entity.User;
@@ -28,13 +26,17 @@ import java.util.List;
 public class RatingService {
 
     private final EnrollService enrollService;
-    private final EnrollFindService enrollFindService;
     private final UnitFindService unitFindService;
     private final RatingJpaRepository ratingJpaRepository;
     private final RatingFindService ratingFindService;
 
-    private final RecordJpaRepository recordJpaRepository;
-
+    /**
+     * 강의에 대한 평점을 등록합니다.
+     * 여러번 등록할 경우, 가장 최근에 등록한 내용으로 교체됩니다.
+     * @param unitId 강의 아이디
+     * @param ratingRequestDto 점수, 평가 의견
+     * @param user 사용자
+     */
     @Transactional
     public void addRating(Long unitId, RatingRequestDto ratingRequestDto, User user) {
         Unit unit = unitFindService.getUnitById(unitId);
@@ -53,29 +55,27 @@ public class RatingService {
                 .build());
     }
 
+
+    /**
+     * 사용자가 평점을 등록할 수 있는 권한을 가지고 있는지 확인합니다.
+     * 강좌를 수강 신청하지 않았다면 예외가 발생합니다.
+     * @param user
+     * @param unit
+     */
     private void validateAbility(User user, Unit unit) {
         Course course = unit.getCourse();
-        if (!doesUserEnrollCourse(course, user)) {
+        if (!enrollService.doesEnrolled(course, user)) {
             throw new CUserNotEnrolledException();
         }
         ratingFindService.getRatingByUnitAndUserWithOptional(unit, user).orElseThrow(CRecordNotFoundException::new);
     }
 
-    private boolean doesUserEnrollCourse(Course course, User user) {
-        enrollFindService.getStudyByCourseAndUser(course, user);
-        return true;
-    }
 
-    public Long saveRecord(Unit unit, User user, double timeline, boolean completed) {
-        Record record = recordJpaRepository.save(Record.builder()
-                .unit(unit)
-                .user(user)
-                .timeline(timeline)
-                .completed(completed)
-                .build());
-        return record.getId();
-    }
-
+    /**
+     * 강의에 대한 평점을 조회합니다.
+     * @param unitId 강의 아이디
+     * @return 강의 평점, 평점을 매긴 사용자 수
+     */
     @Transactional
     public RatingResponseDto getAverageRatingScore(Long unitId) {
         Unit unit = unitFindService.getUnitById(unitId);
@@ -86,6 +86,12 @@ public class RatingService {
         return calculate(ratingList);
     }
 
+
+    /**
+     * 강의에 대한 평점을 계산합니다.
+     * @param ratingList 강의에 대한 평점 목록
+     * @return 강의 평점, 평점을 매긴 사용자 수
+     */
     private RatingResponseDto calculate(List<Rating> ratingList) {
         double sum = 0;
         int whole = ratingList.size();

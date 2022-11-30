@@ -8,6 +8,7 @@ import team7.simple.domain.rating.repository.RatingJpaRepository;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +18,13 @@ public class RatingFindService {
 
     private final RatingJpaRepository ratingJpaRepository;
 
+    @Transactional
     public Optional<Rating> getRatingByUnitAndUserWithOptional(Unit unit, User user){
         return ratingJpaRepository.findByUnitAndUser(unit, user);
     }
 
+
+    @Transactional
     public List<Rating> getAllByUnit(Unit unit){
         return ratingJpaRepository.findAllByUnit(unit);
     }

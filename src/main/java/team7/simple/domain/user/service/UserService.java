@@ -7,10 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import team7.simple.domain.course.dto.JoinedCourseResponseDto;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.service.CourseFindService;
-import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.enroll.entity.Enroll;
 import team7.simple.domain.enroll.service.EnrollFindService;
-import team7.simple.domain.enroll.service.EnrollService;
 import team7.simple.domain.record.entity.Record;
 import team7.simple.domain.record.service.RecordFindService;
 import team7.simple.domain.record.service.RecordService;
@@ -18,8 +16,6 @@ import team7.simple.domain.unit.dto.UnitHistoryResponseDto;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.dto.PasswordUpdateParam;
 import team7.simple.domain.user.entity.User;
-import team7.simple.domain.user.error.exception.CUserNotFoundException;
-import team7.simple.domain.user.repository.UserJpaRepository;
 import team7.simple.utils.RoundCalculator;
 
 import java.util.ArrayList;
@@ -31,13 +27,11 @@ import java.util.stream.Collectors;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final EnrollFindService enrollFindService;
-
     private final CourseFindService courseFindService;
     private final RecordService recordService;
-    private final RecordFindService recordFindService;
     private final RoundCalculator roundCalculator;
-
     private final UserFindService userFindService;
+
     /**
      * 사용자의 비밀번호를 변경합니다.
      * @param passwordUpdateParam 변경할 비밀번호
@@ -75,20 +69,11 @@ public class UserService {
         List<Unit> unitList = course.getUnitList();
         List<UnitHistoryResponseDto> unitHistoryList = new ArrayList<>();
         for (Unit unit : unitList) {
-            boolean completed = isCompleted(user, unit);
+            boolean completed = recordService.isCompleted(user, unit);
             double progress = roundCalculator.round(recordService.getTimeline(user, unit) * 100, 0);
             unitHistoryList.add(new UnitHistoryResponseDto(unit, completed, progress));
         }
 
         return unitHistoryList;
     }
-
-    private boolean isCompleted(User user, Unit unit) {
-        Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
-        if (record == null) {
-            return false;
-        }
-        return record.isCompleted();
-    }
-
 }

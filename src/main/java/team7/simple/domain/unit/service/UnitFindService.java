@@ -13,11 +13,6 @@ public class UnitFindService {
 
     private final UnitJpaRepository unitJpaRepository;
 
-    /**
-     * 강의 정보를 반환합니다.
-     * @param unitId
-     * @return
-     */
     @Transactional
     public Unit getUnitById(Long unitId) {
         return unitJpaRepository.findById(unitId).orElseThrow(CUnitNotFoundException::new);

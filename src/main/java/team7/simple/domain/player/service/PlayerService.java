@@ -142,7 +142,7 @@ public class PlayerService {
      */
     private void setCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
         Unit unit = unitFindService.getUnitById(unitPlayRequestDto.getCurrentUnitId());
-        Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
+        Record record = recordFindService.getRecordByUnitAndUserWithOptional(unit, user).orElse(null);
 
         if (record == null) {
             recordService.saveRecord(unit, user, unitPlayRequestDto.getRecordTime(), unitPlayRequestDto.isComplete());
@@ -187,7 +187,7 @@ public class PlayerService {
 
     private void setCurrentRecord(ExitRequestDto exitRequestDto, User user) {
         Unit unit = unitFindService.getUnitById(exitRequestDto.getUnitId());
-        Record record = recordFindService.getRecordByUnitAndUser(unit, user).orElse(null);
+        Record record = recordFindService.getRecordByUnitAndUserWithOptional(unit, user).orElse(null);
 
         if (record == null) {
             recordService.saveRecord(unit, user, exitRequestDto.getTime(), exitRequestDto.isCheck());

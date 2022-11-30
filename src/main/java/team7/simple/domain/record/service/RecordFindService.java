@@ -7,7 +7,6 @@ import team7.simple.domain.record.repository.RecordJpaRepository;
 import team7.simple.domain.unit.entity.Unit;
 import team7.simple.domain.user.entity.User;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,11 +15,7 @@ public class RecordFindService {
 
     private final RecordJpaRepository recordJpaRepository;
 
-    public Optional<Record> getRecordByUnitAndUser(Unit unit, User user) {
+    public Optional<Record> getRecordByUnitAndUserWithOptional(Unit unit, User user) {
         return recordJpaRepository.findByUnitAndUser(unit, user);
-    }
-
-    public List<Record> getRecordListByUnit(Unit unit) {
-        return recordJpaRepository.findAllByUnit(unit);
     }
 }

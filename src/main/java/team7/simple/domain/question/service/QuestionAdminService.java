@@ -14,6 +14,12 @@ public class QuestionAdminService {
     private final QuestionFindService questionFindService;
     private final QuestionJpaRepository questionJpaRepository;
 
+    /**
+     * 질문을 수정합니다. 관리자용 API입니다.
+     * @param questionId 질문 아이디
+     * @param questionUpdateParam 질문 수정 파라미터 (질문 제목, 질문 내용)
+     * @return 수정한 질문 아이디
+     */
     @Transactional
     public Long updateQuestion(Long questionId, QuestionUpdateParam questionUpdateParam) {
         Question question = questionFindService.getQuestionById(questionId);
@@ -22,6 +28,11 @@ public class QuestionAdminService {
         return question.getId();
     }
 
+
+    /**
+     * 질문을 삭제합니다. 관리자용 API입니다.
+     * @param questionId 질문 아이디
+     */
     @Transactional
     public void deleteQuestion(Long questionId) {
         Question question = questionFindService.getQuestionById(questionId);
