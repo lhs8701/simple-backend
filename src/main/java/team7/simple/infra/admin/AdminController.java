@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import team7.simple.domain.answer.dto.AnswerUpdateParam;
+import team7.simple.domain.answer.service.AnswerAdminService;
 import team7.simple.domain.answer.service.AnswerService;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.service.CourseService;
@@ -28,6 +29,7 @@ public class AdminController {
     private final UnitService unitService;
     private final QuestionService questionService;
     private final AnswerService answerService;
+    private final AnswerAdminService answerAdminService;
 
     @ApiOperation(value = "OPEN - 강좌 정보 수정",
             notes = """
@@ -116,7 +118,7 @@ public class AdminController {
     )
     @PatchMapping("/front/answers/{answerId}")
     public ResponseEntity<?> updateAnswer(@PathVariable Long answerId, @RequestBody @Valid AnswerUpdateParam answerUpdateParam) {
-        return new ResponseEntity<>(answerService.updateAnswer(answerId, answerUpdateParam), HttpStatus.OK);
+        return new ResponseEntity<>(answerAdminService.updateAnswer(answerId, answerUpdateParam), HttpStatus.OK);
     }
 
 
@@ -129,7 +131,7 @@ public class AdminController {
     )
     @DeleteMapping("/front/answers/{answerId}")
     public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId) {
-        answerService.deleteAnswer(answerId);
+        answerAdminService.deleteAnswer(answerId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
