@@ -26,12 +26,25 @@ public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
     private final EnrollService enrollService;
 
+
+    /**
+     * 강좌를 등록합니다.
+     * @param courseRequestDto 강좌 제목, 강좌 부제목
+     * @param instructor 강사
+     * @return 등록된 강좌 아이디
+     */
     @Transactional
     public Long createCourse(CourseRequestDto courseRequestDto, User instructor) {
         Course course = courseRequestDto.toEntity(instructor);
         return courseJpaRepository.save(course).getId();
     }
 
+
+    /**
+     * 강좌 정보를 조회합니다.
+     * @param courseId 조회할 강좌 아이디
+     * @return CourseDetailResponseDto (강좌 아이디, 강좌 제목, 강좌 부제목, 강사 이름, 수강생 수)
+     */
     @Transactional
     public CourseDetailResponseDto getCourseInfo(Long courseId) {
         Course course = getCourseById(courseId);
@@ -43,6 +56,14 @@ public class CourseService {
         return new CourseDetailResponseDto(course, attendeeCount);
     }
 
+
+    /**
+     * 강좌 정보를 수정합니다.
+     * @param courseId 강좌 아이디
+     * @param courseUpdateParam 강좌 제목, 강좌 부제목
+     * @param user 사용자
+     * @return 수정된 강좌 아이디
+     */
     @Transactional
     public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam, User user) {
         Course course = getCourseById(courseId);
@@ -53,6 +74,12 @@ public class CourseService {
         return courseId;
     }
 
+
+    /**
+     * 강좌를 삭제합니다.
+     * @param courseId 삭제할 강좌 아이디
+     * @param user 사용자
+     */
     @Transactional
     public void deleteCourse(Long courseId, User user) {
         Course course = getCourseById(courseId);
@@ -62,6 +89,13 @@ public class CourseService {
         courseJpaRepository.delete(course);
     }
 
+
+    /**
+     * 강좌를 수정합니다. 관리자용 API입니다.
+     * @param courseId 수정할 강좌 아이디
+     * @param courseUpdateParam 강좌 제목, 강좌 부제목
+     * @return 수정된 강좌 아이디
+     */
     @Transactional
     public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam) {
         Course course = getCourseById(courseId);
@@ -69,12 +103,23 @@ public class CourseService {
         return courseId;
     }
 
+
+    /**
+     * 강좌를 삭제합니다. 관리자용 API입니다.
+     * @param courseId 삭제할 강좌 아이디
+     */
     @Transactional
     public void deleteCourse(Long courseId) {
         Course course = getCourseById(courseId);
         courseJpaRepository.delete(course);
     }
 
+
+    /**
+     * 강좌에 수강 등록합니다.
+     * @param courseId 강좌 아이디
+     * @param user 사용자
+     */
     public void register(Long courseId, User user) {
         Course course = getCourseById(courseId);
         if (enrollService.doesEnrolled(course, user)) {
@@ -83,11 +128,18 @@ public class CourseService {
         enrollService.saveStudy(course, user);
     }
 
+
+    /**
+     * 강좌를 수강 취소합니다.
+     * @param courseId 강좌 아이디
+     * @param user 사용자
+     */
     public void cancel(Long courseId, User user) {
         Course course = getCourseById(courseId);
         Enroll enroll = enrollService.getStudyByCourseAndUser(course, user);
         enrollService.deleteStudy(enroll);
     }
+
 
     public Course getCourseById(Long id) {
         return courseJpaRepository.findById(id).orElseThrow(CCourseNotFoundException::new);

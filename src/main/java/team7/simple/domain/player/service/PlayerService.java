@@ -45,11 +45,13 @@ public class PlayerService {
     @Value("${path.front_page}")
     String PLAYER_PATH;
 
+
     /**
-     * 사용자 권한을 확인한 후, 플레이어 주소를 반환한다. 이 때, redis 저장소에 충돌 상태를 기록한 Active 토큰이 생성된다.
-     * 토큰의 유효성을 나타내는 valid가 false로 기록된다.
+     * 사용자 권한을 확인한 후, 플레이어 주소를 반환합니다.
+     * 레디스 저장소에는 충돌 상태를 기록한 레디스 액세스 토큰이 생성됩니다.
+     * 생성 당시에는 토큰의 유효성을 나타내는 valid값이 false로 기록됩니다.
      *
-     * @param accessToken       어세스토큰
+     * @param accessToken       액세스 토큰
      * @param executeRequestDto 강좌 아이디, 강의 아이디
      * @param user              사용자
      * @return 사용자 아이디, 강좌 아이디, 강의 아이디를 쿼리 파라미터로 하는 플레이어의 주소
@@ -68,12 +70,12 @@ public class PlayerService {
                 + "&unitId=" + executeRequestDto.getUnitId());
     }
 
+
     /**
-     * 사용자 id를 통해 가장 최근에 접속한 Active 토큰 하나를 리턴한다.
-     * initPlayer를 거치며 Active 토큰의 valid 속성이 true로 설정된다.
-     *
-     * @param startRequestDto userId: 사용자 id
-     * @return 가장 최근에 접속한 Active 토큰
+     * 사용자 id를 통해 가장 최근에 접속한 레디스 액티브 토큰 하나를 리턴합니다.
+     * 레디스 액티브 토큰의 valid 속성이 true로 설정됩니다.
+     * @param startRequestDto 사용자 아이디
+     * @return 가장 최근에 접속한 레디스 액티브 토큰
      */
     public AccessTokenResponseDto initPlayer(StartRequestDto startRequestDto) {
         User user = userService.getUserById(startRequestDto.getUserId());
@@ -82,6 +84,15 @@ public class PlayerService {
         return new AccessTokenResponseDto(token.getAccessToken());
     }
 
+
+    /**
+     * 강의를 이동합니다.
+     * 현재 시청 중인 강의의 재생 정보를 갱신하고, 이동할 강의의 재생 정보를 불러옵니다.
+     * @param unitId 이동할 강의 아이디
+     * @param unitPlayRequestDto 현재 강의 아이디, 현재 강의 재생 시각, 현재 강의 시청 완료 여부
+     * @param user 사용자
+     * @return 이동할 강의 아이디, 이동할 강의 제목, 이동할 강의 HLS 파일 경로, 이동할 강의 마지막 재생 시각
+     */
     @Transactional
     public UnitPlayResponseDto playUnit(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
 
@@ -98,6 +109,14 @@ public class PlayerService {
                 .build();
     }
 
+
+    /**
+     * 로컬 환경에서 강의를 재생하기 위한 테스트용 API입니다.
+     * @param unitId 강의 아이디
+     * @param unitPlayRequestDto 현재 강의 아이디, 현재 강의 재생 시각, 현재 강의 시청 완료 여부
+     * @param user 사용자
+     * @return 이동할 강의 아이디, 이동할 강의 제목, 이동할 강의 HLS 파일 경로, 이동할 강의 마지막 재생 시각
+     */
     public UnitPlayResponseDto playUnitInLocal(Long unitId, UnitPlayRequestDto unitPlayRequestDto, User user) {
 
         if (unitPlayRequestDto.getCurrentUnitId() != -1) {
@@ -113,6 +132,13 @@ public class PlayerService {
                 .build();
     }
 
+
+    /**
+     * 현재 시청중이던 강의의 재생 정보를 저장합니다.
+     * 만약 시청 기록이 없다면, 새로 생성합니다.
+     * @param unitPlayRequestDto 현재 강의 아이디, 현재 강의 재생 시각, 현재 강의 시청 완료 여부
+     * @param user 사용자
+     */
     private void setCurrentUnitRecord(UnitPlayRequestDto unitPlayRequestDto, User user) {
         Unit unit = unitService.getUnitById(unitPlayRequestDto.getCurrentUnitId());
         Record record = recordService.getRecordByUnitAndUser(unit, user).orElse(null);
@@ -124,6 +150,12 @@ public class PlayerService {
         updateExistingRecord(unitPlayRequestDto, record);
     }
 
+
+    /**
+     * 현재 시청중이던 강의의 재생 정보를 갱신합니다.
+     * @param unitPlayRequestDto 현재 강의 아이디, 현재 강의 재생 시각, 현재 강의 시청 완료 여부
+     * @param record 갱신할 시청 기록
+     */
     private void updateExistingRecord(UnitPlayRequestDto unitPlayRequestDto, Record record) {
         record.setTimeline(unitPlayRequestDto.getRecordTime());
         if (unitPlayRequestDto.isComplete() && !record.isCompleted()) {
@@ -132,6 +164,12 @@ public class PlayerService {
     }
 
 
+    /**
+     * 플레이어를 종료합니다.
+     * 현재 시청중이던 강의의 재생 정보를 저장하고, 해당 레디스 액티브 토큰을 제거합니다.
+     * @param accessToken 액세스 토큰
+     * @param exitRequestDto 현재 강의 아이디, 현재 강의 재생 시각, 현재 강의 시청 완료 여부
+     */
     public void exitPlayer(String accessToken, ExitRequestDto exitRequestDto) {
         User user = (User) jwtProvider.getAuthentication(accessToken).getPrincipal();
         ActiveAccessToken activeToken = activeAccessTokenRedisRepository.findById(accessToken).orElseThrow(CUserNotActiveException::new);
@@ -144,6 +182,7 @@ public class PlayerService {
 
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
+
 
     private void setCurrentRecord(ExitRequestDto exitRequestDto, User user) {
         Unit unit = unitService.getUnitById(exitRequestDto.getUnitId());

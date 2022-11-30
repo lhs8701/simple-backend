@@ -35,12 +35,23 @@ public class AuthService {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final ActiveAccessTokenRedisRepository activeAccessTokenRedisRepository;
 
+    /**
+     * 회원 가입합니다.
+     * @param signupRequestDto 계정 아이디, 비밀번호
+     * @return 생성된 유저 아이디
+     */
     public String signup(SignupRequestDto signupRequestDto) {
         if (userJpaRepository.findByAccount(signupRequestDto.getAccount()).isPresent())
             throw new CUserExistException();
         return userJpaRepository.save(signupRequestDto.toEntity(passwordEncoder)).getId();
     }
 
+
+    /**
+     * 로그인합니다.
+     * @param loginRequestDto 계정 아이디, 비밀번호
+     * @return 액세스 토큰, 리프레시 토큰
+     */
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userJpaRepository.findByAccount(loginRequestDto.getAccount()).orElseThrow(CUserNotFoundException::new);
 
@@ -59,6 +70,12 @@ public class AuthService {
                 .build();
     }
 
+
+    /**
+     * 로그아웃합니다.
+     * @param accessToken 액세스 토큰
+     * @param user 사용자
+     */
     public void logout(String accessToken, User user) {
         long remainMilliSeconds = jwtProvider.getExpiration(accessToken);
 
@@ -67,6 +84,12 @@ public class AuthService {
         activeAccessTokenRedisRepository.deleteById(accessToken);
     }
 
+
+    /**
+     * 계정을 탈퇴합니다.
+     * @param accessToken 액세스 토큰
+     * @param user 사용자
+     */
     public void withdrawal(String accessToken, User user) {
         logout(accessToken, user);
         userJpaRepository.deleteById(user.getId());

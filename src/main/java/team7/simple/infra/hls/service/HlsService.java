@@ -38,6 +38,12 @@ public class HlsService {
 
     private final Environment env;
 
+
+    /**
+     * 영상을 ffmpeg를 이용해 .m3u8확장자로 변환한 뒤, 원격 서버에 전송합니다.
+     * @param videoDto
+     * @return
+     */
     public String convertToM3u8(VideoDto videoDto) {
         String fileName = videoDto.getFileName();
         String onlyFileName = fileName.substring(0, fileName.lastIndexOf("."));
@@ -86,6 +92,12 @@ public class HlsService {
         return outputPath.substring(ROOT_PATH.length());
     }
 
+
+    /**
+     * 원격 서버에서 해당 영상의 .m3u8확장자 파일 경로를 반환합니다.
+     * @param video 영상
+     * @return .m3u8확장자 파일 경로
+     */
     public String getHlsFileUrl(Video video) {
         String hlsFileUrl = video.getHlsFileUrl();
 
