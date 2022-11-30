@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class AnswerService {
+
+    private final AnswerFindService answerFindService;
     private final AnswerJpaRepository answerJpaRepository;
     private final QuestionService questionService;
 
@@ -53,7 +55,7 @@ public class AnswerService {
      */
     @Transactional
     public Long updateAnswer(Long answerId, AnswerUpdateParam answerUpdateParam, User user) {
-        Answer answer = getAnswerById(answerId);
+        Answer answer = answerFindService.getAnswerById(answerId);
         if (!answer.getUser().getAccount().equals(user.getAccount())){
             throw new CAccessDeniedException();
         }
@@ -71,7 +73,7 @@ public class AnswerService {
      */
     @Transactional
     public Long updateAnswer(Long answerId, AnswerUpdateParam answerUpdateParam) {
-        Answer answer = getAnswerById(answerId);
+        Answer answer = answerFindService.getAnswerById(answerId);
         answer.update(answerUpdateParam.getContent());
         return answerId;
     }
@@ -83,7 +85,7 @@ public class AnswerService {
      */
     @Transactional
     public void deleteAnswer(Long answerId, User user) {
-        Answer answer = getAnswerById(answerId);
+        Answer answer = answerFindService.getAnswerById(answerId);
         if (!answer.getUser().getAccount().equals(user.getAccount())){
             throw new CAccessDeniedException();
         }
@@ -97,24 +99,7 @@ public class AnswerService {
      */
     @Transactional
     public void deleteAnswer(Long answerId) {
-        Answer answer = getAnswerById(answerId);
+        Answer answer = answerFindService.getAnswerById(answerId);
         answerJpaRepository.delete(answer);
-    }
-
-
-    /**
-     * 질문에 대한 답변 목록을 반환합니다.
-     * @param questionId 질문 아이디
-     * @return AnswerResponseDto (답변 아이디, 답변 내용, 답변 등록 일자, 답변 수정 일자)
-     */
-    public List<AnswerResponseDto> getAnswerList(Long questionId) {
-        List<Answer> answerList = questionService.getQuestionById(questionId).getAnswerList();
-        return answerList.stream().map(AnswerResponseDto::new).collect(Collectors.toList());
-    }
-
-
-    @Transactional
-    public Answer getAnswerById(Long id){
-        return answerJpaRepository.findById(id).orElseThrow(CAnswerNotFoundException::new);
     }
 }
