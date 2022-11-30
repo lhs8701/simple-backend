@@ -11,6 +11,7 @@ import team7.simple.domain.answer.dto.AnswerUpdateParam;
 import team7.simple.domain.answer.service.AnswerAdminService;
 import team7.simple.domain.answer.service.AnswerService;
 import team7.simple.domain.course.dto.CourseUpdateParam;
+import team7.simple.domain.course.service.CourseAdminService;
 import team7.simple.domain.course.service.CourseService;
 import team7.simple.domain.question.dto.QuestionUpdateParam;
 import team7.simple.domain.question.service.QuestionAdminService;
@@ -27,10 +28,8 @@ import javax.validation.Valid;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final CourseService courseService;
-    private final UnitService unitService;
-    private final QuestionService questionService;
-    private final AnswerService answerService;
+
+    private final CourseAdminService courseAdminService;
     private final AnswerAdminService answerAdminService;
 
     private final QuestionAdminService questionAdminService;
@@ -46,7 +45,7 @@ public class AdminController {
     )
     @PatchMapping(value = "/courses/{courseId}")
     public ResponseEntity<?> updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseUpdateParam courseUpdateParam) {
-        return new ResponseEntity<>(courseService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
+        return new ResponseEntity<>(courseAdminService.updateCourse(courseId, courseUpdateParam), HttpStatus.OK);
     }
 
 
@@ -59,7 +58,7 @@ public class AdminController {
     )
     @DeleteMapping(value = "/courses/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
-        courseService.deleteCourse(courseId);
+        courseAdminService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

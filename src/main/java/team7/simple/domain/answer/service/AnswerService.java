@@ -25,8 +25,6 @@ public class AnswerService {
 
     private final AnswerFindService answerFindService;
     private final AnswerJpaRepository answerJpaRepository;
-    private final QuestionService questionService;
-
     private final QuestionFindService questionFindService;
     private final UserJpaRepository userJpaRepository;
 

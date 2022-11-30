@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionService {
     private final QuestionJpaRepository questionJpaRepository;
-    private final UnitService unitService;
     private final UserJpaRepository userJpaRepository;
     private final QuestionFindService questionFindService;
 

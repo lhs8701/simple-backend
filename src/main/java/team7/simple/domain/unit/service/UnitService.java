@@ -83,10 +83,6 @@ public class UnitService {
         return unitId;
     }
 
-
-
-
-
     public List<UnitThumbnailResponseDto> getUnits(Long courseId) {
         Course course = courseService.getCourseById(courseId);
         List<Unit> unitList = course.getUnitList();

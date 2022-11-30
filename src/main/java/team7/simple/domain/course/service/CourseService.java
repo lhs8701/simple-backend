@@ -24,6 +24,7 @@ import java.util.List;
 @Service
 public class CourseService {
     private final CourseJpaRepository courseJpaRepository;
+    private final CourseFindService courseFindService;
     private final EnrollService enrollService;
 
 
@@ -47,7 +48,7 @@ public class CourseService {
      */
     @Transactional
     public CourseDetailResponseDto getCourseInfo(Long courseId) {
-        Course course = getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         int attendeeCount = 0;
         List<Enroll> enrollList = enrollService.getStudyListByCourse(course);
         if (enrollList != null) {
@@ -66,7 +67,7 @@ public class CourseService {
      */
     @Transactional
     public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam, User user) {
-        Course course = getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         if (!course.getInstructor().getAccount().equals(user.getAccount())) {
             throw new CAccessDeniedException();
         }
@@ -82,7 +83,7 @@ public class CourseService {
      */
     @Transactional
     public void deleteCourse(Long courseId, User user) {
-        Course course = getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         if (!course.getInstructor().getAccount().equals(user.getAccount())) {
             throw new CAccessDeniedException();
         }
@@ -90,29 +91,7 @@ public class CourseService {
     }
 
 
-    /**
-     * 강좌를 수정합니다. 관리자용 API입니다.
-     * @param courseId 수정할 강좌 아이디
-     * @param courseUpdateParam 강좌 제목, 강좌 부제목
-     * @return 수정된 강좌 아이디
-     */
-    @Transactional
-    public Long updateCourse(Long courseId, CourseUpdateParam courseUpdateParam) {
-        Course course = getCourseById(courseId);
-        course.update(courseUpdateParam.getTitle(), courseUpdateParam.getSubtitle());
-        return courseId;
-    }
 
-
-    /**
-     * 강좌를 삭제합니다. 관리자용 API입니다.
-     * @param courseId 삭제할 강좌 아이디
-     */
-    @Transactional
-    public void deleteCourse(Long courseId) {
-        Course course = getCourseById(courseId);
-        courseJpaRepository.delete(course);
-    }
 
 
     /**
@@ -121,7 +100,7 @@ public class CourseService {
      * @param user 사용자
      */
     public void register(Long courseId, User user) {
-        Course course = getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         if (enrollService.doesEnrolled(course, user)) {
             throw new CAlreadyJoinedCourseException();
         }
@@ -135,13 +114,8 @@ public class CourseService {
      * @param user 사용자
      */
     public void cancel(Long courseId, User user) {
-        Course course = getCourseById(courseId);
+        Course course = courseFindService.getCourseById(courseId);
         Enroll enroll = enrollService.getStudyByCourseAndUser(course, user);
         enrollService.deleteStudy(enroll);
-    }
-
-
-    public Course getCourseById(Long id) {
-        return courseJpaRepository.findById(id).orElseThrow(CCourseNotFoundException::new);
     }
 }
