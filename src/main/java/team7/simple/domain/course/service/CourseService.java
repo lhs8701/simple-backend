@@ -11,7 +11,6 @@ import team7.simple.domain.course.dto.CourseRequestDto;
 import team7.simple.domain.course.dto.CourseUpdateParam;
 import team7.simple.domain.course.entity.Course;
 import team7.simple.domain.course.error.exception.CAlreadyJoinedCourseException;
-import team7.simple.domain.course.error.exception.CCourseNotFoundException;
 import team7.simple.domain.course.repository.CourseJpaRepository;
 import team7.simple.domain.enroll.entity.Enroll;
 import team7.simple.domain.enroll.service.EnrollService;

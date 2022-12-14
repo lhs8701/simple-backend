@@ -31,7 +31,6 @@ public class Course extends BaseTimeEntity {
     private List<Unit> unitList = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-
     private List<Enroll> enrollList = new ArrayList<>();
 
     public void update(String title, String subtitle) {

@@ -38,14 +38,6 @@ public class PlayerController {
         return new ResponseEntity<>(playerService.playUnit(nextUnitId, unitPlayRequestDto, user), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "TEST - 강의 재생 (로컬 테스트용)", notes = "로컬 테스트용입니다")
-    @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/play-local/units/{nextUnitId}")
-    public ResponseEntity<?> playUnitInLocal(@PathVariable Long nextUnitId, @RequestBody UnitPlayRequestDto unitPlayRequestDto, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(playerService.playUnitInLocal(nextUnitId, unitPlayRequestDto, user), HttpStatus.OK);
-    }
-
     @ApiOperation(value = "FRONT - 플레이어 종료", notes = "플레이어가 종료될 때 호출되어야 하는 API로, 현재 재생중인 강의의 시청 기록을 갱신합니다.")
     @ApiImplicitParam(name = ConstValue.JWT_HEADER, value = "AccessToken", required = true, dataType = "String", paramType = "header")
     @PreAuthorize("hasRole('USER')")

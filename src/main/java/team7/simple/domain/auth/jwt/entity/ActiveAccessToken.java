@@ -17,7 +17,7 @@ public class ActiveAccessToken {
     @Id
     private String accessToken;
 
-    @Indexed //redis repository에서 인자로 사용하는 필드에 붙여줘야 함
+    @Indexed
     private String userId;
 
     @Indexed
