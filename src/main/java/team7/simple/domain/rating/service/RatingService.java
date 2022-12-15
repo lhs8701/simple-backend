@@ -67,7 +67,6 @@ public class RatingService {
         if (!enrollService.doesEnrolled(course, user)) {
             throw new CUserNotEnrolledException();
         }
-        ratingFindService.getRatingByUnitAndUserWithOptional(unit, user).orElseThrow(CRecordNotFoundException::new);
     }
 
 
