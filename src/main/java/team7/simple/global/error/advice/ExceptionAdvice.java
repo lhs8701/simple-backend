@@ -16,17 +16,17 @@ import team7.simple.global.error.advice.exception.*;
 @RestControllerAdvice
 public class ExceptionAdvice {
 
-    /**
-     * 서버 내부에서 에러가 발생할 경우
-     * @param e Exception
-     * @return INTERNAL_SERVER_ERROR 500
-     */
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<?> defaultException(Exception e) {
-
-        e.printStackTrace();
-        return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    /**
+//     * 서버 내부에서 에러가 발생할 경우
+//     * @param e Exception
+//     * @return INTERNAL_SERVER_ERROR 500
+//     */
+//    @ExceptionHandler(Exception.class)
+//    protected ResponseEntity<?> defaultException(Exception e) {
+//
+//        e.printStackTrace();
+//        return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     /**
      * 입력 형식이 잘못되었을 때 발생하는 예외
@@ -63,5 +63,4 @@ public class ExceptionAdvice {
         log.error(errorCode.getMessage());
         return new ResponseEntity<>(new ErrorResponseDto(errorCode), errorCode.getStatusCode());
     }
-
 }
