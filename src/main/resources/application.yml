@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api # nginx 리버스 프록시 prefix를 /api로 설정
+
+spring:
+  profiles:
+    active: local
+    include: private
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #swagger 3.0 오류 해결
+
+  redis:
+    host: localhost
+    port: 6379

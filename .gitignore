@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+#-----------------------Custom----------------------#
+/src/images/
+
+
+### test ###
+/src/main/java/team7/simple/domain/test/
