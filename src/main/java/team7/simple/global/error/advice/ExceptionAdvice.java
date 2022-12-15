@@ -23,7 +23,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> defaultException(Exception e) {
-
+        log.error("server error");
         e.printStackTrace();
         return new ResponseEntity<>(new ErrorResponseDto(ErrorCode.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
