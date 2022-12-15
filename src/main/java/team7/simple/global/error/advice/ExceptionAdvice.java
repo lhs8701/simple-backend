@@ -2,6 +2,8 @@ package team7.simple.global.error.advice;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +16,7 @@ import team7.simple.global.error.advice.exception.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class ExceptionAdvice {
 
     /**
