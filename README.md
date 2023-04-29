@@ -47,7 +47,7 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레
 
 - 한 계정으로 동시에 강의를 시청할 수 없습니다.   
 - 계정 공유를 방지하고, 강의 컨텐츠 유출을 막을 수 있습니다. 
-- [동시 시청 방지 로직]()
+- [동시 시청 방지 로직](https://github.com/lhs8701/simple-backend/blob/main/src/main/java/team7/simple/domain/auth/service/readme.md)
 
 ### 강의 평가 기능
 ![img_3](https://user-images.githubusercontent.com/45627010/235284706-dacc3982-b80a-4379-817e-29fe167b6505.png)
