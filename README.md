@@ -1,7 +1,9 @@
 # Simplayer 
 
 Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레이어입니다.
-
+<p>
+<a href="https://jaeheon-sim.github.io/simplayer_apidocs/"><img src="https://user-images.githubusercontent.com/45627010/235290166-eeb61089-6348-4131-a69c-66e107b7a5ed.png"></a> &nbsp; 
+</p>
 
 ## 🌎 프로젝트 배경
 
@@ -69,7 +71,6 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레
 
 - 플랫폼에서 쉽게 Simplayer를 적용할 수 있도록, 오픈 API 형태로 제공합니다.   
 - 오픈 API의 사용 방법을 설명하는 문서를 제공합니다.  
-- [오픈 API 문서](https://jaeheon-sim.github.io/simplayer_apidocs/)
 
 
 ## 🎮 프로젝트 구조
