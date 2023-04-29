@@ -1,9 +1,9 @@
 # Simplayer 
 
+
 Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레이어입니다.
-<p>
-<a href="https://jaeheon-sim.github.io/simplayer_apidocs/"><img src="https://user-images.githubusercontent.com/45627010/235290166-eeb61089-6348-4131-a69c-66e107b7a5ed.png"></a> &nbsp; 
-</p>
+
+
 
 ## 🌎 프로젝트 배경
 
@@ -36,7 +36,7 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레
 
 ## ⚡ 주요 기능
 
-### 실시간 질문 / 답변
+### ✅ 실시간 질문 / 답변
 ![img](https://user-images.githubusercontent.com/45627010/235284698-524b782e-ef7f-4aba-be10-3fb62624306f.png)
 
 
@@ -44,20 +44,20 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레
 - 질문은 타임라인에 따라 실시간으로 정렬됩니다. 사용자가 현재 시청 중인 시간대에 등록된 질문들이 가장 상위에 표시됩니다. 
 - 답변 기능은 수강생 모두에게 열려있습니다. 
 
-### 동시 시청 제한
+### ✅ 동시 시청 제한
 ![img_2](https://user-images.githubusercontent.com/45627010/235284704-bce6ee4f-3cac-415c-9236-a9485abecc1e.png)
 
 - 한 계정으로 동시에 강의를 시청할 수 없습니다.   
 - 계정 공유를 방지하고, 강의 컨텐츠 유출을 막을 수 있습니다. 
 - [동시 시청 방지 로직](https://github.com/lhs8701/simple-backend/blob/main/src/main/java/team7/simple/domain/auth/service/readme.md)
 
-### 강의 평가 기능
+### ✅ 강의 평가 기능
 ![img_3](https://user-images.githubusercontent.com/45627010/235284706-dacc3982-b80a-4379-817e-29fe167b6505.png)
 
 - 강의를 끝까지 시청한 경우, 강의에 대한 평가를 남길 수 있습니다.  
 - 강연자는 질 높은 강의를 제공하는데 도움을 받을 수 있습니다. 
 
-### HLS 프로토콜
+### ✅ HLS 프로토콜
 
 ![그림1](https://user-images.githubusercontent.com/45627010/235284713-2eec7622-fb61-4f48-aee7-2914e8b0bb28.png)
 
@@ -66,11 +66,12 @@ Simplayer는 오픈 API 형태로 제공되는 온라인 학습 미디어 플레
 - 또한, 가변 비트레이트 스트리밍 기술을 이용해 영상을 고화질로 시청할 수 있습니다.
 
 
-### 오픈 API 
+### ✅ 오픈 API 
 ![img_4](https://user-images.githubusercontent.com/45627010/235284709-6561ccb1-a839-4c7d-97dc-f199ef4c0286.png)
 
 - 플랫폼에서 쉽게 Simplayer를 적용할 수 있도록, 오픈 API 형태로 제공합니다.   
 - 오픈 API의 사용 방법을 설명하는 문서를 제공합니다.  
+- [오픈 API 문서](https://jaeheon-sim.github.io/simplayer_apidocs/)
 
 
 ## 🎮 프로젝트 구조
